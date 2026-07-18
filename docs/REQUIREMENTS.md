@@ -37,6 +37,8 @@ The service owns inpatient nursing workflow within a ward. It stores durable pat
 - `NFR-NS-007`: Reject stale concurrent mutations using record versions.
 - `NFR-NS-008`: Produce no synthetic integration telemetry or fallback success.
 - `NFR-NS-009`: Maintain clinical safety case, hazard log, DPIA, privacy notice, retention policy, and operational runbook.
+- `NFR-NS-010`: Resolve dedicated backend and frontend ports from the canonical workspace registry, register service existence in the BulletTrain service catalogue, regenerate dependent catalogue/topology artefacts, and fail the build on conflicts, unregistered binds, hardcoded fallbacks, or stale generated metadata. Phase 1 must not add unimplemented interface-catalogue rows.
+- `NFR-NS-011`: Declare governed synthetic seed provenance and landed counts in durable runtime state, label synthetic patient records with their data class and manifest ID, and reject any claim that the fixture contains or represents real, pseudonymised, or live-system data.
 
 ## Standards basis and local adoption boundary
 

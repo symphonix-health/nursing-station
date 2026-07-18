@@ -2,556 +2,834 @@
   "schema_version": "BT_REQUIREMENTS_SUPERSET_V1",
   "metadata": {
     "subsystem": "nursing-station",
-    "requirement_count": 28
+    "requirement_count": 30
   },
   "requirements": [
     {
       "requirement_id": "FR-NS-001",
-      "title": "FR-NS-001",
+      "title": "Ward board is scoped to tenant, facility, ward, and assignment",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-001 from the reviewed Phase 1 specification.",
+      "statement": "Ward board is scoped to tenant, facility, ward, and assignment",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-001-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-001-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0001",
-        "NS-HANDOVER-0029",
-        "NS-WARDBOARD-0057",
-        "NS-HANDOVER-0085"
-      ]
+        "NS-WARDBOARD-0031",
+        "NS-WARDBOARD-0061",
+        "NS-WARDBOARD-0091"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_ward_board_is_ward_scoped"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "FR-NS-002",
-      "title": "FR-NS-002",
+      "title": "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-002 from the reviewed Phase 1 specification.",
+      "statement": "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-002-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-002-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-OBSERVATIONS-0002",
-        "NS-MEDICATIONS-0030",
-        "NS-OBSERVATIONS-0058",
-        "NS-MEDICATIONS-0086"
-      ]
+        "NS-WARDBOARD-0002",
+        "NS-WARDBOARD-0032",
+        "NS-WARDBOARD-0062",
+        "NS-WARDBOARD-0092"
+      ],
+      "direct_evidence": [
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "FR-NS-003",
-      "title": "FR-NS-003",
+      "title": "Accountable nurse and accountability changes are recorded",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-003 from the reviewed Phase 1 specification.",
+      "statement": "Accountable nurse and accountability changes are recorded",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-003-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-003-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-TASKS-0003",
-        "NS-SAFETY-0031",
-        "NS-TASKS-0059",
-        "NS-SAFETY-0087"
-      ]
+        "NS-HANDOVER-0003",
+        "NS-HANDOVER-0033",
+        "NS-HANDOVER-0063",
+        "NS-HANDOVER-0093"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_handover_requires_receiver_and_transfers_accountability"
+      ],
+      "domain": "handover"
     },
     {
       "requirement_id": "FR-NS-004",
-      "title": "FR-NS-004",
+      "title": "Shared-screen privacy masks direct identifiers while retaining operational risk",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-004 from the reviewed Phase 1 specification.",
+      "statement": "Shared-screen privacy masks direct identifiers while retaining operational risk",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-004-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-004-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-CAREPLANS-0004",
-        "NS-AUDIT-0032",
-        "NS-CAREPLANS-0060",
-        "NS-AUDIT-0088"
-      ]
+        "NS-WARDBOARD-0004",
+        "NS-WARDBOARD-0034",
+        "NS-WARDBOARD-0064",
+        "NS-WARDBOARD-0094"
+      ],
+      "direct_evidence": [
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "FR-NS-010",
-      "title": "FR-NS-010",
+      "title": "Structured observations retain units, performer, time, provenance, and warning score",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-010 from the reviewed Phase 1 specification.",
+      "statement": "Structured observations retain units, performer, time, provenance, and warning score",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-010-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-010-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-HANDOVER-0005",
-        "NS-WARDBOARD-0033",
-        "NS-HANDOVER-0061",
-        "NS-WARDBOARD-0089"
-      ]
+        "NS-OBSERVATIONS-0005",
+        "NS-OBSERVATIONS-0035",
+        "NS-OBSERVATIONS-0065",
+        "NS-OBSERVATIONS-0095"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_observation_records_score_and_creates_escalation"
+      ],
+      "domain": "observations"
     },
     {
       "requirement_id": "FR-NS-011",
-      "title": "FR-NS-011",
+      "title": "Implausible observations are rejected before persistence",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-011 from the reviewed Phase 1 specification.",
+      "statement": "Implausible observations are rejected before persistence",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-011-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-011-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-MEDICATIONS-0006",
-        "NS-OBSERVATIONS-0034",
-        "NS-MEDICATIONS-0062",
-        "NS-OBSERVATIONS-0090"
-      ]
+        "NS-OBSERVATIONS-0006",
+        "NS-OBSERVATIONS-0036",
+        "NS-OBSERVATIONS-0066",
+        "NS-OBSERVATIONS-0096"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_observation_rejects_implausible_value"
+      ],
+      "domain": "observations"
     },
     {
       "requirement_id": "FR-NS-012",
-      "title": "FR-NS-012",
+      "title": "Configured warning thresholds create due escalation tasks",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-012 from the reviewed Phase 1 specification.",
+      "statement": "Configured warning thresholds create due escalation tasks",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-012-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-012-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-SAFETY-0007",
-        "NS-TASKS-0035",
-        "NS-SAFETY-0063",
-        "NS-TASKS-0091"
-      ]
+        "NS-OBSERVATIONS-0007",
+        "NS-OBSERVATIONS-0037",
+        "NS-OBSERVATIONS-0067",
+        "NS-OBSERVATIONS-0097"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_observation_records_score_and_creates_escalation"
+      ],
+      "domain": "observations"
     },
     {
       "requirement_id": "FR-NS-020",
-      "title": "FR-NS-020",
+      "title": "Nursing tasks support create, assign, accept, complete, cancel, and list",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-020 from the reviewed Phase 1 specification.",
+      "statement": "Nursing tasks support create, assign, accept, complete, cancel, and list",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-020-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-020-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-AUDIT-0008",
-        "NS-CAREPLANS-0036",
-        "NS-AUDIT-0064",
-        "NS-CAREPLANS-0092"
-      ]
+        "NS-TASKS-0008",
+        "NS-TASKS-0038",
+        "NS-TASKS-0068",
+        "NS-TASKS-0098"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_task_state_machine_and_stale_version",
+        "tests/test_api.py::test_task_can_be_created_assigned_and_cancelled"
+      ],
+      "domain": "tasks"
     },
     {
       "requirement_id": "FR-NS-021",
-      "title": "FR-NS-021",
+      "title": "Task completion is limited to authorised ward and role scope",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-021 from the reviewed Phase 1 specification.",
+      "statement": "Task completion is limited to authorised ward and role scope",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-021-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-021-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-WARDBOARD-0009",
-        "NS-HANDOVER-0037",
-        "NS-WARDBOARD-0065",
-        "NS-HANDOVER-0093"
-      ]
+        "NS-TASKS-0009",
+        "NS-TASKS-0039",
+        "NS-TASKS-0069",
+        "NS-TASKS-0099"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_patient_access_cannot_cross_ward"
+      ],
+      "domain": "tasks"
     },
     {
       "requirement_id": "FR-NS-022",
-      "title": "FR-NS-022",
+      "title": "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-022 from the reviewed Phase 1 specification.",
+      "statement": "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-022-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-022-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-OBSERVATIONS-0010",
-        "NS-MEDICATIONS-0038",
-        "NS-OBSERVATIONS-0066",
-        "NS-MEDICATIONS-0094"
-      ]
+        "NS-CAREPLANS-0010",
+        "NS-CAREPLANS-0040",
+        "NS-CAREPLANS-0070",
+        "NS-CAREPLANS-0100"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_care_plan_create_and_evaluate_with_version_guard",
+        "tests/test_api.py::test_care_plan_can_be_discontinued_but_not_reopened"
+      ],
+      "domain": "care-plans"
     },
     {
       "requirement_id": "FR-NS-030",
-      "title": "FR-NS-030",
+      "title": "Structured SBAR handover transfers accountability only after named acceptance",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-030 from the reviewed Phase 1 specification.",
+      "statement": "Structured SBAR handover transfers accountability only after named acceptance",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-030-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-030-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-TASKS-0011",
-        "NS-SAFETY-0039",
-        "NS-TASKS-0067",
-        "NS-SAFETY-0095"
-      ]
+        "NS-HANDOVER-0011",
+        "NS-HANDOVER-0041",
+        "NS-HANDOVER-0071"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_handover_requires_receiver_and_transfers_accountability"
+      ],
+      "domain": "handover"
     },
     {
       "requirement_id": "FR-NS-031",
-      "title": "FR-NS-031",
+      "title": "Handover snapshots unresolved tasks and current risks",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-031 from the reviewed Phase 1 specification.",
+      "statement": "Handover snapshots unresolved tasks and current risks",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-031-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-031-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-CAREPLANS-0012",
-        "NS-AUDIT-0040",
-        "NS-CAREPLANS-0068",
-        "NS-AUDIT-0096"
-      ]
+        "NS-HANDOVER-0012",
+        "NS-HANDOVER-0042",
+        "NS-HANDOVER-0072"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_named_receiver_can_list_pending_handover"
+      ],
+      "domain": "handover"
     },
     {
       "requirement_id": "FR-NS-040",
-      "title": "FR-NS-040",
+      "title": "Medication administration records all six explicit outcomes",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-040 from the reviewed Phase 1 specification.",
+      "statement": "Medication administration records all six explicit outcomes",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-040-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-040-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-HANDOVER-0013",
-        "NS-WARDBOARD-0041",
-        "NS-HANDOVER-0069",
-        "NS-WARDBOARD-0097"
-      ]
+        "NS-MEDICATIONS-0013",
+        "NS-MEDICATIONS-0043",
+        "NS-MEDICATIONS-0073"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_every_medication_outcome_is_recorded_exactly"
+      ],
+      "domain": "medications"
     },
     {
       "requirement_id": "FR-NS-041",
-      "title": "FR-NS-041",
+      "title": "Medication events require two patient identifiers",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-041 from the reviewed Phase 1 specification.",
+      "statement": "Medication events require two patient identifiers",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-041-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-041-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
         "NS-MEDICATIONS-0014",
-        "NS-OBSERVATIONS-0042",
-        "NS-MEDICATIONS-0070",
-        "NS-OBSERVATIONS-0098"
-      ]
+        "NS-MEDICATIONS-0044",
+        "NS-MEDICATIONS-0074"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_medication_rejects_wrong_patient_identifiers"
+      ],
+      "domain": "medications"
     },
     {
       "requirement_id": "FR-NS-042",
-      "title": "FR-NS-042",
+      "title": "High-alert medication requires an independent eligible co-signer",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-042 from the reviewed Phase 1 specification.",
+      "statement": "High-alert medication requires an independent eligible co-signer",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-042-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-042-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-SAFETY-0015",
-        "NS-TASKS-0043",
-        "NS-SAFETY-0071",
-        "NS-TASKS-0099"
-      ]
+        "NS-MEDICATIONS-0015",
+        "NS-MEDICATIONS-0045",
+        "NS-MEDICATIONS-0075"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_high_alert_medication_requires_independent_cosign"
+      ],
+      "domain": "medications"
     },
     {
       "requirement_id": "FR-NS-043",
-      "title": "FR-NS-043",
+      "title": "Medication units remain explicit and failed actions never become administration records",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-043 from the reviewed Phase 1 specification.",
+      "statement": "Medication units remain explicit and failed actions never become administration records",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-043-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-043-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-AUDIT-0016",
-        "NS-CAREPLANS-0044",
-        "NS-AUDIT-0072",
-        "NS-CAREPLANS-0100"
-      ]
+        "NS-MEDICATIONS-0016",
+        "NS-MEDICATIONS-0046",
+        "NS-MEDICATIONS-0076"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_medication_rejects_wrong_patient_identifiers",
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "medications"
     },
     {
       "requirement_id": "FR-NS-050",
-      "title": "FR-NS-050",
+      "title": "Applicable inpatient nursing safety assessments are recorded",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-050 from the reviewed Phase 1 specification.",
+      "statement": "Applicable inpatient nursing safety assessments are recorded",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-050-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-050-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-WARDBOARD-0017",
-        "NS-HANDOVER-0045",
-        "NS-WARDBOARD-0073"
-      ]
+        "NS-SAFETY-0017",
+        "NS-SAFETY-0047",
+        "NS-SAFETY-0077"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_safety_assessment_generates_owned_action"
+      ],
+      "domain": "safety"
     },
     {
       "requirement_id": "FR-NS-051",
-      "title": "FR-NS-051",
+      "title": "Assessment risks create owned and due nursing actions",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-051 from the reviewed Phase 1 specification.",
+      "statement": "Assessment risks create owned and due nursing actions",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-051-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-051-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-OBSERVATIONS-0018",
-        "NS-MEDICATIONS-0046",
-        "NS-OBSERVATIONS-0074"
-      ]
+        "NS-SAFETY-0018",
+        "NS-SAFETY-0048",
+        "NS-SAFETY-0078"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_safety_assessment_generates_owned_action"
+      ],
+      "domain": "safety"
     },
     {
       "requirement_id": "FR-NS-060",
-      "title": "FR-NS-060",
+      "title": "Every regulated mutation appends to a tamper-evident audit chain",
       "category": "functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement FR-NS-060 from the reviewed Phase 1 specification.",
+      "statement": "Every regulated mutation appends to a tamper-evident audit chain",
       "acceptance_criteria": [
         {
           "ac_id": "FR-NS-060-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-060-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-TASKS-0019",
-        "NS-SAFETY-0047",
-        "NS-TASKS-0075"
-      ]
+        "NS-AUDIT-0019",
+        "NS-AUDIT-0049",
+        "NS-AUDIT-0079"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_audit_chain_is_append_only_and_verifiable"
+      ],
+      "domain": "audit"
     },
     {
       "requirement_id": "NFR-NS-001",
-      "title": "NFR-NS-001",
+      "title": "Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-001 from the reviewed Phase 1 specification.",
+      "statement": "Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-001-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-001-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-CAREPLANS-0020",
-        "NS-AUDIT-0048",
-        "NS-CAREPLANS-0076"
-      ]
+        "NS-WARDBOARD-0020",
+        "NS-WARDBOARD-0050",
+        "NS-WARDBOARD-0080"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_ward_board_is_ward_scoped",
+        "tests/test_api.py::test_ward_nurse_reference_is_scoped"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "NFR-NS-002",
-      "title": "NFR-NS-002",
+      "title": "Clinical state uses durable storage",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-002 from the reviewed Phase 1 specification.",
+      "statement": "Clinical state uses durable storage",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-002-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-002-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-HANDOVER-0021",
-        "NS-WARDBOARD-0049",
-        "NS-HANDOVER-0077"
-      ]
+        "NS-WARDBOARD-0021",
+        "NS-WARDBOARD-0051",
+        "NS-WARDBOARD-0081"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_health_reports_durable_phase_boundary"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "NFR-NS-003",
-      "title": "NFR-NS-003",
+      "title": "Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-003 from the reviewed Phase 1 specification.",
+      "statement": "Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-003-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-003-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-MEDICATIONS-0022",
-        "NS-OBSERVATIONS-0050",
-        "NS-MEDICATIONS-0078"
-      ]
+        "NS-WARDBOARD-0022",
+        "NS-WARDBOARD-0052",
+        "NS-WARDBOARD-0082"
+      ],
+      "direct_evidence": [
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "NFR-NS-004",
-      "title": "NFR-NS-004",
+      "title": "Deterministic light and dark themes have a visible control",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-004 from the reviewed Phase 1 specification.",
+      "statement": "Deterministic light and dark themes have a visible control",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-004-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-004-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-SAFETY-0023",
-        "NS-TASKS-0051",
-        "NS-SAFETY-0079"
-      ]
+        "NS-WARDBOARD-0023",
+        "NS-WARDBOARD-0053",
+        "NS-WARDBOARD-0083"
+      ],
+      "direct_evidence": [
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "NFR-NS-005",
-      "title": "NFR-NS-005",
+      "title": "Safety invariants persist across themes and viewport sizes",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-005 from the reviewed Phase 1 specification.",
+      "statement": "Safety invariants persist across themes and viewport sizes",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-005-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-005-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-AUDIT-0024",
-        "NS-CAREPLANS-0052",
-        "NS-AUDIT-0080"
-      ]
+        "NS-WARDBOARD-0024",
+        "NS-WARDBOARD-0054",
+        "NS-WARDBOARD-0084"
+      ],
+      "direct_evidence": [
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "ward-board"
     },
     {
       "requirement_id": "NFR-NS-006",
-      "title": "NFR-NS-006",
+      "title": "Clinical surfaces show freshness, source, author, and action ownership",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-006 from the reviewed Phase 1 specification.",
+      "statement": "Clinical surfaces show freshness, source, author, and action ownership",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-006-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-006-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-WARDBOARD-0025",
-        "NS-HANDOVER-0053",
-        "NS-WARDBOARD-0081"
-      ]
+        "NS-OBSERVATIONS-0025",
+        "NS-OBSERVATIONS-0055",
+        "NS-OBSERVATIONS-0085"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_observation_records_score_and_creates_escalation",
+        "frontend/e2e/clinical.spec.ts"
+      ],
+      "domain": "observations"
     },
     {
       "requirement_id": "NFR-NS-007",
-      "title": "NFR-NS-007",
+      "title": "Stale concurrent mutations are rejected with record versions",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-007 from the reviewed Phase 1 specification.",
+      "statement": "Stale concurrent mutations are rejected with record versions",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-007-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-007-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-OBSERVATIONS-0026",
-        "NS-MEDICATIONS-0054",
-        "NS-OBSERVATIONS-0082"
-      ]
+        "NS-TASKS-0026",
+        "NS-TASKS-0056",
+        "NS-TASKS-0086"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_task_state_machine_and_stale_version",
+        "tests/test_api.py::test_care_plan_create_and_evaluate_with_version_guard"
+      ],
+      "domain": "tasks"
     },
     {
       "requirement_id": "NFR-NS-008",
-      "title": "NFR-NS-008",
+      "title": "No synthetic integration telemetry or fallback success is emitted",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-008 from the reviewed Phase 1 specification.",
+      "statement": "No synthetic integration telemetry or fallback success is emitted",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-008-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-008-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-TASKS-0027",
-        "NS-SAFETY-0055",
-        "NS-TASKS-0083"
-      ]
+        "NS-AUDIT-0027",
+        "NS-AUDIT-0057",
+        "NS-AUDIT-0087"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_health_reports_durable_phase_boundary"
+      ],
+      "domain": "audit"
     },
     {
       "requirement_id": "NFR-NS-009",
-      "title": "NFR-NS-009",
+      "title": "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
       "category": "non-functional",
       "source": "docs/REQUIREMENTS.md",
       "coverage_status": "covered",
-      "statement": "Requirement NFR-NS-009 from the reviewed Phase 1 specification.",
+      "statement": "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
       "acceptance_criteria": [
         {
           "ac_id": "NFR-NS-009-AC01",
-          "verification_method": "canonical_matrix_and_direct_test"
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-009-AC02",
+          "verification_method": "repo-owned direct executable evidence"
         }
       ],
       "matrix_row_ids": [
-        "NS-CAREPLANS-0028",
-        "NS-AUDIT-0056",
-        "NS-CAREPLANS-0084"
-      ]
+        "NS-AUDIT-0028",
+        "NS-AUDIT-0058",
+        "NS-AUDIT-0088"
+      ],
+      "direct_evidence": [
+        "tests/test_governance_artifacts.py"
+      ],
+      "domain": "audit"
+    },
+    {
+      "requirement_id": "NFR-NS-010",
+      "title": "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-010-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-010-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0029",
+        "NS-WARDBOARD-0059",
+        "NS-WARDBOARD-0089"
+      ],
+      "direct_evidence": [
+        "tests/test_port_registry.py"
+      ],
+      "domain": "ward-board"
+    },
+    {
+      "requirement_id": "NFR-NS-011",
+      "title": "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-011-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-011-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0030",
+        "NS-WARDBOARD-0060",
+        "NS-WARDBOARD-0090"
+      ],
+      "direct_evidence": [
+        "tests/test_api.py::test_seed_governance_is_durable_explicit_and_non_live"
+      ],
+      "domain": "ward-board"
     }
   ]
 }

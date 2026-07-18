@@ -10,3 +10,5 @@
 - `UC-NS-008`: A nurse records a safety assessment and the system creates owned actions from its interventions.
 - `UC-NS-009`: A nurse uses privacy mode on a shared display while maintaining operational risk awareness.
 - `UC-NS-010`: An authorised nurse in charge or Clinical Safety Officer inspects the append-only audit chain.
+- `UC-NS-011`: A developer or CAID run starts Nursing Station using its dedicated registry allocations and verifies that workspace, service-catalogue, and generated topology gates remain conflict-free.
+- `UC-NS-012`: A nurse or reviewer opens Governance and sees the durable synthetic seed manifest, landed counts, privacy declarations, and Phase 1 limitations.

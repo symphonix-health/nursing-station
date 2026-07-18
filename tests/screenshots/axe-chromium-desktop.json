@@ -13,8 +13,8 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-07-18T14:09:28.876Z",
-  "url": "http://127.0.0.1:5173/patients/pat-001",
+  "timestamp": "2026-07-18T15:05:24.518Z",
+  "url": "http://127.0.0.1:5282/patients/pat-001",
   "toolOptions": {
     "reporter": "v1"
   },
@@ -341,23 +341,6 @@
       "description": "Ensure <dt> and <dd> elements are contained by a <dl>",
       "help": "<dt> and <dd> elements must be contained by a <dl>",
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/dlitem?application=playwright",
-      "nodes": []
-    },
-    {
-      "id": "duplicate-id-aria",
-      "impact": null,
-      "tags": [
-        "cat.parsing",
-        "wcag2a",
-        "wcag412",
-        "EN-301-549",
-        "EN-9.4.1.2",
-        "RGAAv4",
-        "RGAA-8.2.1"
-      ],
-      "description": "Ensure every id attribute value used in ARIA and in labels is unique",
-      "help": "IDs used in ARIA and labels must be unique",
-      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/duplicate-id-aria?application=playwright",
       "nodes": []
     },
     {
@@ -883,18 +866,6 @@
       "nodes": []
     },
     {
-      "id": "tabindex",
-      "impact": null,
-      "tags": [
-        "cat.keyboard",
-        "best-practice"
-      ],
-      "description": "Ensure tabindex attribute values are not greater than 0",
-      "help": "Elements should not have tabindex greater than zero",
-      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/tabindex?application=playwright",
-      "nodes": []
-    },
-    {
       "id": "table-duplicate-name",
       "impact": null,
       "tags": [
@@ -1090,6 +1061,39 @@
             }
           ],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-allowed-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attributes are used correctly for the defined role"
+            },
+            {
+              "id": "aria-allowed-attr-elm",
+              "data": null,
+              "relatedNodes": [],
+              "message": "ARIA attributes are allowed for this element",
+              "impact": "critical"
+            }
+          ],
+          "none": [
+            {
+              "id": "aria-unsupported-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute is supported"
+            }
+          ],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -1222,9 +1226,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
-            ".active"
+            ".tabs"
           ]
         },
         {
@@ -1255,9 +1259,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-0"
           ]
         },
         {
@@ -1288,9 +1292,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -1321,9 +1325,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -1354,9 +1358,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -1387,9 +1391,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -1420,9 +1424,75 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-allowed-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attributes are used correctly for the defined role"
+            },
+            {
+              "id": "aria-allowed-attr-elm",
+              "data": null,
+              "relatedNodes": [],
+              "message": "ARIA attributes are allowed for this element",
+              "impact": "critical"
+            }
+          ],
+          "none": [
+            {
+              "id": "aria-unsupported-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute is supported"
+            }
+          ],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-allowed-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attributes are used correctly for the defined role"
+            },
+            {
+              "id": "aria-allowed-attr-elm",
+              "data": null,
+              "relatedNodes": [],
+              "message": "ARIA attributes are allowed for this element",
+              "impact": "critical"
+            }
+          ],
+          "none": [
+            {
+              "id": "aria-unsupported-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute is supported"
+            }
+          ],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -1469,7 +1539,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -1487,9 +1557,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -1505,9 +1575,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -1523,9 +1593,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -1541,9 +1611,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -1559,9 +1629,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -1577,9 +1647,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -1595,9 +1665,27 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-allowed-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "minor",
+              "message": "ARIA role is allowed for given element"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -1649,6 +1737,24 @@
           ],
           "none": [],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-conditional-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "none": [],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -1721,9 +1827,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
-            ".active"
+            ".tabs"
           ]
         },
         {
@@ -1739,9 +1845,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-0"
           ]
         },
         {
@@ -1757,9 +1863,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -1775,9 +1881,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -1793,9 +1899,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -1811,9 +1917,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -1829,9 +1935,45 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-conditional-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-conditional-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -1883,7 +2025,7 @@
             }
           ],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -1901,9 +2043,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -1919,9 +2061,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -1937,9 +2079,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -1955,9 +2097,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -1973,9 +2115,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -1991,9 +2133,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -2009,9 +2151,27 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "deprecatedrole",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "minor",
+              "message": "ARIA role is not deprecated"
+            }
+          ],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -2101,6 +2261,24 @@
             }
           ],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "aria-prohibited-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -2155,9 +2333,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
-            ".active"
+            ".tabs"
           ]
         },
         {
@@ -2173,9 +2351,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-0"
           ]
         },
         {
@@ -2191,9 +2369,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -2209,9 +2387,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -2227,9 +2405,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -2245,9 +2423,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -2263,9 +2441,45 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "aria-prohibited-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "aria-prohibited-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -2317,7 +2531,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -2335,9 +2549,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -2353,9 +2567,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -2371,9 +2585,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -2389,9 +2603,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -2407,9 +2621,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -2425,9 +2639,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -2443,9 +2657,27 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-required-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "All required ARIA attributes are present"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -2479,7 +2711,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -2515,9 +2747,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -2533,9 +2765,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -2551,9 +2783,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -2569,9 +2801,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -2587,9 +2819,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -2605,9 +2837,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -2623,9 +2855,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
           ]
         }
       ]
@@ -2705,7 +2937,7 @@
             }
           ],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -2737,9 +2969,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -2769,9 +3001,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -2801,9 +3033,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -2833,9 +3065,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -2865,9 +3097,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -2897,9 +3129,9 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -2929,9 +3161,41 @@
             }
           ],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "invalidrole",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA role is valid"
+            },
+            {
+              "id": "abstractrole",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Abstract roles are not used"
+            },
+            {
+              "id": "unsupportedrole",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA role is supported"
+            }
+          ],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -3011,6 +3275,38 @@
           ],
           "none": [],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-valid-attr-value",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute values are valid"
+            },
+            {
+              "id": "aria-errormessage",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
+            },
+            {
+              "id": "aria-level",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-level values are valid"
+            }
+          ],
+          "none": [],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -3139,9 +3435,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
-            ".active"
+            ".tabs"
           ]
         },
         {
@@ -3171,9 +3467,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-0"
           ]
         },
         {
@@ -3203,9 +3499,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -3235,9 +3531,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -3267,9 +3563,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -3299,9 +3595,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -3331,9 +3627,73 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-valid-attr-value",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute values are valid"
+            },
+            {
+              "id": "aria-errormessage",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
+            },
+            {
+              "id": "aria-level",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-level values are valid"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-valid-attr-value",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute values are valid"
+            },
+            {
+              "id": "aria-errormessage",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
+            },
+            {
+              "id": "aria-level",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-level values are valid"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -3385,6 +3745,24 @@
           "all": [],
           "none": [],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-valid-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute name is valid"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -3457,9 +3835,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
-            ".active"
+            ".tabs"
           ]
         },
         {
@@ -3475,9 +3853,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-0"
           ]
         },
         {
@@ -3493,9 +3871,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -3511,9 +3889,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -3529,9 +3907,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -3547,9 +3925,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -3565,9 +3943,45 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-valid-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute name is valid"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-valid-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute name is valid"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -3593,6 +4007,24 @@
       "help": "Buttons must have discernible text",
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/button-name?application=playwright",
       "nodes": [
+        {
+          "any": [
+            {
+              "id": "button-has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has inner text that is visible to screen readers"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
         {
           "any": [
             {
@@ -3649,9 +4081,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -3667,9 +4099,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -3685,9 +4117,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -3703,9 +4135,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -3721,9 +4153,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -3739,9 +4171,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -3757,9 +4189,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
           ]
         }
       ]
@@ -3824,7 +4256,7 @@
               "data": null,
               "relatedNodes": [
                 {
-                  "html": "<main id=\"main-content\" class=\"bt-main\">",
+                  "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
                   "target": [
                     "#main-content"
                   ]
@@ -4083,9 +4515,34 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"header-meta\">Phase 1 standalone / durable seeded data</div>",
+          "html": "<div class=\"header-meta\">Phase 1 standalone / durable governed synthetic data</div>",
           "target": [
             "div:nth-child(1) > .header-meta"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#101225",
+                "bgColor": "#ffffff",
+                "contrastRatio": 18.49,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 18.49"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
           ]
         },
         {
@@ -4433,9 +4890,34 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<p>Source: Nursing Station Phase 1 / current record version / accountable action owner visible below.</p>",
+          "html": "<p>Accountable nurse: Amina Okafor. Source manifest: seed.uk.nursing_station.phase1_v1.</p>",
           "target": [
-            "p"
+            "div > p"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#075985",
+                "bgColor": "#d9e4ed",
+                "contrastRatio": 5.85,
+                "fontSize": "6.8pt (9px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 5.85"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"badge info\">Seeded synthetic</span>",
+          "target": [
+            ".page-head > .info.badge"
           ]
         },
         {
@@ -4458,9 +4940,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -4483,9 +4965,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -4508,9 +4990,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -4533,9 +5015,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -4558,9 +5040,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -4583,9 +5065,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -4608,9 +5090,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
           ]
         },
         {
@@ -4758,9 +5240,34 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric-value\">124</div>",
+          "html": "<div class=\"metric-value\">124<small>mmHg</small></div>",
           "target": [
             ".metric:nth-child(2) > .metric-value"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#101225",
+                "bgColor": "#ffffff",
+                "contrastRatio": 18.49,
+                "fontSize": "16.9pt (22.5px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 18.49"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<small>mmHg</small>",
+          "target": [
+            ".metric:nth-child(2) > .metric-value > small"
           ]
         },
         {
@@ -4808,9 +5315,59 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric-value\">78</div>",
+          "html": "<div class=\"metric-value\">78<small>/min</small></div>",
           "target": [
             ".metric:nth-child(3) > .metric-value"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#101225",
+                "bgColor": "#ffffff",
+                "contrastRatio": 18.49,
+                "fontSize": "16.9pt (22.5px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 18.49"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<small>/min</small>",
+          "target": [
+            ".metric:nth-child(3) > .metric-value > small"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4d536b",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.59,
+                "fontSize": "7.5pt (10px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.59"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"sub\">Recorded by Amina Okafor at 7/18/2026, 4:02:30 PM from manual bedside observation. Profile NS-NEWS2-PHASE1-v1.</p>",
+          "target": [
+            ".panel:nth-child(1) > p"
           ]
         },
         {
@@ -4860,7 +5417,7 @@
           "impact": null,
           "html": "<span class=\"badge info\">1 active</span>",
           "target": [
-            ".info"
+            ".panel-head > .info.badge"
           ]
         },
         {
@@ -4933,7 +5490,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"sub\">Due 7/18/2026, 2:22:54 PM / open</div>",
+          "html": "<div class=\"sub\">Owner Amina Okafor / due 7/18/2026, 2:22:54 PM / open</div>",
           "target": [
             ".task > div > .sub"
           ]
@@ -4975,6 +5532,60 @@
           "html": "<html lang=\"en\" data-theme=\"light\">",
           "target": [
             "html"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "duplicate-id-aria",
+      "impact": null,
+      "tags": [
+        "cat.parsing",
+        "wcag2a",
+        "wcag412",
+        "EN-301-549",
+        "EN-9.4.1.2",
+        "RGAAv4",
+        "RGAA-8.2.1"
+      ],
+      "description": "Ensure every id attribute value used in ARIA and in labels is unique",
+      "help": "IDs used in ARIA and labels must be unique",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/duplicate-id-aria?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "patient-tab-0",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
+          "target": [
+            "#patient-tab-0"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "duplicate-id-aria",
+              "data": "patient-tab-panel",
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Document has no elements referenced with ARIA or labels that share the same id attribute"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]
@@ -5065,19 +5676,19 @@
                 "headingOrder": [
                   {
                     "ancestry": [
-                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(2) > div > h1:nth-child(2)"
+                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(2) > div:nth-child(1) > h1:nth-child(2)"
                     ],
                     "level": 1
                   },
                   {
                     "ancestry": [
-                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(4) > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)"
+                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(4) > div > section:nth-child(1) > div:nth-child(1) > h2:nth-child(1)"
                     ],
                     "level": 2
                   },
                   {
                     "ancestry": [
-                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(4) > section:nth-child(2) > div:nth-child(1) > h2:nth-child(1)"
+                      "html > body > div:nth-child(1) > div > div:nth-child(2) > main:nth-child(3) > div:nth-child(4) > div > section:nth-child(2) > div:nth-child(1) > h2:nth-child(1)"
                     ],
                     "level": 2
                   }
@@ -5271,7 +5882,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<main id=\"main-content\" class=\"bt-main\">",
+          "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
           "target": [
             "#main-content"
           ]
@@ -5333,7 +5944,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<main id=\"main-content\" class=\"bt-main\">",
+          "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
           "target": [
             "#main-content"
           ]
@@ -5359,7 +5970,7 @@
               "data": null,
               "relatedNodes": [
                 {
-                  "html": "<main id=\"main-content\" class=\"bt-main\">",
+                  "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
                   "target": [
                     "#main-content"
                   ]
@@ -5468,7 +6079,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<main id=\"main-content\" class=\"bt-main\">",
+          "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
           "target": [
             "#main-content"
           ]
@@ -5724,6 +6335,24 @@
           "all": [],
           "none": [],
           "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "no-focusable-content",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have focusable descendants"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
           "html": "<button class=\"btn\" aria-label=\"Theme: system. Change theme\">",
           "target": [
             "button[aria-label=\"Theme: system. Change theme\"]"
@@ -5760,9 +6389,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -5778,9 +6407,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -5796,9 +6425,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -5814,9 +6443,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -5832,9 +6461,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -5850,9 +6479,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -5868,9 +6497,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
           ]
         }
       ]
@@ -6681,7 +7310,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div><div class=\"header-title\">Clinical operations</div><div class=\"header-meta\">Phase 1 standalone / durable seeded data</div></div>",
+          "html": "<div><div class=\"header-title\">Clinical operations</div><div class=\"header-meta\">Phase 1 standalone / durable governed synthetic data</div></div>",
           "target": [
             "header > div:nth-child(1)"
           ]
@@ -6721,7 +7350,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"header-meta\">Phase 1 standalone / durable seeded data</div>",
+          "html": "<div class=\"header-meta\">Phase 1 standalone / durable governed synthetic data</div>",
           "target": [
             "div:nth-child(1) > .header-meta"
           ]
@@ -6744,6 +7373,26 @@
           "html": "<div class=\"header-actions\">",
           "target": [
             ".header-actions"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button class=\"btn\" aria-pressed=\"false\">Privacy mode</button>",
+          "target": [
+            ".btn:nth-child(1)"
           ]
         },
         {
@@ -7101,7 +7750,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<main id=\"main-content\" class=\"bt-main\">",
+          "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
           "target": [
             "#main-content"
           ]
@@ -7421,7 +8070,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"page-head\"><div><div class=\"eyebrow\">Nursing record / Bed A-12</div><h1>Pneumonia with hypoxia</h1><p>Source: Nursing Station Phase 1 / current record version / accountable action owner visible below.</p></div></div>",
+          "html": "<div class=\"page-head\"><div><div class=\"eyebrow\">Nursing record / Bed A-12</div><h1>Pneumonia with hypoxia</h1><p>Accountable nurse: Amina Okafor. Source manifest: seed.uk.nursing_station.phase1_v1.</p></div><span class=\"badge info\">Seeded synthetic</span></div>",
           "target": [
             ".page-head"
           ]
@@ -7441,7 +8090,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div><div class=\"eyebrow\">Nursing record / Bed A-12</div><h1>Pneumonia with hypoxia</h1><p>Source: Nursing Station Phase 1 / current record version / accountable action owner visible below.</p></div>",
+          "html": "<div><div class=\"eyebrow\">Nursing record / Bed A-12</div><h1>Pneumonia with hypoxia</h1><p>Accountable nurse: Amina Okafor. Source manifest: seed.uk.nursing_station.phase1_v1.</p></div>",
           "target": [
             ".page-head > div"
           ]
@@ -7501,9 +8150,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<p>Source: Nursing Station Phase 1 / current record version / accountable action owner visible below.</p>",
+          "html": "<p>Accountable nurse: Amina Okafor. Source manifest: seed.uk.nursing_station.phase1_v1.</p>",
           "target": [
-            "p"
+            "div > p"
           ]
         },
         {
@@ -7521,7 +8170,27 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"tabs\" role=\"tablist\">",
+          "html": "<span class=\"badge info\">Seeded synthetic</span>",
+          "target": [
+            ".page-head > .info.badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div class=\"tabs\" role=\"tablist\" aria-label=\"Patient record sections\">",
           "target": [
             ".tabs"
           ]
@@ -7541,9 +8210,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"true\" class=\"active\">Overview</button>",
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
           "target": [
-            ".active"
+            "#patient-tab-0"
           ]
         },
         {
@@ -7561,9 +8230,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Observations</button>",
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(2)"
+            "#patient-tab-1"
           ]
         },
         {
@@ -7581,9 +8250,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Tasks</button>",
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(3)"
+            "#patient-tab-2"
           ]
         },
         {
@@ -7601,9 +8270,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Care plan</button>",
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(4)"
+            "#patient-tab-3"
           ]
         },
         {
@@ -7621,9 +8290,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Medications</button>",
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(5)"
+            "#patient-tab-4"
           ]
         },
         {
@@ -7641,9 +8310,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Handover</button>",
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(6)"
+            "#patient-tab-5"
           ]
         },
         {
@@ -7661,9 +8330,29 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button role=\"tab\" aria-selected=\"false\" class=\"\">Safety</button>",
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
           "target": [
-            "button[role=\"tab\"]:nth-child(7)"
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         },
         {
@@ -7863,7 +8552,7 @@
           "impact": null,
           "html": "<small>%</small>",
           "target": [
-            "small"
+            ".metric:nth-child(1) > .metric-value > small"
           ]
         },
         {
@@ -7881,7 +8570,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric\"><div class=\"metric-label\">Blood pressure</div><div class=\"metric-value\">124</div></div>",
+          "html": "<div class=\"metric\"><div class=\"metric-label\">Blood pressure</div><div class=\"metric-value\">124<small>mmHg</small></div></div>",
           "target": [
             ".metric:nth-child(2)"
           ]
@@ -7921,7 +8610,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric-value\">124</div>",
+          "html": "<div class=\"metric-value\">124<small>mmHg</small></div>",
           "target": [
             ".metric:nth-child(2) > .metric-value"
           ]
@@ -7941,7 +8630,27 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric\"><div class=\"metric-label\">Pulse</div><div class=\"metric-value\">78</div></div>",
+          "html": "<small>mmHg</small>",
+          "target": [
+            ".metric:nth-child(2) > .metric-value > small"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div class=\"metric\"><div class=\"metric-label\">Pulse</div><div class=\"metric-value\">78<small>/min</small></div></div>",
           "target": [
             ".metric:nth-child(3)"
           ]
@@ -7981,9 +8690,49 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"metric-value\">78</div>",
+          "html": "<div class=\"metric-value\">78<small>/min</small></div>",
           "target": [
             ".metric:nth-child(3) > .metric-value"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<small>/min</small>",
+          "target": [
+            ".metric:nth-child(3) > .metric-value > small"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "region",
+              "data": {
+                "isIframe": false
+              },
+              "relatedNodes": [],
+              "impact": "moderate",
+              "message": "All page content is contained by landmarks"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"sub\">Recorded by Amina Okafor at 7/18/2026, 4:02:30 PM from manual bedside observation. Profile NS-NEWS2-PHASE1-v1.</p>",
+          "target": [
+            ".panel:nth-child(1) > p"
           ]
         },
         {
@@ -8063,7 +8812,7 @@
           "impact": null,
           "html": "<span class=\"badge info\">1 active</span>",
           "target": [
-            ".info"
+            ".panel-head > .info.badge"
           ]
         },
         {
@@ -8081,7 +8830,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"task-list\"><div class=\"task overdue\"><span class=\"badge danger\">stat</span><div><strong>Repeat observations</strong><div class=\"sub\">Due 7/18/2026, 2:22:54 PM / open</div></div></div></div>",
+          "html": "<div class=\"task-list\"><div class=\"task overdue\"><span class=\"badge danger\">stat</span><div><strong>Repeat observations</strong><div class=\"sub\">Owner Amina Okafor / due 7/18/2026, 2:22:54 PM / open</div></div></div></div>",
           "target": [
             ".task-list"
           ]
@@ -8101,7 +8850,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"task overdue\"><span class=\"badge danger\">stat</span><div><strong>Repeat observations</strong><div class=\"sub\">Due 7/18/2026, 2:22:54 PM / open</div></div></div>",
+          "html": "<div class=\"task overdue\"><span class=\"badge danger\">stat</span><div><strong>Repeat observations</strong><div class=\"sub\">Owner Amina Okafor / due 7/18/2026, 2:22:54 PM / open</div></div></div>",
           "target": [
             ".task"
           ]
@@ -8141,7 +8890,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div><strong>Repeat observations</strong><div class=\"sub\">Due 7/18/2026, 2:22:54 PM / open</div></div>",
+          "html": "<div><strong>Repeat observations</strong><div class=\"sub\">Owner Amina Okafor / due 7/18/2026, 2:22:54 PM / open</div></div>",
           "target": [
             ".task > div"
           ]
@@ -8181,7 +8930,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div class=\"sub\">Due 7/18/2026, 2:22:54 PM / open</div>",
+          "html": "<div class=\"sub\">Owner Amina Okafor / due 7/18/2026, 2:22:54 PM / open</div>",
           "target": [
             ".task > div > .sub"
           ]
@@ -8217,6 +8966,181 @@
           "html": "<a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>",
           "target": [
             ".skip-link"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tabindex",
+      "impact": null,
+      "tags": [
+        "cat.keyboard",
+        "best-practice"
+      ],
+      "description": "Ensure tabindex attribute values are not greater than 0",
+      "help": "Elements should not have tabindex greater than zero",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/tabindex?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<main id=\"main-content\" class=\"bt-main\" tabindex=\"-1\">",
+          "target": [
+            "#main-content"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-0\" role=\"tab\" aria-selected=\"true\" aria-controls=\"patient-tab-panel\" tabindex=\"0\" class=\"active\">Overview</button>",
+          "target": [
+            "#patient-tab-0"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-1\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Observations</button>",
+          "target": [
+            "#patient-tab-1"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Tasks</button>",
+          "target": [
+            "#patient-tab-2"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Care plan</button>",
+          "target": [
+            "#patient-tab-3"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Medications</button>",
+          "target": [
+            "#patient-tab-4"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-5\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Handover</button>",
+          "target": [
+            "#patient-tab-5"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button id=\"patient-tab-6\" role=\"tab\" aria-selected=\"false\" aria-controls=\"patient-tab-panel\" tabindex=\"-1\" class=\"\">Safety</button>",
+          "target": [
+            "#patient-tab-6"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "tabindex",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element does not have a tabindex greater than 0"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div id=\"patient-tab-panel\" role=\"tabpanel\" aria-labelledby=\"patient-tab-0\" tabindex=\"0\">",
+          "target": [
+            "#patient-tab-panel"
           ]
         }
       ]

@@ -53,22 +53,25 @@
       "NFR-NS-006",
       "NFR-NS-007",
       "NFR-NS-008",
-      "NFR-NS-009"
-    ]
+      "NFR-NS-009",
+      "NFR-NS-010",
+      "NFR-NS-011"
+    ],
+    "mapping_policy": "semantic requirement-domain mapping"
   },
   "test_cases": [
     {
       "use_case_id": "NS-WARDBOARD-0001",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 1",
+      "scenario": "FR-NS-001 Ward and governance context: Ward board is scoped to tenant, facility, ward, and assignment (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-001 is enforced",
+        "Ward board is scoped to tenant, facility, ward, and assignment",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -76,8 +79,8 @@
         "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -89,267 +92,29 @@
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0002",
+      "use_case_id": "NS-WARDBOARD-0002",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 2",
+      "scenario": "FR-NS-002 Ward and governance context: Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-002 is enforced",
+        "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
+        "endpoint": "/api/patients/pat-001"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "observations",
-        "Positive",
-        "FR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-TASKS-0003",
-      "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 3",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-003"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0004",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 4",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-004 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "FR-NS-004"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0005",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 5",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-010 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "FR-NS-010"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0006",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 6",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-011 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "FR-NS-011"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0007",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 7",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-012 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-012"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0008",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 8",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-020 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Positive",
-        "FR-NS-020"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0009",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 9",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-021 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -357,126 +122,24 @@
       "tags": [
         "ward-board",
         "Positive",
-        "FR-NS-021"
+        "FR-NS-002"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0010",
+      "use_case_id": "NS-HANDOVER-0003",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 10",
+      "scenario": "FR-NS-003 Structured SBAR accountability transfer: Accountable nurse and accountability changes are recorded (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-022 is enforced",
+        "Accountable nurse and accountability changes are recorded",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "observations",
-        "Positive",
-        "FR-NS-022"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-TASKS-0011",
-      "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 11",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-030 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-030"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0012",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 12",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-031 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "FR-NS-031"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0013",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 13",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-040 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -484,8 +147,8 @@
         "endpoint": "/api/patients/pat-001/handovers"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -493,33 +156,373 @@
       "tags": [
         "handover",
         "Positive",
+        "FR-NS-003"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0004",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-004 Ward and governance context: Shared-screen privacy masks direct identifiers while retaining operational risk (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Shared-screen privacy masks direct identifiers while retaining operational risk",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-004"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0005",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-010 Observation and deterioration controls: Structured observations retain units, performer, time, provenance, and warning score (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Structured observations retain units, performer, time, provenance, and warning score",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "FR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0006",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-011 Observation and deterioration controls: Implausible observations are rejected before persistence (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Implausible observations are rejected before persistence",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "FR-NS-011"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0007",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-012 Observation and deterioration controls: Configured warning thresholds create due escalation tasks (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Configured warning thresholds create due escalation tasks",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-012 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "FR-NS-012"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0008",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-020 Nursing task ownership and transitions: Nursing tasks support create, assign, accept, complete, cancel, and list (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Nursing tasks support create, assign, accept, complete, cancel, and list",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "FR-NS-020 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Positive",
+        "FR-NS-020"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0009",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-021 Nursing task ownership and transitions: Task completion is limited to authorised ward and role scope (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Task completion is limited to authorised ward and role scope",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "FR-NS-021 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Positive",
+        "FR-NS-021"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0010",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-022 Nursing care planning and evaluation: Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/care-plans"
+      },
+      "validation_rules": [
+        "FR-NS-022 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "care-plans",
+        "Positive",
+        "FR-NS-022"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0011",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-030 Structured SBAR accountability transfer: Structured SBAR handover transfers accountability only after named acceptance (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Structured SBAR handover transfers accountability only after named acceptance",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-030 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Positive",
+        "FR-NS-030"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0012",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-031 Structured SBAR accountability transfer: Handover snapshots unresolved tasks and current risks (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Handover snapshots unresolved tasks and current risks",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-031 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Positive",
+        "FR-NS-031"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0013",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-040 Medication administration verification: Medication administration records all six explicit outcomes (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Medication administration records all six explicit outcomes",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-040 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
         "FR-NS-040"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
       "use_case_id": "NS-MEDICATIONS-0014",
       "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 14",
+      "scenario": "FR-NS-041 Medication administration verification: Medication events require two patient identifiers (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-041 is enforced",
+        "Medication events require two patient identifiers",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
+        "endpoint": "/api/medication-orders/med-001/administrations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-041 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -531,326 +534,156 @@
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-SAFETY-0015",
+      "use_case_id": "NS-MEDICATIONS-0015",
       "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 15",
+      "scenario": "FR-NS-042 Medication administration verification: High-alert medication requires an independent eligible co-signer (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-042 is enforced",
+        "High-alert medication requires an independent eligible co-signer",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
+        "endpoint": "/api/medication-orders/med-002/administrations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-042 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "safety",
+        "medications",
         "Positive",
         "FR-NS-042"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-AUDIT-0016",
+      "use_case_id": "NS-MEDICATIONS-0016",
       "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 16",
+      "scenario": "FR-NS-043 Medication administration verification: Medication units remain explicit and failed actions never become administration records (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-043 is enforced",
+        "Medication units remain explicit and failed actions never become administration records",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/audit"
+        "endpoint": "/api/medication-orders/med-001/administrations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-043 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "audit",
+        "medications",
         "Positive",
         "FR-NS-043"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0017",
+      "use_case_id": "NS-SAFETY-0017",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 17",
+      "scenario": "FR-NS-050 Nursing safety assessment and owned actions: Applicable inpatient nursing safety assessments are recorded (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-050 is enforced",
+        "Applicable inpatient nursing safety assessments are recorded",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
+        "endpoint": "/api/patients/pat-002/safety-assessments"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-050 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "ward-board",
+        "safety",
         "Positive",
         "FR-NS-050"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0018",
+      "use_case_id": "NS-SAFETY-0018",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 18",
+      "scenario": "FR-NS-051 Nursing safety assessment and owned actions: Assessment risks create owned and due nursing actions (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-051 is enforced",
+        "Assessment risks create owned and due nursing actions",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
+        "endpoint": "/api/patients/pat-002/safety-assessments"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-051 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "observations",
+        "safety",
         "Positive",
         "FR-NS-051"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0019",
+      "use_case_id": "NS-AUDIT-0019",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 19",
+      "scenario": "FR-NS-060 Tamper-evident governance evidence: Every regulated mutation appends to a tamper-evident audit chain (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-060 is enforced",
+        "Every regulated mutation appends to a tamper-evident audit chain",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-060"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0020",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 20",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-001 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "NFR-NS-001"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0021",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 21",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-002 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "NFR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0022",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 22",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "NFR-NS-003"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0023",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 23",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-004 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "NFR-NS-004"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0024",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 24",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-005 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -858,8 +691,8 @@
         "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-060 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -867,24 +700,24 @@
       "tags": [
         "audit",
         "Positive",
-        "NFR-NS-005"
+        "FR-NS-060"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0025",
+      "use_case_id": "NS-WARDBOARD-0020",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 25",
+      "scenario": "NFR-NS-001 Ward and governance context: Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-006 is enforced",
+        "Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -892,8 +725,8 @@
         "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -901,24 +734,160 @@
       "tags": [
         "ward-board",
         "Positive",
-        "NFR-NS-006"
+        "NFR-NS-001"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0026",
+      "use_case_id": "NS-WARDBOARD-0021",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 26",
+      "scenario": "NFR-NS-002 Ward and governance context: Clinical state uses durable storage (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-007 is enforced",
+        "Clinical state uses durable storage",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-002"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0022",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-003 Ward and governance context: Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-003"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0023",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-004 Ward and governance context: Deterministic light and dark themes have a visible control (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Deterministic light and dark themes have a visible control",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-004"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0024",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-005 Ward and governance context: Safety invariants persist across themes and viewport sizes (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Safety invariants persist across themes and viewport sizes",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-005 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-005"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0025",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-006 Observation and deterioration controls: Clinical surfaces show freshness, source, author, and action ownership (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Clinical surfaces show freshness, source, author, and action ownership",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -926,8 +895,8 @@
         "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-006 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -935,24 +904,24 @@
       "tags": [
         "observations",
         "Positive",
-        "NFR-NS-007"
+        "NFR-NS-006"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0027",
+      "use_case_id": "NS-TASKS-0026",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 27",
+      "scenario": "NFR-NS-007 Nursing task ownership and transitions: Stale concurrent mutations are rejected with record versions (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-008 is enforced",
+        "Stale concurrent mutations are rejected with record versions",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -960,8 +929,8 @@
         "endpoint": "/api/tasks/task-001/transition"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-007 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -969,160 +938,24 @@
       "tags": [
         "tasks",
         "Positive",
-        "NFR-NS-008"
+        "NFR-NS-007"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0028",
+      "use_case_id": "NS-AUDIT-0027",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 28",
+      "scenario": "NFR-NS-008 Tamper-evident governance evidence: No synthetic integration telemetry or fallback success is emitted (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-009 is enforced",
+        "No synthetic integration telemetry or fallback success is emitted",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "NFR-NS-009"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0029",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 29",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-001 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "FR-NS-001"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0030",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 30",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-002 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "FR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0031",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 31",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-003"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0032",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 32",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-004 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1130,8 +963,8 @@
         "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-008 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1139,24 +972,58 @@
       "tags": [
         "audit",
         "Positive",
-        "FR-NS-004"
+        "NFR-NS-008"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0033",
+      "use_case_id": "NS-AUDIT-0028",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 33",
+      "scenario": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-010 is enforced",
+        "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/audit"
+      },
+      "validation_rules": [
+        "NFR-NS-009 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "audit",
+        "Positive",
+        "NFR-NS-009"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0029",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1164,8 +1031,8 @@
         "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1173,24 +1040,194 @@
       "tags": [
         "ward-board",
         "Positive",
-        "FR-NS-010"
+        "NFR-NS-010"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0034",
+      "use_case_id": "NS-WARDBOARD-0030",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 34",
+      "scenario": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-011 is enforced",
+        "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-011"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0031",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-001 Ward and governance context: Ward board is scoped to tenant, facility, ward, and assignment (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Ward board is scoped to tenant, facility, ward, and assignment",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-001"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0032",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-002 Ward and governance context: Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001"
+      },
+      "validation_rules": [
+        "FR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-002"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0033",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-003 Structured SBAR accountability transfer: Accountable nurse and accountability changes are recorded (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Accountable nurse and accountability changes are recorded",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Positive",
+        "FR-NS-003"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0034",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-004 Ward and governance context: Shared-screen privacy masks direct identifiers while retaining operational risk (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Shared-screen privacy masks direct identifiers while retaining operational risk",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-004"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0035",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-010 Observation and deterioration controls: Structured observations retain units, performer, time, provenance, and warning score (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Structured observations retain units, performer, time, provenance, and warning score",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1198,8 +1235,42 @@
         "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "FR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0036",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-011 Observation and deterioration controls: Implausible observations are rejected before persistence (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Implausible observations are rejected before persistence",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1211,258 +1282,20 @@
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0035",
+      "use_case_id": "NS-OBSERVATIONS-0037",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 35",
+      "scenario": "FR-NS-012 Observation and deterioration controls: Configured warning thresholds create due escalation tasks (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-012 is enforced",
+        "Configured warning thresholds create due escalation tasks",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-012"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0036",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 36",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-020 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "FR-NS-020"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0037",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 37",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-021 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "FR-NS-021"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0038",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 38",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-022 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "FR-NS-022"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0039",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 39",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-030 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-030"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0040",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 40",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-031 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Positive",
-        "FR-NS-031"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0041",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 41",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-040 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "ward-board",
-        "Positive",
-        "FR-NS-040"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-OBSERVATIONS-0042",
-      "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 42",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-041 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1470,8 +1303,8 @@
         "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-012 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1479,24 +1312,24 @@
       "tags": [
         "observations",
         "Positive",
-        "FR-NS-041"
+        "FR-NS-012"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0043",
+      "use_case_id": "NS-TASKS-0038",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 43",
+      "scenario": "FR-NS-020 Nursing task ownership and transitions: Nursing tasks support create, assign, accept, complete, cancel, and list (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-042 is enforced",
+        "Nursing tasks support create, assign, accept, complete, cancel, and list",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1504,8 +1337,8 @@
         "endpoint": "/api/tasks/task-001/transition"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-020 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1513,24 +1346,58 @@
       "tags": [
         "tasks",
         "Positive",
-        "FR-NS-042"
+        "FR-NS-020"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0044",
+      "use_case_id": "NS-TASKS-0039",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 44",
+      "scenario": "FR-NS-021 Nursing task ownership and transitions: Task completion is limited to authorised ward and role scope (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-043 is enforced",
+        "Task completion is limited to authorised ward and role scope",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "FR-NS-021 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Positive",
+        "FR-NS-021"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0040",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-022 Nursing care planning and evaluation: Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1538,8 +1405,8 @@
         "endpoint": "/api/patients/pat-001/care-plans"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-022 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1547,24 +1414,24 @@
       "tags": [
         "care-plans",
         "Positive",
-        "FR-NS-043"
+        "FR-NS-022"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-HANDOVER-0045",
+      "use_case_id": "NS-HANDOVER-0041",
       "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 45",
+      "scenario": "FR-NS-030 Structured SBAR accountability transfer: Structured SBAR handover transfers accountability only after named acceptance (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-050 is enforced",
+        "Structured SBAR handover transfers accountability only after named acceptance",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -1572,8 +1439,8 @@
         "endpoint": "/api/patients/pat-001/handovers"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-030 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -1581,1350 +1448,738 @@
       "tags": [
         "handover",
         "Positive",
-        "FR-NS-050"
+        "FR-NS-030"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0042",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-031 Structured SBAR accountability transfer: Handover snapshots unresolved tasks and current risks (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Handover snapshots unresolved tasks and current risks",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-031 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Positive",
+        "FR-NS-031"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0043",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-040 Medication administration verification: Medication administration records all six explicit outcomes (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Medication administration records all six explicit outcomes",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-040 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-040"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0044",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-041 Medication administration verification: Medication events require two patient identifiers (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Medication events require two patient identifiers",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-041 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-041"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0045",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-042 Medication administration verification: High-alert medication requires an independent eligible co-signer (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "High-alert medication requires an independent eligible co-signer",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-002/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-042 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-042"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
       "use_case_id": "NS-MEDICATIONS-0046",
       "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 46",
+      "scenario": "FR-NS-043 Medication administration verification: Medication units remain explicit and failed actions never become administration records (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-051 is enforced",
+        "Medication units remain explicit and failed actions never become administration records",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
+        "endpoint": "/api/medication-orders/med-001/administrations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-043 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "medications",
-        "Positive",
-        "FR-NS-051"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0047",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 47",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-060 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-060"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0048",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 48",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-001 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Positive",
-        "NFR-NS-001"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0049",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 49",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-002 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "ward-board",
-        "Positive",
-        "NFR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-OBSERVATIONS-0050",
-      "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 50",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "observations",
-        "Positive",
-        "NFR-NS-003"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-TASKS-0051",
-      "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 51",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-004 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "NFR-NS-004"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0052",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 52",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-005 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "NFR-NS-005"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0053",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 53",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-006 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "NFR-NS-006"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0054",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 54",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-007 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "NFR-NS-007"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0055",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 55",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-008 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "NFR-NS-008"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0056",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 56",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "NFR-NS-009 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Positive",
-        "NFR-NS-009"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0057",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 57",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-001 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "ward-board",
-        "Positive",
-        "FR-NS-001"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-OBSERVATIONS-0058",
-      "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 58",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-002 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "observations",
-        "Positive",
-        "FR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-TASKS-0059",
-      "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 59",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-003"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0060",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 60",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-004 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "FR-NS-004"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0061",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 61",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-010 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "FR-NS-010"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0062",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 62",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-011 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "FR-NS-011"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0063",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 63",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-012 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-012"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0064",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 64",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-020 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Positive",
-        "FR-NS-020"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0065",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 65",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-021 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "ward-board",
-        "Positive",
-        "FR-NS-021"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-OBSERVATIONS-0066",
-      "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 66",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-022 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "observations",
-        "Positive",
-        "FR-NS-022"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-TASKS-0067",
-      "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 67",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-030 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "tasks",
-        "Positive",
-        "FR-NS-030"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-CAREPLANS-0068",
-      "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 68",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-031 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "care-plans",
-        "Positive",
-        "FR-NS-031"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-HANDOVER-0069",
-      "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 69",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-040 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "handover",
-        "Positive",
-        "FR-NS-040"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0070",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 70",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-041 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Positive",
-        "FR-NS-041"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0071",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 71",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-042 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Positive",
-        "FR-NS-042"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-AUDIT-0072",
-      "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 72",
-      "test_type": "Positive",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-043 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
         "Positive",
         "FR-NS-043"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0073",
+      "use_case_id": "NS-SAFETY-0047",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 73",
+      "scenario": "FR-NS-050 Nursing safety assessment and owned actions: Applicable inpatient nursing safety assessments are recorded (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-050 is enforced",
+        "Applicable inpatient nursing safety assessments are recorded",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
+        "endpoint": "/api/patients/pat-002/safety-assessments"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-050 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "ward-board",
+        "safety",
         "Positive",
         "FR-NS-050"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0074",
+      "use_case_id": "NS-SAFETY-0048",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 74",
+      "scenario": "FR-NS-051 Nursing safety assessment and owned actions: Assessment risks create owned and due nursing actions (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-051 is enforced",
+        "Assessment risks create owned and due nursing actions",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
+        "endpoint": "/api/patients/pat-002/safety-assessments"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-051 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "observations",
+        "safety",
         "Positive",
         "FR-NS-051"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0075",
+      "use_case_id": "NS-AUDIT-0049",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 75",
+      "scenario": "FR-NS-060 Tamper-evident governance evidence: Every regulated mutation appends to a tamper-evident audit chain (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-060 is enforced",
+        "Every regulated mutation appends to a tamper-evident audit chain",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
+        "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-060 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "tasks",
+        "audit",
         "Positive",
         "FR-NS-060"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0076",
+      "use_case_id": "NS-WARDBOARD-0050",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 76",
+      "scenario": "NFR-NS-001 Ward and governance context: Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-001 is enforced",
+        "Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
+        "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "care-plans",
+        "ward-board",
         "Positive",
         "NFR-NS-001"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-HANDOVER-0077",
+      "use_case_id": "NS-WARDBOARD-0051",
       "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 77",
+      "scenario": "NFR-NS-002 Ward and governance context: Clinical state uses durable storage (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-002 is enforced",
+        "Clinical state uses durable storage",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/handovers"
+        "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "handover",
+        "ward-board",
         "Positive",
         "NFR-NS-002"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0078",
+      "use_case_id": "NS-WARDBOARD-0052",
       "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Positive scenario 78",
+      "scenario": "NFR-NS-003 Ward and governance context: Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-003 is enforced",
+        "Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
+        "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "medications",
+        "ward-board",
         "Positive",
         "NFR-NS-003"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-SAFETY-0079",
+      "use_case_id": "NS-WARDBOARD-0053",
       "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Positive scenario 79",
+      "scenario": "NFR-NS-004 Ward and governance context: Deterministic light and dark themes have a visible control (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-004 is enforced",
+        "Deterministic light and dark themes have a visible control",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
+        "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "safety",
+        "ward-board",
         "Positive",
         "NFR-NS-004"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-AUDIT-0080",
+      "use_case_id": "NS-WARDBOARD-0054",
       "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Positive scenario 80",
+      "scenario": "NFR-NS-005 Ward and governance context: Safety invariants persist across themes and viewport sizes (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-005 is enforced",
+        "Safety invariants persist across themes and viewport sizes",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/audit"
+        "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-005 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "audit",
+        "ward-board",
         "Positive",
         "NFR-NS-005"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0081",
+      "use_case_id": "NS-OBSERVATIONS-0055",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Positive scenario 81",
+      "scenario": "NFR-NS-006 Observation and deterioration controls: Clinical surfaces show freshness, source, author, and action ownership (positive)",
       "test_type": "Positive",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "NFR-NS-006 is enforced",
+        "Clinical surfaces show freshness, source, author, and action ownership",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/ward-board"
+        "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-006 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "ward-board",
+        "observations",
         "Positive",
         "NFR-NS-006"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0082",
+      "use_case_id": "NS-TASKS-0056",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Positive scenario 82",
+      "scenario": "NFR-NS-007 Nursing task ownership and transitions: Stale concurrent mutations are rejected with record versions (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-007 is enforced",
+        "Stale concurrent mutations are rejected with record versions",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/observations"
+        "endpoint": "/api/tasks/task-001/transition"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-007 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "observations",
+        "tasks",
         "Positive",
         "NFR-NS-007"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0083",
+      "use_case_id": "NS-AUDIT-0057",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Positive scenario 83",
+      "scenario": "NFR-NS-008 Tamper-evident governance evidence: No synthetic integration telemetry or fallback success is emitted (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-008 is enforced",
+        "No synthetic integration telemetry or fallback success is emitted",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/tasks/task-001/transition"
+        "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-008 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "tasks",
+        "audit",
         "Positive",
         "NFR-NS-008"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0084",
+      "use_case_id": "NS-AUDIT-0058",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Positive scenario 84",
+      "scenario": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "NFR-NS-009 is enforced",
+        "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-001/care-plans"
+        "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-009 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
-        "care-plans",
+        "audit",
         "Positive",
         "NFR-NS-009"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-HANDOVER-0085",
+      "use_case_id": "NS-WARDBOARD-0059",
       "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Positive scenario 85",
+      "scenario": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (positive)",
       "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-001 is enforced",
+        "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0060",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-011"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0061",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-001 Ward and governance context: Ward board is scoped to tenant, facility, ward, and assignment (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Ward board is scoped to tenant, facility, ward, and assignment",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-001"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0062",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-002 Ward and governance context: Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001"
+      },
+      "validation_rules": [
+        "FR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "FR-NS-002"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0063",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-003 Structured SBAR accountability transfer: Accountable nurse and accountability changes are recorded (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Accountable nurse and accountability changes are recorded",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -2932,8 +2187,8 @@
         "endpoint": "/api/patients/pat-001/handovers"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -2941,126 +2196,24 @@
       "tags": [
         "handover",
         "Positive",
-        "FR-NS-001"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0086",
-      "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Negative scenario 86",
-      "test_type": "Negative",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-002 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/medication-orders/med-002/administrations"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "medications",
-        "Negative",
-        "FR-NS-002"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-SAFETY-0087",
-      "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Negative scenario 87",
-      "test_type": "Negative",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-003 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-002/safety-assessments"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "safety",
-        "Negative",
         "FR-NS-003"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-AUDIT-0088",
+      "use_case_id": "NS-WARDBOARD-0064",
       "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Negative scenario 88",
-      "test_type": "Negative",
+      "scenario": "FR-NS-004 Ward and governance context: Shared-screen privacy masks direct identifiers while retaining operational risk (positive)",
+      "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-004 is enforced",
+        "Shared-screen privacy masks direct identifiers while retaining operational risk",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/audit"
-      },
-      "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "audit",
-        "Negative",
-        "FR-NS-004"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0089",
-      "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Negative scenario 89",
-      "test_type": "Negative",
-      "priority": "high",
-      "expected_outcomes": [
-        "FR-NS-010 is enforced",
-        "No Phase 2 integration is simulated"
-      ],
-      "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3068,33 +2221,33 @@
         "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "ward-board",
-        "Negative",
-        "FR-NS-010"
+        "Positive",
+        "FR-NS-004"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0090",
+      "use_case_id": "NS-OBSERVATIONS-0065",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Negative scenario 90",
-      "test_type": "Negative",
-      "priority": "high",
+      "scenario": "FR-NS-010 Observation and deterioration controls: Structured observations retain units, performer, time, provenance, and warning score (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-011 is enforced",
+        "Structured observations retain units, performer, time, provenance, and warning score",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3102,33 +2255,101 @@
         "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "observations",
-        "Negative",
+        "Positive",
+        "FR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0066",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-011 Observation and deterioration controls: Implausible observations are rejected before persistence (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Implausible observations are rejected before persistence",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
         "FR-NS-011"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0091",
+      "use_case_id": "NS-OBSERVATIONS-0067",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Negative scenario 91",
-      "test_type": "Negative",
-      "priority": "high",
+      "scenario": "FR-NS-012 Observation and deterioration controls: Configured warning thresholds create due escalation tasks (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-012 is enforced",
+        "Configured warning thresholds create due escalation tasks",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-012 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "FR-NS-012"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0068",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-020 Nursing task ownership and transitions: Nursing tasks support create, assign, accept, complete, cancel, and list (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Nursing tasks support create, assign, accept, complete, cancel, and list",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3136,33 +2357,67 @@
         "endpoint": "/api/tasks/task-001/transition"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-020 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "tasks",
-        "Negative",
-        "FR-NS-012"
+        "Positive",
+        "FR-NS-020"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0092",
+      "use_case_id": "NS-TASKS-0069",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Negative scenario 92",
-      "test_type": "Negative",
+      "scenario": "FR-NS-021 Nursing task ownership and transitions: Task completion is limited to authorised ward and role scope (positive)",
+      "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-020 is enforced",
+        "Task completion is limited to authorised ward and role scope",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "FR-NS-021 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Positive",
+        "FR-NS-021"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0070",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-022 Nursing care planning and evaluation: Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3170,33 +2425,33 @@
         "endpoint": "/api/patients/pat-001/care-plans"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-022 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "care-plans",
-        "Negative",
-        "FR-NS-020"
+        "Positive",
+        "FR-NS-022"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-HANDOVER-0093",
+      "use_case_id": "NS-HANDOVER-0071",
       "component": "Nursing Station",
-      "scenario": "Structured SBAR accountability transfer: Negative scenario 93",
-      "test_type": "Negative",
-      "priority": "high",
+      "scenario": "FR-NS-030 Structured SBAR accountability transfer: Structured SBAR handover transfers accountability only after named acceptance (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-021 is enforced",
+        "Structured SBAR handover transfers accountability only after named acceptance",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3204,33 +2459,135 @@
         "endpoint": "/api/patients/pat-001/handovers"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-030 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "handover",
-        "Negative",
-        "FR-NS-021"
+        "Positive",
+        "FR-NS-030"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0094",
+      "use_case_id": "NS-HANDOVER-0072",
       "component": "Nursing Station",
-      "scenario": "Medication administration and verification: Negative scenario 94",
-      "test_type": "Negative",
-      "priority": "high",
+      "scenario": "FR-NS-031 Structured SBAR accountability transfer: Handover snapshots unresolved tasks and current risks (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-022 is enforced",
+        "Handover snapshots unresolved tasks and current risks",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-031 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Positive",
+        "FR-NS-031"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0073",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-040 Medication administration verification: Medication administration records all six explicit outcomes (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Medication administration records all six explicit outcomes",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-040 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-040"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0074",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-041 Medication administration verification: Medication events require two patient identifiers (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Medication events require two patient identifiers",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-041 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-041"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0075",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-042 Medication administration verification: High-alert medication requires an independent eligible co-signer (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "High-alert medication requires an independent eligible co-signer",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3238,33 +2595,67 @@
         "endpoint": "/api/medication-orders/med-002/administrations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-042 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "medications",
-        "Negative",
-        "FR-NS-022"
+        "Positive",
+        "FR-NS-042"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-SAFETY-0095",
+      "use_case_id": "NS-MEDICATIONS-0076",
       "component": "Nursing Station",
-      "scenario": "Nursing safety assessment and owned actions: Negative scenario 95",
-      "test_type": "Negative",
-      "priority": "high",
+      "scenario": "FR-NS-043 Medication administration verification: Medication units remain explicit and failed actions never become administration records (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-030 is enforced",
+        "Medication units remain explicit and failed actions never become administration records",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/medication-orders/med-001/administrations"
+      },
+      "validation_rules": [
+        "FR-NS-043 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "medications",
+        "Positive",
+        "FR-NS-043"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-SAFETY-0077",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-050 Nursing safety assessment and owned actions: Applicable inpatient nursing safety assessments are recorded (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Applicable inpatient nursing safety assessments are recorded",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3272,33 +2663,67 @@
         "endpoint": "/api/patients/pat-002/safety-assessments"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-050 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "safety",
-        "Negative",
-        "FR-NS-030"
+        "Positive",
+        "FR-NS-050"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-AUDIT-0096",
+      "use_case_id": "NS-SAFETY-0078",
       "component": "Nursing Station",
-      "scenario": "Tamper-evident clinical audit: Edge scenario 96",
-      "test_type": "Edge",
+      "scenario": "FR-NS-051 Nursing safety assessment and owned actions: Assessment risks create owned and due nursing actions (positive)",
+      "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-031 is enforced",
+        "Assessment risks create owned and due nursing actions",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-002/safety-assessments"
+      },
+      "validation_rules": [
+        "FR-NS-051 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "safety",
+        "Positive",
+        "FR-NS-051"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-AUDIT-0079",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-060 Tamper-evident governance evidence: Every regulated mutation appends to a tamper-evident audit chain (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Every regulated mutation appends to a tamper-evident audit chain",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3306,33 +2731,33 @@
         "endpoint": "/api/audit"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-060 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "audit",
-        "Edge",
-        "FR-NS-031"
+        "Positive",
+        "FR-NS-060"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0097",
+      "use_case_id": "NS-WARDBOARD-0080",
       "component": "Nursing Station",
-      "scenario": "Ward board and patient safety context: Edge scenario 97",
-      "test_type": "Edge",
+      "scenario": "NFR-NS-001 Ward and governance context: Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced (positive)",
+      "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-040 is enforced",
+        "Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3340,33 +2765,169 @@
         "endpoint": "/api/ward-board"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
       ],
       "tags": [
         "ward-board",
-        "Edge",
-        "FR-NS-040"
+        "Positive",
+        "NFR-NS-001"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0098",
+      "use_case_id": "NS-WARDBOARD-0081",
       "component": "Nursing Station",
-      "scenario": "Observation recording and deterioration escalation: Edge scenario 98",
-      "test_type": "Edge",
+      "scenario": "NFR-NS-002 Ward and governance context: Clinical state uses durable storage (positive)",
+      "test_type": "Positive",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-041 is enforced",
+        "Clinical state uses durable storage",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-002"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0082",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-003 Ward and governance context: Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-003"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0083",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-004 Ward and governance context: Deterministic light and dark themes have a visible control (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Deterministic light and dark themes have a visible control",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-004"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0084",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-005 Ward and governance context: Safety invariants persist across themes and viewport sizes (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Safety invariants persist across themes and viewport sizes",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-005 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Positive",
+        "NFR-NS-005"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0085",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-006 Observation and deterioration controls: Clinical surfaces show freshness, source, author, and action ownership (positive)",
+      "test_type": "Positive",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Clinical surfaces show freshness, source, author, and action ownership",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3374,8 +2935,382 @@
         "endpoint": "/api/patients/pat-001/observations"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "NFR-NS-006 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Positive",
+        "NFR-NS-006"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0086",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-007 Nursing task ownership and transitions: Stale concurrent mutations are rejected with record versions (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Stale concurrent mutations are rejected with record versions",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "NFR-NS-007 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Negative",
+        "NFR-NS-007"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-AUDIT-0087",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-008 Tamper-evident governance evidence: No synthetic integration telemetry or fallback success is emitted (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "No synthetic integration telemetry or fallback success is emitted",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/audit"
+      },
+      "validation_rules": [
+        "NFR-NS-008 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "audit",
+        "Negative",
+        "NFR-NS-008"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-AUDIT-0088",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/audit"
+      },
+      "validation_rules": [
+        "NFR-NS-009 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "audit",
+        "Negative",
+        "NFR-NS-009"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0089",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "NFR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Negative",
+        "NFR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0090",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Negative",
+        "NFR-NS-011"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0091",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-001 Ward and governance context: Ward board is scoped to tenant, facility, ward, and assignment (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Ward board is scoped to tenant, facility, ward, and assignment",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-001 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Negative",
+        "FR-NS-001"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0092",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-002 Ward and governance context: Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001"
+      },
+      "validation_rules": [
+        "FR-NS-002 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Negative",
+        "FR-NS-002"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0093",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-003 Structured SBAR accountability transfer: Accountable nurse and accountability changes are recorded (negative)",
+      "test_type": "Negative",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Accountable nurse and accountability changes are recorded",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/handovers"
+      },
+      "validation_rules": [
+        "FR-NS-003 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "handover",
+        "Negative",
+        "FR-NS-003"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0094",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-004 Ward and governance context: Shared-screen privacy masks direct identifiers while retaining operational risk (negative)",
+      "test_type": "Negative",
+      "priority": "high",
+      "expected_outcomes": [
+        "Shared-screen privacy masks direct identifiers while retaining operational risk",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/ward-board"
+      },
+      "validation_rules": [
+        "FR-NS-004 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "ward-board",
+        "Negative",
+        "FR-NS-004"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0095",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-010 Observation and deterioration controls: Structured observations retain units, performer, time, provenance, and warning score (negative)",
+      "test_type": "Negative",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Structured observations retain units, performer, time, provenance, and warning score",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": false
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-010 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Negative",
+        "FR-NS-010"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0096",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-011 Observation and deterioration controls: Implausible observations are rejected before persistence (edge)",
+      "test_type": "Edge",
+      "priority": "critical",
+      "expected_outcomes": [
+        "Implausible observations are rejected before persistence",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-011 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -3383,24 +3318,58 @@
       "tags": [
         "observations",
         "Edge",
-        "FR-NS-041"
+        "FR-NS-011"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
-      "use_case_id": "NS-TASKS-0099",
+      "use_case_id": "NS-OBSERVATIONS-0097",
       "component": "Nursing Station",
-      "scenario": "Nursing task ownership and transitions: Edge scenario 99",
+      "scenario": "FR-NS-012 Observation and deterioration controls: Configured warning thresholds create due escalation tasks (edge)",
       "test_type": "Edge",
-      "priority": "high",
+      "priority": "critical",
       "expected_outcomes": [
-        "FR-NS-042 is enforced",
+        "Configured warning thresholds create due escalation tasks",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/patients/pat-001/observations"
+      },
+      "validation_rules": [
+        "FR-NS-012 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "observations",
+        "Edge",
+        "FR-NS-012"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0098",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-020 Nursing task ownership and transitions: Nursing tasks support create, assign, accept, complete, cancel, and list (edge)",
+      "test_type": "Edge",
+      "priority": "high",
+      "expected_outcomes": [
+        "Nursing tasks support create, assign, accept, complete, cancel, and list",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3408,8 +3377,8 @@
         "endpoint": "/api/tasks/task-001/transition"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-020 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -3417,24 +3386,58 @@
       "tags": [
         "tasks",
         "Edge",
-        "FR-NS-042"
+        "FR-NS-020"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
+    },
+    {
+      "use_case_id": "NS-TASKS-0099",
+      "component": "Nursing Station",
+      "scenario": "FR-NS-021 Nursing task ownership and transitions: Task completion is limited to authorised ward and role scope (edge)",
+      "test_type": "Edge",
+      "priority": "high",
+      "expected_outcomes": [
+        "Task completion is limited to authorised ward and role scope",
+        "No Phase 2 integration is simulated"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/tasks/task-001/transition"
+      },
+      "validation_rules": [
+        "FR-NS-021 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "tasks",
+        "Edge",
+        "FR-NS-021"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     },
     {
       "use_case_id": "NS-CAREPLANS-0100",
       "component": "Nursing Station",
-      "scenario": "Nursing care planning and evaluation: Edge scenario 100",
+      "scenario": "FR-NS-022 Nursing care planning and evaluation: Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control (edge)",
       "test_type": "Edge",
       "priority": "high",
       "expected_outcomes": [
-        "FR-NS-043 is enforced",
+        "Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control",
         "No Phase 2 integration is simulated"
       ],
       "preconditions": {
-        "database": "durable seeded SQLite",
+        "database": "durable governed synthetic SQLite",
         "authenticated": true
       },
       "test_data": {
@@ -3442,8 +3445,8 @@
         "endpoint": "/api/patients/pat-001/care-plans"
       },
       "validation_rules": [
-        "tenant and ward scope enforced",
-        "regulated mutations audited"
+        "FR-NS-022 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
       ],
       "dependencies": [
         "nursing-station FastAPI application"
@@ -3451,11 +3454,11 @@
       "tags": [
         "care-plans",
         "Edge",
-        "FR-NS-043"
+        "FR-NS-022"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",
-      "notes": "Phase 1 direct service evidence; integration is out of scope"
+      "notes": "Phase 1 direct service evidence; integration implementation remains out of scope"
     }
   ]
 }

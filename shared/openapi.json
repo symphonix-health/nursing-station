@@ -26,6 +26,54 @@
         }
       }
     },
+    "/api/governance/seed": {
+      "get": {
+        "summary": "Seed Governance",
+        "operationId": "seed_governance_api_governance_seed_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Seed Governance Api Governance Seed Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "summary": "Login",
@@ -834,6 +882,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoverAccept"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1466,6 +1524,17 @@
               }
             ],
             "title": "Ward Id"
+          },
+          "facility_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Facility Id"
           }
         },
         "type": "object",
@@ -1475,7 +1544,8 @@
           "email",
           "name",
           "role",
-          "ward_id"
+          "ward_id",
+          "facility_id"
         ],
         "title": "CurrentUser"
       },
@@ -1491,6 +1561,20 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HandoverAccept": {
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "title": "HandoverAccept"
       },
       "HandoverCreate": {
         "properties": {

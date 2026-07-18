@@ -1,12 +1,12 @@
 {
-  "files_scanned": 15,
+  "files_scanned": 19,
   "findings": [
     {
       "rule_id": "UX-01",
       "severity": "MEDIUM",
       "category": "ux",
       "file": "frontend\\src\\styles\\design-system.css",
-      "line": 99,
+      "line": 112,
       "message": "Button class .btn has :hover but no :visited; disguised-as-disabled on shared workstations (L-217).",
       "handoff_role": "design_eng",
       "handoff_phase": "delegate",
@@ -17,7 +17,7 @@
       "severity": "MEDIUM",
       "category": "ux",
       "file": "frontend\\src\\styles\\design-system.css",
-      "line": 99,
+      "line": 112,
       "message": "Button class .btn-primary has :hover but no :visited; disguised-as-disabled on shared workstations (L-217).",
       "handoff_role": "design_eng",
       "handoff_phase": "delegate",

@@ -15,9 +15,17 @@ from pydantic import BaseModel, Field, model_validator
 
 from .config import get_settings
 from .database import Database
+from .port_registry import resolve_frontend_port
 
 settings = get_settings()
 db = Database(settings.database_path)
+OBSERVATION_UNITS = {
+    "respiratory_rate": "/min",
+    "oxygen_saturation": "%",
+    "systolic_bp": "mmHg",
+    "pulse": "/min",
+    "temperature": "Cel",
+}
 
 
 def now() -> str:
@@ -40,9 +48,13 @@ app = FastAPI(
     description="Phase 1 standalone inpatient nursing workflow",
     lifespan=lifespan,
 )
+frontend_port = resolve_frontend_port()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=[
+        f"http://127.0.0.1:{frontend_port}",
+        f"http://localhost:{frontend_port}",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,6 +73,7 @@ class CurrentUser(BaseModel):
     name: str
     role: str
     ward_id: str | None
+    facility_id: str | None
 
 
 def issue_token(user: dict) -> str:
@@ -80,7 +93,11 @@ def current_user(authorization: Annotated[str | None, Header()] = None) -> Curre
         payload = jwt.decode(authorization[7:], settings.jwt_secret, algorithms=["HS256"])
     except jwt.PyJWTError as exc:
         raise HTTPException(status_code=401, detail="Invalid or expired token") from exc
-    user = db.fetchone("SELECT * FROM users WHERE id=? AND active=1", (payload["sub"],))
+    user = db.fetchone(
+        """SELECT u.*,w.facility_id FROM users u LEFT JOIN wards w ON w.id=u.ward_id
+        WHERE u.id=? AND u.active=1""",
+        (payload["sub"],),
+    )
     if not user:
         raise HTTPException(status_code=401, detail="User is not active")
     return CurrentUser(**{key: user[key] for key in CurrentUser.model_fields})
@@ -95,11 +112,27 @@ def require_roles(user: CurrentUser, *roles: str) -> None:
 
 
 def scoped_patient(patient_id: str, user: CurrentUser) -> dict:
-    patient = db.fetchone("SELECT * FROM patients WHERE id=? AND tenant_id=?", (patient_id, user.tenant_id))
+    require_roles(
+        user,
+        "registered_nurse",
+        "nurse_in_charge",
+        "clinical_safety_officer",
+    )
+    patient = db.fetchone(
+        """SELECT p.*,w.facility_id,u.name AS accountable_nurse_name
+        FROM patients p JOIN wards w ON w.id=p.ward_id
+        LEFT JOIN users u ON u.id=p.accountable_nurse_id
+        WHERE p.id=? AND p.tenant_id=?""",
+        (patient_id, user.tenant_id),
+    )
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
     if user.ward_id and patient["ward_id"] != user.ward_id:
         raise HTTPException(status_code=403, detail="Patient is outside assigned ward")
+    if user.facility_id and patient["facility_id"] != user.facility_id:
+        raise HTTPException(status_code=403, detail="Patient is outside assigned facility")
+    if user.role in {"registered_nurse", "nurse_in_charge"} and not user.ward_id:
+        raise HTTPException(status_code=403, detail="No active ward care relationship")
     return patient
 
 
@@ -112,6 +145,7 @@ def decode(row: dict, *fields: str) -> dict:
 @app.get("/health")
 def health() -> dict:
     audit_ok, audit_count = db.verify_audit()
+    seed = db.fetchone("SELECT seed_manifest_id,data_class FROM seed_runs LIMIT 1")
     return {
         "status": "ok" if audit_ok else "degraded",
         "service": "nursing-station",
@@ -120,7 +154,19 @@ def health() -> dict:
         "audit_chain_valid": audit_ok,
         "audit_events": audit_count,
         "integrations": "not-implemented-phase-2",
+        "warning_profile": settings.warning_profile_version,
+        "synthetic_seed": seed,
     }
+
+
+@app.get("/api/governance/seed")
+def seed_governance(_: UserDep) -> dict:
+    row = db.fetchone("SELECT * FROM seed_runs ORDER BY generated_at DESC LIMIT 1")
+    if not row:
+        raise HTTPException(status_code=503, detail="Synthetic seed declaration is unavailable")
+    row["record_counts"] = json.loads(row.pop("record_counts_json"))
+    row["declaration"] = json.loads(row.pop("declaration_json"))
+    return row
 
 
 @app.post("/api/auth/login")
@@ -198,21 +244,37 @@ def ward_board(user: UserDep, ward_id: str | None = Query(default=None)) -> dict
 def patient_detail(patient_id: str, user: UserDep) -> dict:
     patient = decode(scoped_patient(patient_id, user), "allergies_json", "flags_json")
     patient["observations"] = db.fetchall(
-        "SELECT * FROM observations WHERE patient_id=? ORDER BY recorded_at DESC LIMIT 20", (patient_id,)
+        """SELECT o.*,u.name AS recorded_by_name FROM observations o
+        JOIN users u ON u.id=o.recorded_by WHERE o.patient_id=?
+        ORDER BY o.recorded_at DESC LIMIT 20""",
+        (patient_id,),
     )
+    for observation in patient["observations"]:
+        decode(observation, "units_json")
     patient["tasks"] = db.fetchall(
-        "SELECT * FROM tasks WHERE patient_id=? ORDER BY due_at", (patient_id,)
+        """SELECT t.*,creator.name AS created_by_name,assignee.name AS assigned_to_name
+        FROM tasks t JOIN users creator ON creator.id=t.created_by
+        LEFT JOIN users assignee ON assignee.id=t.assigned_to
+        WHERE t.patient_id=? ORDER BY t.due_at""",
+        (patient_id,),
     )
     patient["medications"] = db.fetchall(
         "SELECT * FROM medication_orders WHERE patient_id=? AND status='active' ORDER BY due_at", (patient_id,)
     )
     patient["assessments"] = db.fetchall(
-        "SELECT * FROM safety_assessments WHERE patient_id=? ORDER BY assessed_at DESC", (patient_id,)
+        """SELECT s.*,u.name AS assessed_by_name FROM safety_assessments s
+        JOIN users u ON u.id=s.assessed_by
+        WHERE s.patient_id=? ORDER BY s.assessed_at DESC""",
+        (patient_id,),
     )
     for assessment in patient["assessments"]:
         decode(assessment, "actions_json")
     patient["care_plans"] = db.fetchall(
-        "SELECT * FROM care_plans WHERE patient_id=? ORDER BY updated_at DESC", (patient_id,)
+        """SELECT c.*,owner.name AS owner_name,creator.name AS created_by_name
+        FROM care_plans c JOIN users owner ON owner.id=c.owner_id
+        JOIN users creator ON creator.id=c.created_by
+        WHERE c.patient_id=? ORDER BY c.updated_at DESC""",
+        (patient_id,),
     )
     for plan in patient["care_plans"]:
         decode(plan, "interventions_json")
@@ -248,29 +310,43 @@ def add_observation(patient_id: str, body: ObservationCreate, user: UserDep) -> 
     patient = scoped_patient(patient_id, user)
     observation_id = new_id("obs")
     score = news_score(body)
-    escalation = "critical" if score >= 7 else "urgent" if score >= 5 else "review" if score >= 3 else "routine"
+    escalation = (
+        "critical" if score >= settings.warning_critical_threshold
+        else "urgent" if score >= settings.warning_escalation_threshold
+        else "review" if score >= settings.warning_review_threshold
+        else "routine"
+    )
     recorded_at = now()
     with db.connect() as conn:
         conn.execute(
-            """INSERT INTO observations VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            """INSERT INTO observations
+            (id,tenant_id,ward_id,patient_id,recorded_by,recorded_at,source,units_json,
+             warning_profile_version,respiratory_rate,oxygen_saturation,supplemental_oxygen,
+             systolic_bp,pulse,temperature,consciousness,score,escalation_level)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (observation_id,user.tenant_id,patient["ward_id"],patient_id,user.id,recorded_at,body.source,
+             json.dumps(OBSERVATION_UNITS),settings.warning_profile_version,
              body.respiratory_rate,body.oxygen_saturation,int(body.supplemental_oxygen),body.systolic_bp,
              body.pulse,body.temperature,body.consciousness,score,escalation),
         )
         escalation_task = None
-        if score >= 5:
+        if score >= settings.warning_escalation_threshold:
             escalation_task = new_id("task")
             conn.execute(
                 """INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (escalation_task,user.tenant_id,patient["ward_id"],patient_id,
                  f"{escalation.title()} deterioration review",f"Warning score {score}; assess and escalate per local policy",
-                 "stat" if score >= 7 else "high","open",(datetime.now(UTC)+timedelta(minutes=5)).isoformat(),
+                  "stat" if score >= settings.warning_critical_threshold else "high","open",
+                  (datetime.now(UTC)+timedelta(minutes=settings.escalation_due_minutes)).isoformat(),
                  patient["accountable_nurse_id"],user.id,recorded_at,None,None,None,1),
             )
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="observation.recorded",resource_type="Observation",resource_id=observation_id,
-                 patient_id=patient_id,details={"score":score,"escalation":escalation,"task_id":escalation_task})
-    return {"id": observation_id, "score": score, "escalation_level": escalation, "escalation_task_id": escalation_task}
+                 patient_id=patient_id,details={"score":score,"escalation":escalation,"task_id":escalation_task,
+                 "warning_profile":settings.warning_profile_version,"units":OBSERVATION_UNITS})
+    return {"id": observation_id, "score": score, "escalation_level": escalation,
+            "escalation_task_id": escalation_task, "warning_profile": settings.warning_profile_version,
+            "units": OBSERVATION_UNITS}
 
 
 class TaskCreate(BaseModel):
@@ -292,7 +368,10 @@ def tasks(user: UserDep, status_filter: str | None = Query(default=None, alias="
         clauses.append("t.status=?")
         params.append(status_filter)
     return db.fetchall(
-        f"""SELECT t.*,p.name AS patient_name,p.bed FROM tasks t JOIN patients p ON p.id=t.patient_id
+        f"""SELECT t.*,p.name AS patient_name,p.bed,creator.name AS created_by_name,
+        assignee.name AS assigned_to_name FROM tasks t JOIN patients p ON p.id=t.patient_id
+        JOIN users creator ON creator.id=t.created_by
+        LEFT JOIN users assignee ON assignee.id=t.assigned_to
         WHERE {' AND '.join(clauses)} ORDER BY CASE t.priority WHEN 'stat' THEN 0 WHEN 'high' THEN 1 ELSE 2 END,t.due_at""",
         tuple(params),
     )
@@ -341,10 +420,13 @@ def transition_task(task_id: str, body: TaskTransition, user: UserDep) -> dict:
     completed_at = now() if target == "completed" else None
     assigned_to = user.id if target == "accepted" else task["assigned_to"]
     with db.connect() as conn:
-        conn.execute(
-            "UPDATE tasks SET status=?,assigned_to=?,completed_by=?,completed_at=?,completion_note=?,version=version+1 WHERE id=?",
-            (target,assigned_to,completed_by,completed_at,body.note or None,task_id),
+        changed = conn.execute(
+            """UPDATE tasks SET status=?,assigned_to=?,completed_by=?,completed_at=?,completion_note=?,version=version+1
+            WHERE id=? AND version=? AND status=?""",
+            (target,assigned_to,completed_by,completed_at,body.note or None,task_id,body.version,required),
         )
+        if changed.rowcount != 1:
+            raise HTTPException(status_code=409, detail="Task changed; refresh before updating")
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action=f"task.{target}",resource_type="Task",resource_id=task_id,
                  patient_id=task["patient_id"],details={"note":body.note})
@@ -374,7 +456,7 @@ def handovers(user: UserDep, status_filter: str | None = Query(default=None, ali
         tuple(params),
     )
     for row in rows:
-        decode(row, "unresolved_tasks_json")
+        decode(row, "unresolved_tasks_json", "current_risks_json")
     return rows
 
 
@@ -386,19 +468,49 @@ def create_handover(patient_id: str, body: HandoverCreate, user: UserDep) -> dic
     if not receiver or receiver["tenant_id"] != user.tenant_id or receiver["ward_id"] != patient["ward_id"] or receiver["id"] == user.id:
         raise HTTPException(status_code=422, detail="Receiver must be a different active nurse in this ward")
     unresolved = db.fetchall("SELECT id,title,priority,due_at,status FROM tasks WHERE patient_id=? AND status IN ('open','accepted')", (patient_id,))
+    latest_observation = db.fetchone(
+        "SELECT score,escalation_level,recorded_at FROM observations WHERE patient_id=? ORDER BY recorded_at DESC LIMIT 1",
+        (patient_id,),
+    )
+    active_assessments = db.fetchall(
+        """SELECT assessment_type,risk_level,findings,assessed_at FROM safety_assessments
+        WHERE patient_id=? AND risk_level IN ('high','critical') ORDER BY assessed_at DESC""",
+        (patient_id,),
+    )
+    current_risks = {
+        "flags": json.loads(patient["flags_json"]),
+        "allergies": json.loads(patient["allergies_json"]),
+        "isolation_status": patient["isolation_status"],
+        "code_status": patient["code_status"],
+        "latest_observation": latest_observation,
+        "high_risk_assessments": active_assessments,
+        "captured_at": now(),
+    }
     handover_id = new_id("handover")
     with db.connect() as conn:
-        conn.execute("INSERT INTO handovers VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        conn.execute(
+            """INSERT INTO handovers
+            (id,tenant_id,ward_id,patient_id,sender_id,receiver_id,created_at,accepted_at,
+             situation,background,assessment,recommendation,unresolved_tasks_json,current_risks_json,status,version)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (handover_id,user.tenant_id,patient["ward_id"],patient_id,user.id,body.receiver_id,now(),None,
-             body.situation,body.background,body.assessment,body.recommendation,json.dumps(unresolved),"pending"))
+             body.situation,body.background,body.assessment,body.recommendation,json.dumps(unresolved),
+             json.dumps(current_risks),"pending",1),
+        )
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="handover.created",resource_type="Communication",resource_id=handover_id,
-                 patient_id=patient_id,details={"receiver_id":body.receiver_id,"unresolved_task_count":len(unresolved)})
-    return {"id": handover_id, "status": "pending", "unresolved_tasks": unresolved}
+                  patient_id=patient_id,details={"receiver_id":body.receiver_id,
+                  "unresolved_task_count":len(unresolved),"risk_snapshot":current_risks})
+    return {"id": handover_id, "status": "pending", "unresolved_tasks": unresolved,
+            "current_risks": current_risks, "version": 1}
+
+
+class HandoverAccept(BaseModel):
+    version: int = Field(ge=1)
 
 
 @app.post("/api/handovers/{handover_id}/accept")
-def accept_handover(handover_id: str, user: UserDep) -> dict:
+def accept_handover(handover_id: str, body: HandoverAccept, user: UserDep) -> dict:
     handover = db.fetchone("SELECT * FROM handovers WHERE id=? AND tenant_id=?", (handover_id, user.tenant_id))
     if not handover:
         raise HTTPException(status_code=404, detail="Handover not found")
@@ -406,14 +518,23 @@ def accept_handover(handover_id: str, user: UserDep) -> dict:
         raise HTTPException(status_code=403, detail="Only the named receiver may accept")
     if handover["status"] != "pending":
         raise HTTPException(status_code=409, detail="Handover is not pending")
+    if body.version != handover["version"]:
+        raise HTTPException(status_code=409, detail="Handover changed; refresh before accepting")
     accepted_at = now()
     with db.connect() as conn:
-        conn.execute("UPDATE handovers SET status='accepted',accepted_at=? WHERE id=?", (accepted_at,handover_id))
+        changed = conn.execute(
+            """UPDATE handovers SET status='accepted',accepted_at=?,version=version+1
+            WHERE id=? AND status='pending' AND version=?""",
+            (accepted_at,handover_id,body.version),
+        )
+        if changed.rowcount != 1:
+            raise HTTPException(status_code=409, detail="Handover changed; refresh before accepting")
         conn.execute("UPDATE patients SET accountable_nurse_id=?,version=version+1 WHERE id=?", (user.id,handover["patient_id"]))
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="handover.accepted",resource_type="Communication",resource_id=handover_id,
                  patient_id=handover["patient_id"],details={"accountability_transferred":True})
-    return {"id": handover_id, "status": "accepted", "accepted_at": accepted_at}
+    return {"id": handover_id, "status": "accepted", "accepted_at": accepted_at,
+            "version": handover["version"] + 1}
 
 
 class CarePlanCreate(BaseModel):
@@ -457,10 +578,12 @@ def evaluate_care_plan(plan_id: str, body: CarePlanUpdate, user: UserDep) -> dic
     if not plan:
         raise HTTPException(status_code=404, detail="Care plan not found")
     scoped_patient(plan["patient_id"], user)
+    if plan["status"] != "active":
+        raise HTTPException(status_code=409, detail="Only an active care plan may be evaluated")
     with db.connect() as conn:
         changed = conn.execute(
             """UPDATE care_plans SET status=?,evaluation=?,updated_at=?,version=version+1
-            WHERE id=? AND version=?""",
+            WHERE id=? AND version=? AND status='active'""",
             (body.status,body.evaluation,now(),plan_id,body.version),
         )
         if changed.rowcount != 1:
@@ -591,7 +714,15 @@ async def integrity_error(_, exc: sqlite3.IntegrityError):
 
 def run() -> None:
     import uvicorn
-    uvicorn.run("nursing_station.main:app", host="127.0.0.1", port=8781, reload=False)
+
+    from .port_registry import resolve_backend_port
+
+    uvicorn.run(
+        "nursing_station.main:app",
+        host="127.0.0.1",
+        port=resolve_backend_port(),
+        reload=False,
+    )
 
 
 if __name__ == "__main__":

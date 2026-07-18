@@ -15,5 +15,32 @@
     "resilience", "code_quality", "python", "typescript"
   ],
   "evidence_boundary": "Phase 1 standalone only; Phase 2 integrations are contracts, not implemented evidence",
-  "prohibited": ["internal mocks", "in-memory clinical storage", "fake integration fallback", "synthetic telemetry"]
+  "prohibited": [
+    "internal mocks",
+    "in-memory clinical storage",
+    "fake integration fallback",
+    "synthetic telemetry",
+    "hardcoded service ports",
+    "shared development ports when a dedicated allocation is required",
+    "unregistered host-port bindings"
+  ],
+  "workspace_cascade": {
+    "port_registry": "../workspace-tooling/ports.workspace.json",
+    "required_registry_key": "nursing-station",
+    "required_backend_port": 9201,
+    "required_frontend_port": 5282,
+    "runtime_policy": "Backend, Vite, Playwright, docs, and launch tooling must resolve ports from the workspace registry or an explicit test override; no literal fallback is permitted.",
+    "service_registry": "../BulletTrain/config/ports.json#external_systems.nursing_station",
+    "generated_catalogues": [
+      "../BulletTrain/docs/architecture/service-catalogue.md",
+      "../BulletTrain/docs/architecture/interface-catalogue-network.svg",
+      "../BulletTrain/docs/architecture/interface-catalogue-network.html"
+    ],
+    "phase_boundary": "Register service existence and topology metadata in Phase 1. Do not create governed interface rows until Phase 2 implements and proves those interfaces.",
+    "required_gates": [
+      "python ../workspace-tooling/check_workspace_ports.py --workspace .. --strict --source",
+      "python -m scripts.ci.validate_ports",
+      "python -m pytest tests/unit/test_service_catalogue_schema.py tests/unit/test_interface_catalogue_network_diagram.py -q"
+    ]
+  }
 }
