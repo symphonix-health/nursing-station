@@ -1,0 +1,368 @@
+/* ─────────────────────────────────────────────────────────────
+   Symphonix Health — Design Tokens
+   Extracted from symphonix-public/website/index.html + brand docs
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ───── Brand: Indigo-Violet (primary) ───── */
+  --brand-50:  #EEF2FF;
+  --brand-100: #E0E7FF;
+  --brand-200: #C7D2FE;
+  --brand-300: #A5B4FC;
+  --brand-400: #818CF8;
+  --brand-500: #6366F1;  /* Hero primary */
+  --brand-600: #4F46E5;  /* Primary button */
+  --brand-700: #4338CA;
+  --brand-800: #3730A3;
+  --brand-900: #312E81;
+  --brand-950: #1E1B4B;
+
+  /* ───── Teal (secondary — "harmony" accent) ───── */
+  --teal-300: #4DD0E1;
+  --teal-400: #26C6DA;
+  --teal-500: #14919B;
+  --teal-600: #0D7377;
+
+  /* ───── Signature Rainbow Spectrum (ECG-only, never bg/text) ───── */
+  --rainbow-red:    #FF3B30;
+  --rainbow-orange: #FF9500;
+  --rainbow-yellow: #FFCC00;
+  --rainbow-green:  #34C759;
+  --rainbow-cyan:   #00BCD4;
+  --rainbow-blue:   #007AFF;
+  --rainbow-indigo: #5856D6;
+  --rainbow-purple: #AF52DE;
+  --rainbow:   linear-gradient(90deg, #FF3B30, #FF9500, #FFCC00, #34C759, #00BCD4, #007AFF, #5856D6, #AF52DE);
+  --rainbow-x2: linear-gradient(90deg, #FF3B30, #FF9500, #FFCC00, #34C759, #00BCD4, #007AFF, #5856D6, #AF52DE, #FF3B30, #FF9500, #FFCC00, #34C759);
+
+  /* ───── Dark surfaces (primary mode) ───── */
+  --surface-0: #080A2E;   /* Deep indigo-black, body */
+  --surface-1: #0C0E38;
+  --surface-2: #121445;
+  --surface-3: #1A1A55;
+  --surface-card:       rgba(12, 14, 46, 0.88);
+  --surface-card-hover: rgba(20, 20, 65, 0.92);
+  --bg-hero: linear-gradient(135deg, #060D1F 0%, #0D1B6E 28%, #1A1080 50%, #4A1A90 76%, #7B2DA0 100%);
+
+  /* ───── Text (dark mode) — tuned for high-contrast legibility on indigo bg ───── */
+  --text-1: #F5F6FA;     /* Headings, emphasis */
+  --text-2: #C4C7D6;     /* Body — bumped from #A0A3B5 for clarity */
+  --text-3: #9499B2;     /* Meta, captions — bumped from #7A7D98 */
+
+  /* ───── Borders ───── */
+  --border:       rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(165, 180, 252, 0.40);
+  --border-strong: rgba(99, 102, 241, 0.35);
+
+  /* ───── Semantic category colors (used in nav/badges) ───── */
+  --cat-standards:   #0D7377; /* teal */
+  --cat-compliance:  #92600A; /* amber */
+  --cat-ai:          #4F46E5; /* brand */
+  --cat-architecture:#16803C; /* green */
+  --cat-symphonix:   #7C3AED; /* violet */
+
+  /* ───── Status ───── */
+  --success: #34C759;
+  --warning: #FF9500;
+  --danger:  #FF3B30;
+  --info:    #4DD0E1;
+
+  /* ───── Fonts — Inter primary (sharper than DM Sans at small sizes) ───── */
+  --f-sans:  'Inter', 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-serif: 'Playfair Display', Georgia, serif;
+  --f-mono:  'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* ───── Type scale (semantic) ───── */
+  --fs-display:  clamp(2.4rem, 5.2vw, 3.8rem); /* Hero h1, 700 */
+  --fs-h1:       clamp(1.8rem, 3.8vw, 3rem);    /* Section title, 700 */
+  --fs-h2:       clamp(1.6rem, 3vw,  2.4rem);   /* Subsection, 700 */
+  --fs-h3:       1.3rem;                         /* Card title, 700 */
+  --fs-lead:     clamp(0.95rem, 1.8vw, 1.18rem); /* Hero subtitle */
+  --fs-body:     0.92rem;
+  --fs-small:    0.85rem;
+  --fs-meta:     0.75rem;  /* Uppercase labels */
+  --fs-micro:    0.72rem;
+
+  --lh-tight:    1.12;
+  --lh-snug:     1.25;
+  --lh-body:     1.7;
+  --lh-relaxed:  1.8;
+
+  --ls-tight:    -0.025em;   /* Display */
+  --ls-normal:   0;
+  --ls-wide:     1.5px;      /* Meta / mono labels */
+  --ls-widest:   3.5px;      /* Section labels */
+
+  /* ───── Radii ───── */
+  --r-sm: 8px;   /* Small buttons, inputs */
+  --r-md: 10px;  /* Nav pills */
+  --r-lg: 12px;  /* Buttons, small cards */
+  --r-xl: 16px;  /* Nav bar, standard cards */
+  --r-2xl: 18px; /* Large panels, code windows */
+  --r-3xl: 24px; /* Hero panels */
+  --r-full: 9999px;
+
+  /* ───── Spacing (8pt-ish scale, page-level uses rems) ───── */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+  --sp-28: 7rem;   /* Section padding Y */
+
+  /* ───── Elevation ───── */
+  --shadow-sm:  0 1px 4px rgba(0,0,0,0.04);
+  --shadow-md:  0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg:  0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  --shadow-xl:  0 32px 64px rgba(0,0,0,0.35), 0 0 60px rgba(99,102,241,0.08);
+  --glow-brand: 0 0 40px rgba(99,102,241,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+  --glow-teal:  0 0 40px rgba(20,145,155,0.15);
+
+  /* ───── Motion ───── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast:    0.2s;
+  --dur-base:    0.35s;
+  --dur-slow:    0.8s;
+}
+
+/* ───── Light theme overrides ───── */
+[data-theme="light"] {
+  --surface-0: #FAFBFC;
+  --surface-1: #F3F4F9;
+  --surface-2: #EBEDF5;
+  --surface-3: #E2E4F0;
+  --surface-card:       rgba(255, 255, 255, 0.92);
+  --surface-card-hover: rgba(245, 247, 252, 0.95);
+  --text-1: #1A1D2E;
+  --text-2: #3A3D58;
+  --text-3: #6B6F8E;
+  --border: rgba(79, 70, 229, 0.14);
+  --border-hover: rgba(79, 70, 229, 0.35);
+  --border-strong: rgba(79, 70, 229, 0.35);
+  --brand-300: #4F46E5;  /* eyebrow/accent in light = indigo-600 */
+  --brand-400: #4F46E5;
+  --brand-500: #4F46E5;
+  --brand-600: #4338CA;
+  --bg-hero: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 40%, #F3E8FF 100%);
+  --shadow-sm:  0 1px 4px rgba(30, 27, 75, 0.06);
+  --shadow-md:  0 8px 24px rgba(30, 27, 75, 0.08);
+  --shadow-lg:  0 24px 48px rgba(30, 27, 75, 0.1);
+  --shadow-xl:  0 32px 64px rgba(30, 27, 75, 0.12);
+  --glow-brand: 0 0 40px rgba(99,102,241,0.12);
+  --glow-teal:  0 0 40px rgba(20,145,155,0.12);
+
+  /* Semantic tints for line-borders/fills used across components */
+  --tint-subtle:  rgba(79, 70, 229, 0.04);   /* was rgba(255,255,255,.03) */
+  --tint-weak:    rgba(79, 70, 229, 0.06);
+  --tint-line:    rgba(79, 70, 229, 0.12);
+  --tint-line-2:  rgba(79, 70, 229, 0.22);
+}
+
+:root {
+  --tint-subtle: rgba(255, 255, 255, 0.03);
+  --tint-weak:   rgba(255, 255, 255, 0.06);
+  --tint-line:   rgba(255, 255, 255, 0.08);
+  --tint-line-2: rgba(165, 180, 252, 0.22);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SEMANTIC TYPE ROLES
+   Use these classes (or @extend equivalents) for consistent type.
+   ───────────────────────────────────────────────────────────── */
+
+.type-display,
+.sx-display {
+  font-family: var(--f-sans);
+  font-size: var(--fs-display);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-1);
+}
+
+.type-h1, .sx-h1 {
+  font-family: var(--f-sans);
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+
+.type-h2, .sx-h2 {
+  font-family: var(--f-sans);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+}
+
+.type-h3, .sx-h3 {
+  font-family: var(--f-sans);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-1);
+}
+
+.type-lead, .sx-lead {
+  font-family: var(--f-sans);
+  font-size: var(--fs-lead);
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-2);
+}
+
+.type-body, .sx-body {
+  font-family: var(--f-sans);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--lh-relaxed);
+  color: var(--text-2);
+}
+
+.type-small, .sx-small {
+  font-family: var(--f-sans);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+/* Uppercase mono "eyebrow" label — the signature brand type treatment */
+.type-label, .sx-label {
+  font-family: var(--f-mono);
+  text-transform: uppercase;
+  font-size: var(--fs-meta);
+  font-weight: 500;
+  letter-spacing: var(--ls-widest);
+  color: var(--brand-400);
+}
+
+.type-mono, .sx-mono {
+  font-family: var(--f-mono);
+  font-size: var(--fs-small);
+  color: var(--text-2);
+}
+
+/* Playfair italic — used sparingly for big pull-quotes */
+.type-quote, .sx-quote {
+  font-family: var(--f-serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--brand-200);
+  border-left: 3px solid;
+  border-image: var(--rainbow-x2) 1;
+  padding-left: 1.5rem;
+}
+
+.type-meta, .sx-meta {
+  font-family: var(--f-mono);
+  font-size: var(--fs-meta);
+  color: var(--text-3);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+/* ───── Utility: the signature 56px rainbow underline ───── */
+.sx-rainbow-underline {
+  width: 56px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--rainbow-x2);
+  background-size: 200% 100%;
+  animation: sx-pulse-flow 3s linear infinite;
+}
+
+@keyframes sx-pulse-flow {
+  0%   { background-position: 0%   50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ───── Reduce-motion respect ───── */
+@media (prefers-reduced-motion: reduce) {
+  .sx-rainbow-underline { animation: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE LAYOUT RESET
+   Viewport containment — pages fit on phone & tablet without
+   horizontal overflow.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Breakpoint reference tokens (informational; use literal px in @media) */
+  --bp-xs:   320px;
+  --bp-sm:   480px;
+  --bp-md:   768px;
+  --bp-lg:  1024px;
+  --bp-xl:  1280px;
+  --bp-2xl: 1536px;
+
+  /* Fluid container */
+  --sx-container-max:  1280px;
+  --sx-container-pad:  clamp(1rem, 4vw, 2.5rem);
+  --sx-gap:            clamp(0.75rem, 2.5vw, 1.5rem);
+  --sx-gap-sm:         clamp(0.5rem, 2vw, 1rem);
+  --sx-gap-lg:         clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Box-model fix — border + padding never push elements outside containers */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Viewport-safe root — no horizontal scrollbar on phone or tablet */
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%; /* Prevent iOS font size inflation */
+}
+
+body {
+  overflow-x: hidden;
+  min-width: 320px; /* Smallest supported phone */
+}
+
+/* Media elements: constrained to container width */
+img, video, canvas, svg, picture, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Scrollable table wrapper — prevents a wide table from pushing the page */
+.sx-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* Fluid layout container */
+.sx-container {
+  width: 100%;
+  max-width: var(--sx-container-max);
+  margin-inline: auto;
+  padding-inline: var(--sx-container-pad);
+}
+
+/* ─── Phone (≤ 480 px) ─── */
+@media (max-width: 480px) {
+  .sx-container {
+    padding-inline: var(--sp-4, 1rem);
+  }
+}
+
+/* ─── Tablet portrait (481 – 768 px) ─── */
+@media (min-width: 481px) and (max-width: 768px) {
+  .sx-container {
+    padding-inline: clamp(1rem, 3vw, 1.5rem);
+  }
+}

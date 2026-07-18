@@ -1,0 +1,57 @@
+{
+  "drafts": [
+    {
+      "proposed_id": "L-383",
+      "proposed_title": "fix(scan-integration): detect env-var-resolved sibling URLs, not just hardcoded ones",
+      "severity": "HIGH",
+      "category": "inference",
+      "tags": [
+        "hardcoded"
+      ],
+      "similar_existing": [],
+      "researcher_persona": "Senior requirements-engineering research fellow. 20 years applying spaCy-based extraction + INCOSE + ISO 29148 at multi-hospital-scale clinical software vendors. Tenured reviewer for IEEE TSE and ACM TOSEM. Writes rules that a CI job can enforce, not philosophy.",
+      "literature_backing": [
+        "Abbott CACM 1983 \u2014 noun-phrase CRUD precision ~60%",
+        "Arora et al. IST 2023 \u2014 spaCy + rules ~82%",
+        "ISO/IEC/IEEE 29148:2018 \u00a75.2.5 \u2014 8 quality attributes",
+        "CMMI v2.0 CAR \u2014 causal analysis + resolution"
+      ]
+    },
+    {
+      "proposed_id": "L-384",
+      "proposed_title": "fix(a11y): darken error/info/text-muted tokens to meet WCAG AA 4.5:1",
+      "severity": "HIGH",
+      "category": "ux",
+      "tags": [
+        "a11y"
+      ],
+      "similar_existing": [],
+      "researcher_persona": "Accessibility + clinical-UX research specialist. NHS DCB0129 assessor; WCAG 2.2 AAA auditor across eight patient-facing national portals. Treats author-path UI as a clinical risk surface, not a style preference.",
+      "literature_backing": [
+        "WCAG 2.1 AAA \u2014 SC 1.4.6 enhanced contrast 7:1",
+        "Nielsen 1994 \u2014 10 usability heuristics",
+        "NHS DCB0129 \u2014 clinical risk management process"
+      ]
+    },
+    {
+      "proposed_id": "L-385",
+      "proposed_title": "UX-01 frontend\\src\\styles\\design-system.css:99 -- Button class .btn has :hover but no :visited; disguised-as-disabled on",
+      "severity": "MEDIUM",
+      "category": "ux",
+      "tags": [
+        ":hover"
+      ],
+      "similar_existing": [
+        "L-217"
+      ],
+      "researcher_persona": "Accessibility + clinical-UX research specialist. NHS DCB0129 assessor; WCAG 2.2 AAA auditor across eight patient-facing national portals. Treats author-path UI as a clinical risk surface, not a style preference.",
+      "literature_backing": [
+        "WCAG 2.1 AAA \u2014 SC 1.4.6 enhanced contrast 7:1",
+        "Nielsen 1994 \u2014 10 usability heuristics",
+        "NHS DCB0129 \u2014 clinical risk management process"
+      ]
+    }
+  ],
+  "rejections": [],
+  "next_id": "L-383"
+}

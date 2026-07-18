@@ -1,0 +1,19 @@
+{
+  "project_name": "nursing-station",
+  "platform": "fullstack",
+  "phase": 1,
+  "clinical_safety": true,
+  "prompt": "PROMPT.md",
+  "requirements": "docs/REQUIREMENTS.md",
+  "safety": {
+    "hazard_log": "safety/HAZARD_LOG.md",
+    "clinical_safety_case": "safety/CLINICAL_SAFETY_CASE_REPORT.md"
+  },
+  "applicable_patterns": [
+    "service", "database", "auth", "api", "frontend", "testing",
+    "observability", "fsm", "security", "accessibility", "monitoring",
+    "resilience", "code_quality", "python", "typescript"
+  ],
+  "evidence_boundary": "Phase 1 standalone only; Phase 2 integrations are contracts, not implemented evidence",
+  "prohibited": ["internal mocks", "in-memory clinical storage", "fake integration fallback", "synthetic telemetry"]
+}

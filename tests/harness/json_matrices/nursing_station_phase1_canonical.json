@@ -1,0 +1,4964 @@
+{
+  "schema_version": "BT_CANONICAL_MATRIX_V2_18COL",
+  "columns": [
+    "use_case_id",
+    "subsystem",
+    "requirement_ids",
+    "scenario_category",
+    "title",
+    "description",
+    "preconditions",
+    "trigger",
+    "input_payload",
+    "expected_connector_calls",
+    "expected_events",
+    "expected_outputs",
+    "fault_profile",
+    "security_profile",
+    "priority",
+    "automation_status",
+    "estimated_duration_seconds",
+    "tags"
+  ],
+  "metadata": {
+    "subsystem": "nursing-station",
+    "scenario_count": 100,
+    "distribution": {
+      "Positive": 85,
+      "Negative": 10,
+      "Edge": 5
+    },
+    "requirement_ids": [
+      "FR-NS-001",
+      "FR-NS-002",
+      "FR-NS-003",
+      "FR-NS-004",
+      "FR-NS-010",
+      "FR-NS-011",
+      "FR-NS-012",
+      "FR-NS-020",
+      "FR-NS-021",
+      "FR-NS-022",
+      "FR-NS-030",
+      "FR-NS-031",
+      "FR-NS-040",
+      "FR-NS-041",
+      "FR-NS-042",
+      "FR-NS-043",
+      "FR-NS-050",
+      "FR-NS-051",
+      "FR-NS-060",
+      "NFR-NS-001",
+      "NFR-NS-002",
+      "NFR-NS-003",
+      "NFR-NS-004",
+      "NFR-NS-005",
+      "NFR-NS-006",
+      "NFR-NS-007",
+      "NFR-NS-008",
+      "NFR-NS-009"
+    ]
+  },
+  "scenarios": [
+    {
+      "use_case_id": "NS-WARDBOARD-0001",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 1",
+      "description": "Verify ward board and patient safety context against FR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 1,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0002",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 2",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 2,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0003",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 3",
+      "description": "Verify nursing task ownership and transitions against FR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 3,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0004",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 4",
+      "description": "Verify nursing care planning and evaluation against FR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 4,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0005",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-010"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 5",
+      "description": "Verify structured sbar accountability transfer against FR-NS-010 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 5,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0006",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-011"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 6",
+      "description": "Verify medication administration and verification against FR-NS-011 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 6,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0007",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-012"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 7",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-012 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 7,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0008",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-020"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 8",
+      "description": "Verify tamper-evident clinical audit against FR-NS-020 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 8,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0009",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-021"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 9",
+      "description": "Verify ward board and patient safety context against FR-NS-021 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 9,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0010",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-022"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 10",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-022 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 10,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0011",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-030"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 11",
+      "description": "Verify nursing task ownership and transitions against FR-NS-030 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 11,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0012",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-031"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 12",
+      "description": "Verify nursing care planning and evaluation against FR-NS-031 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 12,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0013",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-040"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 13",
+      "description": "Verify structured sbar accountability transfer against FR-NS-040 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 13,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0014",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-041"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 14",
+      "description": "Verify medication administration and verification against FR-NS-041 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 14,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0015",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-042"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 15",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-042 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 15,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0016",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-043"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 16",
+      "description": "Verify tamper-evident clinical audit against FR-NS-043 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 16,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0017",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-050"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 17",
+      "description": "Verify ward board and patient safety context against FR-NS-050 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 17,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0018",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-051"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 18",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-051 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 18,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0019",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-060"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 19",
+      "description": "Verify nursing task ownership and transitions against FR-NS-060 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 19,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0020",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 20",
+      "description": "Verify nursing care planning and evaluation against NFR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 20,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0021",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 21",
+      "description": "Verify structured sbar accountability transfer against NFR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 21,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0022",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 22",
+      "description": "Verify medication administration and verification against NFR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 22,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0023",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 23",
+      "description": "Verify nursing safety assessment and owned actions against NFR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 23,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0024",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-005"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 24",
+      "description": "Verify tamper-evident clinical audit against NFR-NS-005 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 24,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0025",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-006"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 25",
+      "description": "Verify ward board and patient safety context against NFR-NS-006 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 25,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0026",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-007"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 26",
+      "description": "Verify observation recording and deterioration escalation against NFR-NS-007 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 26,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0027",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-008"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 27",
+      "description": "Verify nursing task ownership and transitions against NFR-NS-008 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 27,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0028",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-009"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 28",
+      "description": "Verify nursing care planning and evaluation against NFR-NS-009 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 28,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0029",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 29",
+      "description": "Verify structured sbar accountability transfer against FR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 29,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0030",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 30",
+      "description": "Verify medication administration and verification against FR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 30,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0031",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 31",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 31,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0032",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 32",
+      "description": "Verify tamper-evident clinical audit against FR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 32,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0033",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-010"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 33",
+      "description": "Verify ward board and patient safety context against FR-NS-010 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 33,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0034",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-011"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 34",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-011 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 34,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0035",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-012"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 35",
+      "description": "Verify nursing task ownership and transitions against FR-NS-012 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 35,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0036",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-020"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 36",
+      "description": "Verify nursing care planning and evaluation against FR-NS-020 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 36,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0037",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-021"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 37",
+      "description": "Verify structured sbar accountability transfer against FR-NS-021 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 37,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0038",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-022"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 38",
+      "description": "Verify medication administration and verification against FR-NS-022 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 38,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0039",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-030"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 39",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-030 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 39,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0040",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-031"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 40",
+      "description": "Verify tamper-evident clinical audit against FR-NS-031 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 40,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0041",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-040"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 41",
+      "description": "Verify ward board and patient safety context against FR-NS-040 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 41,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0042",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-041"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 42",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-041 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 42,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0043",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-042"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 43",
+      "description": "Verify nursing task ownership and transitions against FR-NS-042 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 43,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0044",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-043"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 44",
+      "description": "Verify nursing care planning and evaluation against FR-NS-043 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 44,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0045",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-050"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 45",
+      "description": "Verify structured sbar accountability transfer against FR-NS-050 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 45,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0046",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-051"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 46",
+      "description": "Verify medication administration and verification against FR-NS-051 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 46,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0047",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-060"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 47",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-060 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 47,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0048",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 48",
+      "description": "Verify tamper-evident clinical audit against NFR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 48,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0049",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 49",
+      "description": "Verify ward board and patient safety context against NFR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 49,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0050",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 50",
+      "description": "Verify observation recording and deterioration escalation against NFR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 50,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0051",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 51",
+      "description": "Verify nursing task ownership and transitions against NFR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 51,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0052",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-005"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 52",
+      "description": "Verify nursing care planning and evaluation against NFR-NS-005 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 52,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0053",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-006"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 53",
+      "description": "Verify structured sbar accountability transfer against NFR-NS-006 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 53,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0054",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-007"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 54",
+      "description": "Verify medication administration and verification against NFR-NS-007 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 54,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0055",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-008"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 55",
+      "description": "Verify nursing safety assessment and owned actions against NFR-NS-008 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 55,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0056",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-009"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 56",
+      "description": "Verify tamper-evident clinical audit against NFR-NS-009 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 56,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0057",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 57",
+      "description": "Verify ward board and patient safety context against FR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 57,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0058",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 58",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 58,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0059",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 59",
+      "description": "Verify nursing task ownership and transitions against FR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 59,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0060",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 60",
+      "description": "Verify nursing care planning and evaluation against FR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 60,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0061",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-010"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 61",
+      "description": "Verify structured sbar accountability transfer against FR-NS-010 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 61,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0062",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-011"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 62",
+      "description": "Verify medication administration and verification against FR-NS-011 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 62,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0063",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-012"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 63",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-012 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 63,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0064",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-020"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 64",
+      "description": "Verify tamper-evident clinical audit against FR-NS-020 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 64,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0065",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-021"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 65",
+      "description": "Verify ward board and patient safety context against FR-NS-021 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 65,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0066",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-022"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 66",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-022 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 66,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0067",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-030"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 67",
+      "description": "Verify nursing task ownership and transitions against FR-NS-030 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 67,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0068",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-031"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 68",
+      "description": "Verify nursing care planning and evaluation against FR-NS-031 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 68,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0069",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-040"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 69",
+      "description": "Verify structured sbar accountability transfer against FR-NS-040 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 69,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0070",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-041"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 70",
+      "description": "Verify medication administration and verification against FR-NS-041 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 70,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0071",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-042"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 71",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-042 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 71,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0072",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-043"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 72",
+      "description": "Verify tamper-evident clinical audit against FR-NS-043 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 72,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0073",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-050"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 73",
+      "description": "Verify ward board and patient safety context against FR-NS-050 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 73,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0074",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-051"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 74",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-051 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 74,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0075",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-060"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 75",
+      "description": "Verify nursing task ownership and transitions against FR-NS-060 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 75,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0076",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 76",
+      "description": "Verify nursing care planning and evaluation against NFR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 76,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0077",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-002"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 77",
+      "description": "Verify structured sbar accountability transfer against NFR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 77,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0078",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-003"
+      ],
+      "scenario_category": "Positive",
+      "title": "Medication administration and verification: Positive scenario 78",
+      "description": "Verify medication administration and verification against NFR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 78,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0079",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-004"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing safety assessment and owned actions: Positive scenario 79",
+      "description": "Verify nursing safety assessment and owned actions against NFR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 79,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0080",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-005"
+      ],
+      "scenario_category": "Positive",
+      "title": "Tamper-evident clinical audit: Positive scenario 80",
+      "description": "Verify tamper-evident clinical audit against NFR-NS-005 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 80,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0081",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-006"
+      ],
+      "scenario_category": "Positive",
+      "title": "Ward board and patient safety context: Positive scenario 81",
+      "description": "Verify ward board and patient safety context against NFR-NS-006 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 81,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0082",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-007"
+      ],
+      "scenario_category": "Positive",
+      "title": "Observation recording and deterioration escalation: Positive scenario 82",
+      "description": "Verify observation recording and deterioration escalation against NFR-NS-007 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 82,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0083",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-008"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing task ownership and transitions: Positive scenario 83",
+      "description": "Verify nursing task ownership and transitions against NFR-NS-008 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 83,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0084",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-009"
+      ],
+      "scenario_category": "Positive",
+      "title": "Nursing care planning and evaluation: Positive scenario 84",
+      "description": "Verify nursing care planning and evaluation against NFR-NS-009 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 84,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0085",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-001"
+      ],
+      "scenario_category": "Positive",
+      "title": "Structured SBAR accountability transfer: Positive scenario 85",
+      "description": "Verify structured sbar accountability transfer against FR-NS-001 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 85,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Positive",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0086",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-002"
+      ],
+      "scenario_category": "Negative",
+      "title": "Medication administration and verification: Negative scenario 86",
+      "description": "Verify medication administration and verification against FR-NS-002 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 86,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0087",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-003"
+      ],
+      "scenario_category": "Negative",
+      "title": "Nursing safety assessment and owned actions: Negative scenario 87",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-003 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 87,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0088",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-004"
+      ],
+      "scenario_category": "Negative",
+      "title": "Tamper-evident clinical audit: Negative scenario 88",
+      "description": "Verify tamper-evident clinical audit against FR-NS-004 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 88,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0089",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-010"
+      ],
+      "scenario_category": "Negative",
+      "title": "Ward board and patient safety context: Negative scenario 89",
+      "description": "Verify ward board and patient safety context against FR-NS-010 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 89,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0090",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-011"
+      ],
+      "scenario_category": "Negative",
+      "title": "Observation recording and deterioration escalation: Negative scenario 90",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-011 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 90,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0091",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-012"
+      ],
+      "scenario_category": "Negative",
+      "title": "Nursing task ownership and transitions: Negative scenario 91",
+      "description": "Verify nursing task ownership and transitions against FR-NS-012 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 91,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0092",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-020"
+      ],
+      "scenario_category": "Negative",
+      "title": "Nursing care planning and evaluation: Negative scenario 92",
+      "description": "Verify nursing care planning and evaluation against FR-NS-020 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 92,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0093",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-021"
+      ],
+      "scenario_category": "Negative",
+      "title": "Structured SBAR accountability transfer: Negative scenario 93",
+      "description": "Verify structured sbar accountability transfer against FR-NS-021 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/handovers"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 93,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.handover.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "handover",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0094",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-022"
+      ],
+      "scenario_category": "Negative",
+      "title": "Medication administration and verification: Negative scenario 94",
+      "description": "Verify medication administration and verification against FR-NS-022 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-002/administrations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 94,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.medications.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "medications",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0095",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-030"
+      ],
+      "scenario_category": "Negative",
+      "title": "Nursing safety assessment and owned actions: Negative scenario 95",
+      "description": "Verify nursing safety assessment and owned actions against FR-NS-030 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/safety-assessments"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 95,
+        "test_type": "Negative"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.safety.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "safety",
+        "Negative",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0096",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-031"
+      ],
+      "scenario_category": "Edge",
+      "title": "Tamper-evident clinical audit: Edge scenario 96",
+      "description": "Verify tamper-evident clinical audit against FR-NS-031 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/audit"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 96,
+        "test_type": "Edge"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.audit.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "audit",
+        "Edge",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0097",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-040"
+      ],
+      "scenario_category": "Edge",
+      "title": "Ward board and patient safety context: Edge scenario 97",
+      "description": "Verify ward board and patient safety context against FR-NS-040 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 97,
+        "test_type": "Edge"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.ward-board.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "ward-board",
+        "Edge",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0098",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-041"
+      ],
+      "scenario_category": "Edge",
+      "title": "Observation recording and deterioration escalation: Edge scenario 98",
+      "description": "Verify observation recording and deterioration escalation against FR-NS-041 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 98,
+        "test_type": "Edge"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.observations.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "observations",
+        "Edge",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0099",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-042"
+      ],
+      "scenario_category": "Edge",
+      "title": "Nursing task ownership and transitions: Edge scenario 99",
+      "description": "Verify nursing task ownership and transitions against FR-NS-042 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-001/transition"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 99,
+        "test_type": "Edge"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.tasks.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "tasks",
+        "Edge",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-CAREPLANS-0100",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-043"
+      ],
+      "scenario_category": "Edge",
+      "title": "Nursing care planning and evaluation: Edge scenario 100",
+      "description": "Verify nursing care planning and evaluation against FR-NS-043 using the real Phase 1 service.",
+      "preconditions": [
+        "Durable seeded database is initialised",
+        "Authenticated ward-scoped user"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/care-plans"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 100,
+        "test_type": "Edge"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.care-plans.evaluated"
+      ],
+      "expected_outputs": {
+        "phase": 1,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "invalid-or-boundary-input"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-1",
+        "care-plans",
+        "Edge",
+        "real-seeded-service"
+      ]
+    }
+  ]
+}

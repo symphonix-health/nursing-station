@@ -1,0 +1,27 @@
+{
+  "files_scanned": 15,
+  "findings": [
+    {
+      "rule_id": "UX-01",
+      "severity": "MEDIUM",
+      "category": "ux",
+      "file": "frontend\\src\\styles\\design-system.css",
+      "line": 99,
+      "message": "Button class .btn has :hover but no :visited; disguised-as-disabled on shared workstations (L-217).",
+      "handoff_role": "design_eng",
+      "handoff_phase": "delegate",
+      "proposed_lesson_title": "Anchor-as-button stylesheets must cover :visited alongside :hover/:focus"
+    },
+    {
+      "rule_id": "UX-01",
+      "severity": "MEDIUM",
+      "category": "ux",
+      "file": "frontend\\src\\styles\\design-system.css",
+      "line": 99,
+      "message": "Button class .btn-primary has :hover but no :visited; disguised-as-disabled on shared workstations (L-217).",
+      "handoff_role": "design_eng",
+      "handoff_phase": "delegate",
+      "proposed_lesson_title": "Anchor-as-button stylesheets must cover :visited alongside :hover/:focus"
+    }
+  ]
+}

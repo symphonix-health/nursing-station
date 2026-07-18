@@ -1,0 +1,423 @@
+/* ─────────────────────────────────────────────────────────────
+   Symphonix Health — Healthcare Layer Tokens
+   Extends /colors_and_type.css with clinical semantics.
+
+   LAYER MODEL
+   ───────────
+   Layer 0 · Regulatory + safety invariants  (LOCKED — never tenant override)
+   Layer 1 · Clinical semantics              (clinical informatics owned)
+   Layer 2 · Workflow patterns               (per-specialty configurable)
+   Layer 3 · Tenant & brand                  (customizable, bounded)
+   Layer 4 · User preference                 (density, dark mode)
+
+   Rule: A Layer 4 preference must never override a Layer 0 invariant.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ───────────────────────────────────────────
+     LAYER 0 — SAFETY INVARIANTS (LOCKED)
+     ─────────────────────────────────────────── */
+
+  /* Critical clinical values — AAA contrast on both light & dark */
+  --clinical-critical:        #B00020;  /* life-threatening, hard-stop */
+  --clinical-critical-bg:     #FFE5E8;
+  --clinical-critical-fg:     #4A0010;
+  --clinical-critical-border: #7A0015;
+
+  --clinical-danger:          #C8281F;  /* abnormal-high, act-now */
+  --clinical-danger-bg:       #FDECEA;
+  --clinical-danger-fg:       #5C110B;
+
+  --clinical-caution:         #92600A;  /* abnormal-low, watch */
+  --clinical-caution-bg:      #FFF4E0;
+  --clinical-caution-fg:      #4A3005;
+
+  --clinical-normal:          #1B8A3E;
+  --clinical-normal-bg:       #E8F5EC;
+  --clinical-normal-fg:       #0A3A18;
+
+  --clinical-unknown:         #6B6F8E;  /* missing, pending, unverified */
+  --clinical-unknown-bg:      #F2F3F7;
+  --clinical-unknown-fg:      #2A2D42;
+
+  /* Allergy display — red chip, non-negotiable */
+  --allergy-severe:       #B00020;
+  --allergy-severe-bg:    #FFE5E8;
+  --allergy-moderate:     #C8281F;
+  --allergy-moderate-bg:  #FDECEA;
+  --allergy-mild:         #92600A;
+  --allergy-mild-bg:      #FFF4E0;
+  --nka-color:            #1B8A3E; /* No Known Allergies */
+  --nka-bg:               #E8F5EC;
+
+  /* High-alert medication markings (insulin, heparin, opioids, chemo, anticoag) */
+  --high-alert-stripe:    repeating-linear-gradient(
+                            135deg,
+                            #B00020 0 6px,
+                            #FFE5E8 6px 12px);
+  --high-alert-border:    #B00020;
+  --high-alert-label-bg:  #B00020;
+  --high-alert-label-fg:  #FFFFFF;
+
+  /* Isolation precaution colors — CDC/IHI convention */
+  --iso-contact:      #FFCC00;  /* yellow  */
+  --iso-droplet:      #007AFF;  /* blue    */
+  --iso-airborne:     #FF3B30;  /* red     */
+  --iso-protective:   #FFFFFF;  /* white   */
+  --iso-neutropenic:  #AF52DE;  /* purple  */
+
+  /* Code status — no ambiguity, always explicit */
+  --code-full:       #1B8A3E;   /* Full Code */
+  --code-dnr:        #C8281F;   /* DNR/DNI  */
+  --code-limited:    #92600A;   /* Partial  */
+  --code-comfort:    #4F46E5;   /* Comfort-care only */
+
+  /* Alert severity ladder — 5 rungs, discipline at rung 5 */
+  --alert-rung-1: #6B6F8E;      /* passive inline */
+  --alert-rung-2: #4F46E5;      /* advisory inline */
+  --alert-rung-3: #92600A;      /* side panel / banner */
+  --alert-rung-4: #C8281F;      /* modal warning */
+  --alert-rung-5: #B00020;      /* hard stop + cosigner */
+
+  /* Signature / attestation */
+  --sig-signed:      #1B8A3E;
+  --sig-unsigned:    #92600A;
+  --sig-cosign:      #4F46E5;
+  --sig-addendum:    #6B6F8E;
+
+  /* Audit border — every regulated change surfaceable */
+  --audit-border:     rgba(79, 70, 229, 0.35);
+  --audit-tint:       rgba(79, 70, 229, 0.06);
+  --audit-indicator:  #4F46E5;
+
+  /* Provenance source colors */
+  --src-local:       #1B8A3E;   /* local EHR */
+  --src-hie:         #4F46E5;   /* external HIE */
+  --src-patient:     #AF52DE;   /* patient-generated */
+  --src-device:      #0D7377;   /* device / telemetry */
+  --src-ai:          #7C3AED;   /* AI / model */
+  --src-external:    #92600A;   /* third-party, unverified */
+
+  /* Confidence bands */
+  --conf-verified:   #1B8A3E;
+  --conf-measured:   #0D7377;
+  --conf-estimated:  #92600A;
+  --conf-extrapolated: #C8281F;
+
+  /* Freshness */
+  --fresh-now:       #1B8A3E;
+  --fresh-recent:    #4F46E5;   /* < 1h */
+  --fresh-stale:     #92600A;   /* > 4h */
+  --fresh-expired:   #C8281F;
+
+  /* PHI surface — visible distinction for patient-identifying data */
+  --phi-border:      rgba(176, 0, 32, 0.25);
+  --phi-tint:        rgba(176, 0, 32, 0.03);
+  --phi-lock:        #B00020;
+
+  /* ───────────────────────────────────────────
+     LAYER 1 — CLINICAL SEMANTICS
+     ─────────────────────────────────────────── */
+
+  /* Vital signs ranges (color only supplements icon+text, never alone) */
+  --vital-critical:  var(--clinical-critical);
+  --vital-abnormal:  var(--clinical-danger);
+  --vital-borderline:var(--clinical-caution);
+  --vital-normal:    var(--clinical-normal);
+  --vital-unknown:   var(--clinical-unknown);
+
+  /* Medication state */
+  --med-active:       #1B8A3E;
+  --med-scheduled:    #4F46E5;
+  --med-held:         #92600A;
+  --med-discontinued: #6B6F8E;
+  --med-prn:          #7C3AED;
+  --med-stat:         #C8281F;
+
+  /* Acuity (Emergency Severity Index colors) */
+  --esi-1: #B00020;  /* resuscitation */
+  --esi-2: #FF3B30;  /* emergent */
+  --esi-3: #FF9500;  /* urgent */
+  --esi-4: #4F46E5;  /* less-urgent */
+  --esi-5: #1B8A3E;  /* non-urgent */
+
+  /* Order state */
+  --order-new:         #4F46E5;
+  --order-verified:    #1B8A3E;
+  --order-in-progress: #92600A;
+  --order-complete:    #6B6F8E;
+  --order-canceled:    #C8281F;
+
+  /* Lab flag conventions */
+  --lab-high:        #C8281F;
+  --lab-low:         #4F46E5;
+  --lab-critical-hi: #B00020;
+  --lab-critical-lo: #5A3ED8;
+  --lab-abnormal:    #92600A;
+
+  /* Obstetric / maternal risk stratification (Bouchard 4-level) */
+  --risk-low:          var(--clinical-normal);    /* green  — low-risk pregnancy  */
+  --risk-low-bg:       var(--clinical-normal-bg);
+  --risk-low-fg:       var(--clinical-normal-fg);
+  --risk-moderate:     var(--clinical-caution);   /* amber  — increased monitoring */
+  --risk-moderate-bg:  var(--clinical-caution-bg);
+  --risk-moderate-fg:  var(--clinical-caution-fg);
+  --risk-high:         var(--clinical-danger);    /* red    — specialist care       */
+  --risk-high-bg:      var(--clinical-danger-bg);
+  --risk-high-fg:      var(--clinical-danger-fg);
+  --risk-critical:     var(--clinical-critical);  /* dark-red — maternal emergency  */
+  --risk-critical-bg:  var(--clinical-critical-bg);
+  --risk-critical-fg:  var(--clinical-critical-fg);
+
+  /* ───────────────────────────────────────────
+     LAYER 2 — WORKFLOW PATTERNS
+     ─────────────────────────────────────────── */
+
+  /* Density — clinical ~2× consumer density */
+  --clin-density-compact-y:  2px;
+  --clin-density-compact-x:  8px;
+  --clin-density-comfort-y:  6px;
+  --clin-density-comfort-x:  12px;
+  --clin-row-height:         28px;      /* compact row */
+  --clin-row-height-comfort: 36px;
+
+  /* Patient-facing density — larger, calmer */
+  --pf-pad-y: 16px;
+  --pf-pad-x: 20px;
+  --pf-row-height: 56px;
+
+  /* Spacing scales */
+  --sp-clin-1: 2px;
+  --sp-clin-2: 4px;
+  --sp-clin-3: 6px;
+  --sp-clin-4: 8px;
+  --sp-clin-5: 12px;
+  --sp-clin-6: 16px;
+
+  --sp-pf-1:   4px;
+  --sp-pf-2:   8px;
+  --sp-pf-3:  16px;
+  --sp-pf-4:  24px;
+  --sp-pf-5:  32px;
+  --sp-pf-6:  48px;
+
+  /* Type for clinical surfaces — tabular-nums always on numeric */
+  --fs-clin-micro: 10.5px;
+  --fs-clin-label: 11px;
+  --fs-clin-small: 12px;
+  --fs-clin-body:  13.5px;
+  --fs-clin-value: 15px;
+  --fs-clin-large: 20px;
+  --fs-clin-xl:    28px;
+
+  /* Patient-facing type — 16–18px minimum */
+  --fs-pf-body:  16px;
+  --fs-pf-lead:  18px;
+  --fs-pf-h3:    22px;
+  --fs-pf-h2:    28px;
+  --fs-pf-h1:    36px;
+
+  /* Motion — minimal; reduced-motion always respected */
+  --clin-dur-micro: 120ms;
+  --clin-dur-base:  200ms;
+
+  /* ───────────────────────────────────────────
+     LAYER 3 — TENANT & BRAND (bounded)
+     ─────────────────────────────────────────── */
+
+  /* Tenant logo slot, accent, body font override — never status colors */
+  --tenant-accent:   var(--brand-600);
+  --tenant-logo-h:   28px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dark mode — re-validated, not inverted.
+   Critical values remain high-contrast; some tints shift.
+   ───────────────────────────────────────────────────────────── */
+:root:not([data-theme="light"]),
+[data-theme="dark"] {
+  --clinical-critical:        #FF6B60;
+  --clinical-critical-bg:     rgba(176, 0, 32, 0.22);
+  --clinical-critical-fg:     #FFD5D8;
+  --clinical-critical-border: #FF6B60;
+
+  --clinical-danger:          #FF6B60;
+  --clinical-danger-bg:       rgba(200, 40, 31, 0.18);
+  --clinical-danger-fg:       #FFD5D8;
+
+  --clinical-caution:         #FFCC00;
+  --clinical-caution-bg:      rgba(146, 96, 10, 0.22);
+  --clinical-caution-fg:      #FFEDB8;
+
+  --clinical-normal:          #34C759;
+  --clinical-normal-bg:       rgba(27, 138, 62, 0.18);
+  --clinical-normal-fg:       #B8F0C6;
+
+  --clinical-unknown:         #9499B2;
+  --clinical-unknown-bg:      rgba(107, 111, 142, 0.18);
+  --clinical-unknown-fg:      #D4D7E5;
+
+  --allergy-severe:       #FF6B60;
+  --allergy-severe-bg:    rgba(176, 0, 32, 0.22);
+  --allergy-moderate:     #FF9176;
+  --allergy-moderate-bg:  rgba(200, 40, 31, 0.18);
+  --allergy-mild:         #FFCC00;
+  --allergy-mild-bg:      rgba(146, 96, 10, 0.22);
+  --nka-color:            #34C759;
+  --nka-bg:               rgba(27, 138, 62, 0.18);
+
+  --high-alert-stripe:    repeating-linear-gradient(
+                            135deg,
+                            #FF6B60 0 6px,
+                            rgba(176, 0, 32, 0.22) 6px 12px);
+  --high-alert-border:    #FF6B60;
+  --high-alert-label-bg:  #B00020;
+  --high-alert-label-fg:  #FFFFFF;
+
+  --code-full:       #34C759;
+  --code-dnr:        #FF6B60;
+  --code-limited:    #FFCC00;
+  --code-comfort:    #A5B4FC;
+
+  --alert-rung-1: #9499B2;
+  --alert-rung-2: #A5B4FC;
+  --alert-rung-3: #FFCC00;
+  --alert-rung-4: #FF6B60;
+  --alert-rung-5: #FF3B30;
+
+  --sig-signed:      #34C759;
+  --sig-unsigned:    #FFCC00;
+  --sig-cosign:      #A5B4FC;
+  --sig-addendum:    #9499B2;
+
+  --audit-border:     rgba(165, 180, 252, 0.30);
+  --audit-tint:       rgba(165, 180, 252, 0.06);
+  --audit-indicator:  #A5B4FC;
+
+  --src-local:       #34C759;
+  --src-hie:         #A5B4FC;
+  --src-patient:     #D8B4FE;
+  --src-device:      #4DD0E1;
+  --src-ai:          #C4B5FD;
+  --src-external:    #FFCC00;
+
+  --conf-verified:   #34C759;
+  --conf-measured:   #4DD0E1;
+  --conf-estimated:  #FFCC00;
+  --conf-extrapolated: #FF6B60;
+
+  --fresh-now:       #34C759;
+  --fresh-recent:    #A5B4FC;
+  --fresh-stale:     #FFCC00;
+  --fresh-expired:   #FF6B60;
+
+  --phi-border:      rgba(255, 107, 96, 0.3);
+  --phi-tint:        rgba(255, 107, 96, 0.05);
+  --phi-lock:        #FF6B60;
+
+  --vital-critical:  var(--clinical-critical);
+  --vital-abnormal:  var(--clinical-danger);
+  --vital-borderline:var(--clinical-caution);
+  --vital-normal:    var(--clinical-normal);
+  --vital-unknown:   var(--clinical-unknown);
+
+  --med-active:       #34C759;
+  --med-scheduled:    #A5B4FC;
+  --med-held:         #FFCC00;
+  --med-discontinued: #9499B2;
+  --med-prn:          #C4B5FD;
+  --med-stat:         #FF6B60;
+
+  --esi-1: #FF3B30;
+  --esi-2: #FF6B60;
+  --esi-3: #FF9500;
+  --esi-4: #A5B4FC;
+  --esi-5: #34C759;
+
+  --order-new:         #A5B4FC;
+  --order-verified:    #34C759;
+  --order-in-progress: #FFCC00;
+  --order-complete:    #9499B2;
+  --order-canceled:    #FF6B60;
+
+  --lab-high:        #FF6B60;
+  --lab-low:         #A5B4FC;
+  --lab-critical-hi: #FF3B30;
+  --lab-critical-lo: #818CF8;
+  --lab-abnormal:    #FFCC00;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utility classes used throughout the healthcare component library.
+   ───────────────────────────────────────────────────────────── */
+
+.clin-root {
+  font-family: var(--f-sans);
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-1);
+  background: var(--surface-0);
+}
+
+.clin-num {
+  font-family: var(--f-sans);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.clin-id {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+}
+
+/* Tall-man lettering — use for look-alike drug names */
+.tall-man {
+  font-family: var(--f-sans);
+}
+.tall-man .capped {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  color: var(--clinical-danger);
+}
+
+/* Unit — always visible, never inferred */
+.unit {
+  font-family: var(--f-mono);
+  font-size: 0.85em;
+  color: var(--text-3);
+  margin-left: 3px;
+  letter-spacing: 0.3px;
+}
+
+/* Obstetric risk badges — always colour + text, never colour alone */
+.risk-badge {
+  display: inline-block;
+  width: fit-content;
+  min-width: 64px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  text-align: center;
+  font-family: var(--f-sans);
+  font-size: var(--fs-clin-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  color: #fff;
+}
+.risk-green  { background: var(--risk-low);      } /* low-risk pregnancy  */
+.risk-amber  { background: var(--risk-moderate);  } /* increased monitoring */
+.risk-red    { background: var(--risk-high);      } /* specialist care      */
+.risk-critical { background: var(--risk-critical); } /* maternal emergency   */
+
+/* Reduced motion — always respected */
+@media (prefers-reduced-motion: reduce) {
+  .clin-root *,
+  .clin-root *::before,
+  .clin-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

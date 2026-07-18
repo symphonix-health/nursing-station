@@ -1,0 +1,13 @@
+subsystem_default = "nursing-station"
+requirement_id_prefixes = ["FR-", "NFR-"]
+
+[paths]
+json_dir = "tests/harness/json_matrices"
+superset = "tests/harness/requirements_superset.json"
+requirements_matrix_superset = "tests/harness/healthcare_requirements_superset.json"
+requirements_matrix = "tests/harness/requirements_matrix.json"
+
+[canonical]
+discovery = "glob:*_canonical.json"
+strip_matrix = false
+passthrough = "preserve"

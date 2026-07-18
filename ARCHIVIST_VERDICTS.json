@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "approve": 2,
+    "reject": 1,
+    "needs_refinement": 0
+  },
+  "verdicts": [
+    {
+      "proposed_id": "L-383",
+      "verdict": "approve",
+      "reason": "passes Gatekeeper structural review"
+    },
+    {
+      "proposed_id": "L-384",
+      "verdict": "approve",
+      "reason": "passes Gatekeeper structural review"
+    },
+    {
+      "proposed_id": "L-385",
+      "verdict": "reject",
+      "reason": "close duplicate of L-217 (Archivist already flagged)"
+    }
+  ],
+  "total": 3
+}

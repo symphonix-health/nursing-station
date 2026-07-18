@@ -1,0 +1,557 @@
+{
+  "schema_version": "BT_REQUIREMENTS_SUPERSET_V1",
+  "metadata": {
+    "subsystem": "nursing-station",
+    "requirement_count": 28
+  },
+  "requirements": [
+    {
+      "requirement_id": "FR-NS-001",
+      "title": "FR-NS-001",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-001 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-001-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0001",
+        "NS-HANDOVER-0029",
+        "NS-WARDBOARD-0057",
+        "NS-HANDOVER-0085"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-002",
+      "title": "FR-NS-002",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-002 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-002-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-OBSERVATIONS-0002",
+        "NS-MEDICATIONS-0030",
+        "NS-OBSERVATIONS-0058",
+        "NS-MEDICATIONS-0086"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-003",
+      "title": "FR-NS-003",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-003 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-003-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-TASKS-0003",
+        "NS-SAFETY-0031",
+        "NS-TASKS-0059",
+        "NS-SAFETY-0087"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-004",
+      "title": "FR-NS-004",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-004 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-004-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-CAREPLANS-0004",
+        "NS-AUDIT-0032",
+        "NS-CAREPLANS-0060",
+        "NS-AUDIT-0088"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-010",
+      "title": "FR-NS-010",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-010 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-010-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-HANDOVER-0005",
+        "NS-WARDBOARD-0033",
+        "NS-HANDOVER-0061",
+        "NS-WARDBOARD-0089"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-011",
+      "title": "FR-NS-011",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-011 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-011-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-MEDICATIONS-0006",
+        "NS-OBSERVATIONS-0034",
+        "NS-MEDICATIONS-0062",
+        "NS-OBSERVATIONS-0090"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-012",
+      "title": "FR-NS-012",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-012 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-012-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-SAFETY-0007",
+        "NS-TASKS-0035",
+        "NS-SAFETY-0063",
+        "NS-TASKS-0091"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-020",
+      "title": "FR-NS-020",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-020 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-020-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-AUDIT-0008",
+        "NS-CAREPLANS-0036",
+        "NS-AUDIT-0064",
+        "NS-CAREPLANS-0092"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-021",
+      "title": "FR-NS-021",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-021 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-021-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0009",
+        "NS-HANDOVER-0037",
+        "NS-WARDBOARD-0065",
+        "NS-HANDOVER-0093"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-022",
+      "title": "FR-NS-022",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-022 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-022-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-OBSERVATIONS-0010",
+        "NS-MEDICATIONS-0038",
+        "NS-OBSERVATIONS-0066",
+        "NS-MEDICATIONS-0094"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-030",
+      "title": "FR-NS-030",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-030 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-030-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-TASKS-0011",
+        "NS-SAFETY-0039",
+        "NS-TASKS-0067",
+        "NS-SAFETY-0095"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-031",
+      "title": "FR-NS-031",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-031 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-031-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-CAREPLANS-0012",
+        "NS-AUDIT-0040",
+        "NS-CAREPLANS-0068",
+        "NS-AUDIT-0096"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-040",
+      "title": "FR-NS-040",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-040 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-040-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-HANDOVER-0013",
+        "NS-WARDBOARD-0041",
+        "NS-HANDOVER-0069",
+        "NS-WARDBOARD-0097"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-041",
+      "title": "FR-NS-041",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-041 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-041-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-MEDICATIONS-0014",
+        "NS-OBSERVATIONS-0042",
+        "NS-MEDICATIONS-0070",
+        "NS-OBSERVATIONS-0098"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-042",
+      "title": "FR-NS-042",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-042 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-042-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-SAFETY-0015",
+        "NS-TASKS-0043",
+        "NS-SAFETY-0071",
+        "NS-TASKS-0099"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-043",
+      "title": "FR-NS-043",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-043 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-043-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-AUDIT-0016",
+        "NS-CAREPLANS-0044",
+        "NS-AUDIT-0072",
+        "NS-CAREPLANS-0100"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-050",
+      "title": "FR-NS-050",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-050 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-050-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0017",
+        "NS-HANDOVER-0045",
+        "NS-WARDBOARD-0073"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-051",
+      "title": "FR-NS-051",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-051 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-051-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-OBSERVATIONS-0018",
+        "NS-MEDICATIONS-0046",
+        "NS-OBSERVATIONS-0074"
+      ]
+    },
+    {
+      "requirement_id": "FR-NS-060",
+      "title": "FR-NS-060",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement FR-NS-060 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-060-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-TASKS-0019",
+        "NS-SAFETY-0047",
+        "NS-TASKS-0075"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-001",
+      "title": "NFR-NS-001",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-001 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-001-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-CAREPLANS-0020",
+        "NS-AUDIT-0048",
+        "NS-CAREPLANS-0076"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-002",
+      "title": "NFR-NS-002",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-002 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-002-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-HANDOVER-0021",
+        "NS-WARDBOARD-0049",
+        "NS-HANDOVER-0077"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-003",
+      "title": "NFR-NS-003",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-003 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-003-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-MEDICATIONS-0022",
+        "NS-OBSERVATIONS-0050",
+        "NS-MEDICATIONS-0078"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-004",
+      "title": "NFR-NS-004",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-004 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-004-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-SAFETY-0023",
+        "NS-TASKS-0051",
+        "NS-SAFETY-0079"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-005",
+      "title": "NFR-NS-005",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-005 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-005-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-AUDIT-0024",
+        "NS-CAREPLANS-0052",
+        "NS-AUDIT-0080"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-006",
+      "title": "NFR-NS-006",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-006 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-006-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-WARDBOARD-0025",
+        "NS-HANDOVER-0053",
+        "NS-WARDBOARD-0081"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-007",
+      "title": "NFR-NS-007",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-007 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-007-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-OBSERVATIONS-0026",
+        "NS-MEDICATIONS-0054",
+        "NS-OBSERVATIONS-0082"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-008",
+      "title": "NFR-NS-008",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-008 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-008-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-TASKS-0027",
+        "NS-SAFETY-0055",
+        "NS-TASKS-0083"
+      ]
+    },
+    {
+      "requirement_id": "NFR-NS-009",
+      "title": "NFR-NS-009",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Requirement NFR-NS-009 from the reviewed Phase 1 specification.",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-009-AC01",
+          "verification_method": "canonical_matrix_and_direct_test"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-CAREPLANS-0028",
+        "NS-AUDIT-0056",
+        "NS-CAREPLANS-0084"
+      ]
+    }
+  ]
+}

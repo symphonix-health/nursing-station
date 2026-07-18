@@ -1,0 +1,40 @@
+{
+  "open": {
+    "ok": true,
+    "url": "http://localhost:5173/login",
+    "headless": false,
+    "tenant_id": "local-dev",
+    "operator_id": "local-operator",
+    "lease": {
+      "lease_id": "lease-local-dev:local-operator:nursing-station-headed-final-1",
+      "fencing_token": 1,
+      "expires_at": 1784382778.624726
+    },
+    "ack_ms": 5312.0
+  },
+  "ward": {
+    "passed": true,
+    "assertion_type": "textContains",
+    "message": "\"main\" contains \"Medical Ward A\"",
+    "actual": "MED-A / ADULT-MEDICAL\nMedical Ward A\n\nCurrent inpatient nursing accountability and actions. Generated 14:48:07 from Phase 1 Nursing Station database.\n\nPrivacy mode\nDURABLE SOURCE\nPATIENTS\n3\nDETERIORAT",
+    "expected": "Medical Ward A"
+  },
+  "safety_banner": {
+    "passed": true,
+    "assertion_type": "textContains",
+    "message": "\".patient-banner\" contains \"Penicillin: Anaphylaxis\"",
+    "actual": "MH\nPATIENT / TWO IDENTIFIERS\nMargaret Holloway\nMRN-104287 / DOB 1957-09-14 / (no photo)\nALLERGIES\nPenicillin: Anaphylaxis (severe)\nLOCATION / ISOLATION\nBed A-12 / Droplet\nCODE STATUS\nFull escalation",
+    "expected": "Penicillin: Anaphylaxis"
+  },
+  "screenshot": "C:\\Users\\hgeec\\github\\nursing-station\\tests\\screenshots\\signalbox-headed-patient-overview.jpg",
+  "privacy": {
+    "passed": true,
+    "assertion_type": "textContains",
+    "message": "\".ward-board\" contains \"Identifiers hidden\"",
+    "actual": "BED\nPATIENT\nREASON\nSCORE\nTASKS\nSAFETY CONTEXT\nACCOUNTABLE NURSE\nA-12\nPatient A-12\nIdentifiers hidden\nPneumonia with hypoxia\nAdmitted 15/07/2026\nSCORE 3\n14:43:33\n1 open\n1 overdue\nDROPLET\nFalls risk / O",
+    "expected": "Identifiers hidden"
+  },
+  "console_errors": [],
+  "failed_network": [],
+  "passed": true
+}
