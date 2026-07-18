@@ -24,7 +24,7 @@
     "authority": "prepare_evidence_and_recommend_only",
     "professional_registration_claimed": false,
     "checks": {
-      "nursing_station_tests": "passed_151",
+      "nursing_station_tests": "passed_154",
       "frontend_build": "passed",
       "real_seeded_journey": "passed",
       "headed_nurse_persona": "passed_17_of_17",
