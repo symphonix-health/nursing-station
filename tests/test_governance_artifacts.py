@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from scripts.evaluate_clinical_deployment_gate import evaluate_gate
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -53,3 +55,52 @@ def test_port_and_synthetic_requirements_have_direct_gate_evidence() -> None:
     assert requirements["NFR-NS-011"]["direct_evidence"] == [
         "tests/test_api.py::test_seed_governance_is_durable_explicit_and_non_live"
     ]
+
+
+def test_agent_cso_and_human_two_key_gate_approves_only_synthetic_scope() -> None:
+    gate = json.loads(
+        (ROOT / "safety/CLINICAL_DEPLOYMENT_GATE.json").read_text(encoding="utf-8")
+    )
+    result = evaluate_gate(gate, root=ROOT)
+    assert result["status"] == "approved", result
+    assert result["scope"] == "synthetic_clinical_simulation"
+    assert result["agent_competence_contract"] == "passed"
+    assert gate["agent_key"]["persona_id"] == "clinical-safety-officer-superpersona"
+    assert gate["agent_key"]["professional_registration_claimed"] is False
+    assert gate["human_key"]["status"] == "approved"
+    assert gate["scope"]["live_patient_data"] is False
+    assert gate["decision"]["live_clinical_release"] == "blocked"
+
+
+def test_two_key_gate_fails_closed_without_human_or_with_live_scope() -> None:
+    gate = json.loads(
+        (ROOT / "safety/CLINICAL_DEPLOYMENT_GATE.json").read_text(encoding="utf-8")
+    )
+    gate["human_key"]["status"] = "pending"
+    gate["decision"]["status"] = "blocked"
+    assert evaluate_gate(gate, root=ROOT)["status"] == "blocked"
+
+    gate = json.loads(
+        (ROOT / "safety/CLINICAL_DEPLOYMENT_GATE.json").read_text(encoding="utf-8")
+    )
+    gate["scope"]["deployment_class"] = "live_clinical_production"
+    gate["human_key"]["scope"] = "live_clinical_production"
+    gate["decision"]["status"] = "blocked"
+    result = evaluate_gate(gate, root=ROOT)
+    assert result["status"] == "blocked"
+    assert "live_scope_requires_accountable_registered_human" in result["blockers"]
+    assert "live_scope_professional_registration_not_verified" in result["blockers"]
+
+
+def test_two_key_gate_rejects_unqualified_or_unprocedured_agent_persona() -> None:
+    gate = json.loads(
+        (ROOT / "safety/CLINICAL_DEPLOYMENT_GATE.json").read_text(encoding="utf-8")
+    )
+    gate["agent_key"]["maturity"] = "M0-draft"
+    gate["agent_key"]["operating_procedure"] = ""
+    gate["decision"]["status"] = "blocked"
+    result = evaluate_gate(gate, root=ROOT)
+    assert result["status"] == "blocked"
+    assert result["agent_competence_contract"] == "failed"
+    assert "agent_competence_contract_mismatch:maturity" in result["blockers"]
+    assert "agent_competence_contract_mismatch:operating_procedure" in result["blockers"]

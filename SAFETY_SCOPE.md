@@ -13,6 +13,9 @@ scope_override:cds_support accepted. Override rationale: The component calculate
 
 ## Release readiness
 
+- **Synthetic clinical-simulation gate:** `approved` by the two-key Agent Clinical Safety Officer plus human release-authority decision in `safety/CLINICAL_DEPLOYMENT_GATE.json`.
+- **Live-patient clinical release:** `blocked`; the synthetic decision is not transferable.
+
 - **Assessment execution:** `succeeded`
 - **Release gate:** `blocked`
 

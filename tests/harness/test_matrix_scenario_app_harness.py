@@ -114,6 +114,8 @@ def _request(client, domain: str, headers: dict[str, str], category: str):
         if edge:
             return client.post("/api/alerts/missing/acknowledge", headers=headers)
         return client.get("/api/alerts", headers={} if unauthenticated else headers)
+    if domain == "governance":
+        return client.get("/api/governance/seed", headers=active_headers)
     raise AssertionError(f"Unhandled matrix domain: {domain}")
 
 
@@ -124,9 +126,10 @@ def test_matrix_scenario(client, scenario):
     domain = next(tag for tag in scenario["tags"] if tag in {
         "ward-board", "observations", "tasks", "care-plans", "handover",
         "medications", "safety", "audit", "integrations", "reporting", "alerts",
+        "governance",
     })
     response = _request(client, domain, headers, category)
-    expected = 503 if domain == "reporting" else 200 if domain in {"ward-board", "audit", "tasks", "integrations", "alerts"} else 201
+    expected = 503 if domain == "reporting" else 200 if domain in {"ward-board", "audit", "tasks", "integrations", "alerts", "governance"} else 201
     if category == "positive":
         assert response.status_code == expected
     elif category == "negative":

@@ -499,30 +499,30 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0056",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#55:NS-WARDBOARD-0056",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0056]",
+      "use_case_id": "NS-GOVERNANCE-0056",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#55:NS-GOVERNANCE-0056",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-GOVERNANCE-0056]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/ward-board"
+        "/api/governance/seed"
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0057",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#56:NS-WARDBOARD-0057",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0057]",
+      "use_case_id": "NS-GOVERNANCE-0057",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#56:NS-GOVERNANCE-0057",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-GOVERNANCE-0057]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/patients/pat-001"
+        "/api/governance/seed"
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0058",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#57:NS-HANDOVER-0058",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0058]",
+      "use_case_id": "NS-GOVERNANCE-0058",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#57:NS-GOVERNANCE-0058",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-GOVERNANCE-0058]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/patients/pat-001/handovers"
+        "/api/governance/seed"
       ]
     },
     {
@@ -535,102 +535,102 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0060",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#59:NS-OBSERVATIONS-0060",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0060]",
+      "use_case_id": "NS-WARDBOARD-0060",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#59:NS-WARDBOARD-0060",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0060]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001"
+      ]
+    },
+    {
+      "use_case_id": "NS-HANDOVER-0061",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#60:NS-HANDOVER-0061",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0061]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/handovers"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0062",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#61:NS-WARDBOARD-0062",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0062]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0063",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#62:NS-OBSERVATIONS-0063",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0063]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/observations"
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0061",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#60:NS-OBSERVATIONS-0061",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0061]",
+      "use_case_id": "NS-OBSERVATIONS-0064",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#63:NS-OBSERVATIONS-0064",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0064]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/observations"
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0062",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#61:NS-OBSERVATIONS-0062",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0062]",
+      "use_case_id": "NS-OBSERVATIONS-0065",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#64:NS-OBSERVATIONS-0065",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0065]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/observations"
       ]
     },
     {
-      "use_case_id": "NS-TASKS-0063",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#62:NS-TASKS-0063",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0063]",
+      "use_case_id": "NS-TASKS-0066",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#65:NS-TASKS-0066",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0066]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/tasks/task-001/transition"
       ]
     },
     {
-      "use_case_id": "NS-TASKS-0064",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#63:NS-TASKS-0064",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0064]",
+      "use_case_id": "NS-TASKS-0067",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#66:NS-TASKS-0067",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0067]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/tasks/task-001/transition"
       ]
     },
     {
-      "use_case_id": "NS-CAREPLANS-0065",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#64:NS-CAREPLANS-0065",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-CAREPLANS-0065]",
+      "use_case_id": "NS-CAREPLANS-0068",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#67:NS-CAREPLANS-0068",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-CAREPLANS-0068]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/care-plans"
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0066",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#65:NS-HANDOVER-0066",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0066]",
+      "use_case_id": "NS-HANDOVER-0069",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#68:NS-HANDOVER-0069",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0069]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/handovers"
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0067",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#66:NS-HANDOVER-0067",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0067]",
+      "use_case_id": "NS-HANDOVER-0070",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#69:NS-HANDOVER-0070",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-HANDOVER-0070]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-001/handovers"
-      ]
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0068",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#67:NS-MEDICATIONS-0068",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0068]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/medication-orders/med-001/administrations"
-      ]
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0069",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#68:NS-MEDICATIONS-0069",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0069]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/medication-orders/med-001/administrations"
-      ]
-    },
-    {
-      "use_case_id": "NS-MEDICATIONS-0070",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#69:NS-MEDICATIONS-0070",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0070]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/medication-orders/med-002/administrations"
       ]
     },
     {
@@ -643,57 +643,57 @@
       ]
     },
     {
-      "use_case_id": "NS-SAFETY-0072",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#71:NS-SAFETY-0072",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-SAFETY-0072]",
+      "use_case_id": "NS-MEDICATIONS-0072",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#71:NS-MEDICATIONS-0072",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0072]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/medication-orders/med-001/administrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0073",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#72:NS-MEDICATIONS-0073",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0073]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/medication-orders/med-002/administrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-MEDICATIONS-0074",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#73:NS-MEDICATIONS-0074",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-MEDICATIONS-0074]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/medication-orders/med-001/administrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-SAFETY-0075",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#74:NS-SAFETY-0075",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-SAFETY-0075]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-002/safety-assessments"
       ]
     },
     {
-      "use_case_id": "NS-SAFETY-0073",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#72:NS-SAFETY-0073",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-SAFETY-0073]",
+      "use_case_id": "NS-SAFETY-0076",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#75:NS-SAFETY-0076",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-SAFETY-0076]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/patients/pat-002/safety-assessments"
       ]
     },
     {
-      "use_case_id": "NS-AUDIT-0074",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#73:NS-AUDIT-0074",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0074]",
+      "use_case_id": "NS-AUDIT-0077",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#76:NS-AUDIT-0077",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0077]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/audit"
-      ]
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0075",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#74:NS-WARDBOARD-0075",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0075]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/ward-board"
-      ]
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0076",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#75:NS-WARDBOARD-0076",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0076]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/ward-board"
-      ]
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0077",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#76:NS-WARDBOARD-0077",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0077]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/ward-board"
       ]
     },
     {
@@ -715,84 +715,84 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0080",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#79:NS-OBSERVATIONS-0080",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0080]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-001/observations"
-      ]
-    },
-    {
-      "use_case_id": "NS-TASKS-0081",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#80:NS-TASKS-0081",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0081]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/tasks/task-001/transition"
-      ]
-    },
-    {
-      "use_case_id": "NS-AUDIT-0082",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#81:NS-AUDIT-0082",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0082]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/audit"
-      ]
-    },
-    {
-      "use_case_id": "NS-AUDIT-0083",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#82:NS-AUDIT-0083",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0083]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/audit"
-      ]
-    },
-    {
-      "use_case_id": "NS-WARDBOARD-0084",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#83:NS-WARDBOARD-0084",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0084]",
+      "use_case_id": "NS-WARDBOARD-0080",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#79:NS-WARDBOARD-0080",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0080]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/ward-board"
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0085",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#84:NS-WARDBOARD-0085",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0085]",
+      "use_case_id": "NS-WARDBOARD-0081",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#80:NS-WARDBOARD-0081",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0081]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0082",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#81:NS-WARDBOARD-0082",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0082]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board"
+      ]
+    },
+    {
+      "use_case_id": "NS-OBSERVATIONS-0083",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#82:NS-OBSERVATIONS-0083",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-OBSERVATIONS-0083]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/observations"
+      ]
+    },
+    {
+      "use_case_id": "NS-TASKS-0084",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#83:NS-TASKS-0084",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-TASKS-0084]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/tasks/task-001/transition"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0085",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#84:NS-AUDIT-0085",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0085]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/audit"
+      ]
+    },
+    {
+      "use_case_id": "NS-AUDIT-0086",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#85:NS-AUDIT-0086",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-AUDIT-0086]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/audit"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0087",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#86:NS-WARDBOARD-0087",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0087]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0088",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#87:NS-WARDBOARD-0088",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0088]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/governance/seed"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0086",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#85:NS-INTEGRATIONS-0086",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0086]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-005/integrations/refresh"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0087",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#86:NS-INTEGRATIONS-0087",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0087]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-005/integrations/refresh"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0088",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#87:NS-INTEGRATIONS-0088",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0088]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-005/integrations/refresh"
       ]
     },
     {
@@ -814,12 +814,12 @@
       ]
     },
     {
-      "use_case_id": "NS-REPORTING-0091",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#90:NS-REPORTING-0091",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-REPORTING-0091]",
+      "use_case_id": "NS-INTEGRATIONS-0091",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#90:NS-INTEGRATIONS-0091",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0091]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/wards/ward-med-a/hmis-measures"
+        "/api/patients/pat-005/integrations/refresh"
       ]
     },
     {
@@ -828,7 +828,7 @@
       "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0092]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/patients/pat-005/integrations"
+        "/api/patients/pat-005/integrations/refresh"
       ]
     },
     {
@@ -837,16 +837,16 @@
       "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0093]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/patients/pat-005/integrations"
+        "/api/patients/pat-005/integrations/refresh"
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0094",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#93:NS-INTEGRATIONS-0094",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0094]",
+      "use_case_id": "NS-REPORTING-0094",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#93:NS-REPORTING-0094",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-REPORTING-0094]",
       "expected_status": "passed",
       "app_paths_exercised": [
-        "/api/patients/pat-005/integrations"
+        "/api/wards/ward-med-a/hmis-measures"
       ]
     },
     {
@@ -855,52 +855,52 @@
       "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0095]",
       "expected_status": "passed",
       "app_paths_exercised": [
+        "/api/patients/pat-005/integrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-INTEGRATIONS-0096",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#95:NS-INTEGRATIONS-0096",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0096]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-005/integrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-INTEGRATIONS-0097",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#96:NS-INTEGRATIONS-0097",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0097]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-005/integrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-INTEGRATIONS-0098",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#97:NS-INTEGRATIONS-0098",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0098]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
         "/api/patients/pat-005/integrations/refresh"
       ]
     },
     {
-      "use_case_id": "NS-ALERTS-0096",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#95:NS-ALERTS-0096",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-ALERTS-0096]",
+      "use_case_id": "NS-ALERTS-0099",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#98:NS-ALERTS-0099",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-ALERTS-0099]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/integrations/lis/critical-result"
       ]
     },
     {
-      "use_case_id": "NS-ALERTS-0097",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#96:NS-ALERTS-0097",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-ALERTS-0097]",
+      "use_case_id": "NS-ALERTS-0100",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#99:NS-ALERTS-0100",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-ALERTS-0100]",
       "expected_status": "passed",
       "app_paths_exercised": [
         "/api/alerts"
-      ]
-    },
-    {
-      "use_case_id": "NS-ALERTS-0098",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#97:NS-ALERTS-0098",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-ALERTS-0098]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/alerts/{alert_id}/acknowledge"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0099",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#98:NS-INTEGRATIONS-0099",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0099]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-005/integrations/refresh"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0100",
-      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#99:NS-INTEGRATIONS-0100",
-      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-INTEGRATIONS-0100]",
-      "expected_status": "passed",
-      "app_paths_exercised": [
-        "/api/patients/pat-005/integrations/refresh"
       ]
     }
   ]

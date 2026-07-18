@@ -16,6 +16,15 @@
     "resilience", "code_quality", "python", "typescript"
   ],
   "evidence_boundary": "Phase 2 implements hub-mediated seeded context for PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, de-identified HMIS measures, and a signed LIS critical-result alert with explicit nurse acknowledgement. Clinical release remains gated by human safety, privacy, security, and deployment approvals.",
+  "clinical_governance": {
+    "agent_persona": "clinical-safety-officer-superpersona",
+    "procedure": "safety/AGENT_CSO_HITL_PROCEDURE.md",
+    "decision_record": "safety/CLINICAL_DEPLOYMENT_GATE.json",
+    "evaluator": "scripts/evaluate_clinical_deployment_gate.py",
+    "two_key_policy": "Agent assurance prepares and recommends; a human approves the identical scope. Neither key can authorise alone.",
+    "approved_scope": "synthetic_clinical_simulation",
+    "live_clinical_release": "blocked"
+  },
   "prohibited": [
     "internal mocks",
     "in-memory clinical storage",

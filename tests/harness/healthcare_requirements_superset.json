@@ -2,7 +2,7 @@
   "schema_version": "BT_REQUIREMENTS_SUPERSET_V1",
   "metadata": {
     "subsystem": "nursing-station",
-    "requirement_count": 55
+    "requirement_count": 58
   },
   "requirements": [
     {
@@ -24,7 +24,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0001",
-        "NS-WARDBOARD-0056"
+        "NS-WARDBOARD-0059"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_ward_board_is_ward_scoped"
@@ -50,7 +50,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0002",
-        "NS-WARDBOARD-0057"
+        "NS-WARDBOARD-0060"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -76,7 +76,7 @@
       ],
       "matrix_row_ids": [
         "NS-HANDOVER-0003",
-        "NS-HANDOVER-0058"
+        "NS-HANDOVER-0061"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_handover_requires_receiver_and_transfers_accountability"
@@ -102,7 +102,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0004",
-        "NS-WARDBOARD-0059"
+        "NS-WARDBOARD-0062"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -128,7 +128,7 @@
       ],
       "matrix_row_ids": [
         "NS-OBSERVATIONS-0005",
-        "NS-OBSERVATIONS-0060"
+        "NS-OBSERVATIONS-0063"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_observation_records_score_and_creates_escalation"
@@ -154,7 +154,7 @@
       ],
       "matrix_row_ids": [
         "NS-OBSERVATIONS-0006",
-        "NS-OBSERVATIONS-0061"
+        "NS-OBSERVATIONS-0064"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_observation_rejects_implausible_value"
@@ -180,7 +180,7 @@
       ],
       "matrix_row_ids": [
         "NS-OBSERVATIONS-0007",
-        "NS-OBSERVATIONS-0062"
+        "NS-OBSERVATIONS-0065"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_observation_records_score_and_creates_escalation"
@@ -206,7 +206,7 @@
       ],
       "matrix_row_ids": [
         "NS-TASKS-0008",
-        "NS-TASKS-0063"
+        "NS-TASKS-0066"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_task_state_machine_and_stale_version",
@@ -233,7 +233,7 @@
       ],
       "matrix_row_ids": [
         "NS-TASKS-0009",
-        "NS-TASKS-0064"
+        "NS-TASKS-0067"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_patient_access_cannot_cross_ward"
@@ -259,7 +259,7 @@
       ],
       "matrix_row_ids": [
         "NS-CAREPLANS-0010",
-        "NS-CAREPLANS-0065"
+        "NS-CAREPLANS-0068"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_care_plan_create_and_evaluate_with_version_guard",
@@ -286,7 +286,7 @@
       ],
       "matrix_row_ids": [
         "NS-HANDOVER-0011",
-        "NS-HANDOVER-0066"
+        "NS-HANDOVER-0069"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_handover_requires_receiver_and_transfers_accountability"
@@ -312,7 +312,7 @@
       ],
       "matrix_row_ids": [
         "NS-HANDOVER-0012",
-        "NS-HANDOVER-0067"
+        "NS-HANDOVER-0070"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_named_receiver_can_list_pending_handover"
@@ -338,7 +338,7 @@
       ],
       "matrix_row_ids": [
         "NS-MEDICATIONS-0013",
-        "NS-MEDICATIONS-0068"
+        "NS-MEDICATIONS-0071"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_every_medication_outcome_is_recorded_exactly"
@@ -364,7 +364,7 @@
       ],
       "matrix_row_ids": [
         "NS-MEDICATIONS-0014",
-        "NS-MEDICATIONS-0069"
+        "NS-MEDICATIONS-0072"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_medication_rejects_wrong_patient_identifiers"
@@ -390,7 +390,7 @@
       ],
       "matrix_row_ids": [
         "NS-MEDICATIONS-0015",
-        "NS-MEDICATIONS-0070"
+        "NS-MEDICATIONS-0073"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_high_alert_medication_requires_independent_cosign"
@@ -416,7 +416,7 @@
       ],
       "matrix_row_ids": [
         "NS-MEDICATIONS-0016",
-        "NS-MEDICATIONS-0071"
+        "NS-MEDICATIONS-0074"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_medication_rejects_wrong_patient_identifiers",
@@ -443,7 +443,7 @@
       ],
       "matrix_row_ids": [
         "NS-SAFETY-0017",
-        "NS-SAFETY-0072"
+        "NS-SAFETY-0075"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_safety_assessment_generates_owned_action"
@@ -469,7 +469,7 @@
       ],
       "matrix_row_ids": [
         "NS-SAFETY-0018",
-        "NS-SAFETY-0073"
+        "NS-SAFETY-0076"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_safety_assessment_generates_owned_action"
@@ -495,7 +495,7 @@
       ],
       "matrix_row_ids": [
         "NS-AUDIT-0019",
-        "NS-AUDIT-0074"
+        "NS-AUDIT-0077"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_audit_chain_is_append_only_and_verifiable"
@@ -521,7 +521,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0020",
-        "NS-WARDBOARD-0075"
+        "NS-WARDBOARD-0078"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_ward_board_is_ward_scoped",
@@ -548,7 +548,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0021",
-        "NS-WARDBOARD-0076"
+        "NS-WARDBOARD-0079"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_health_reports_durable_phase_boundary"
@@ -574,7 +574,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0022",
-        "NS-WARDBOARD-0077"
+        "NS-WARDBOARD-0080"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -600,7 +600,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0023",
-        "NS-WARDBOARD-0078"
+        "NS-WARDBOARD-0081"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -626,7 +626,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0024",
-        "NS-WARDBOARD-0079"
+        "NS-WARDBOARD-0082"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -652,7 +652,7 @@
       ],
       "matrix_row_ids": [
         "NS-OBSERVATIONS-0025",
-        "NS-OBSERVATIONS-0080"
+        "NS-OBSERVATIONS-0083"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_observation_records_score_and_creates_escalation",
@@ -679,7 +679,7 @@
       ],
       "matrix_row_ids": [
         "NS-TASKS-0026",
-        "NS-TASKS-0081"
+        "NS-TASKS-0084"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_task_state_machine_and_stale_version",
@@ -706,7 +706,7 @@
       ],
       "matrix_row_ids": [
         "NS-AUDIT-0027",
-        "NS-AUDIT-0082"
+        "NS-AUDIT-0085"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_health_reports_durable_phase_boundary"
@@ -732,7 +732,7 @@
       ],
       "matrix_row_ids": [
         "NS-AUDIT-0028",
-        "NS-AUDIT-0083"
+        "NS-AUDIT-0086"
       ],
       "direct_evidence": [
         "tests/test_governance_artifacts.py"
@@ -758,7 +758,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0029",
-        "NS-WARDBOARD-0084"
+        "NS-WARDBOARD-0087"
       ],
       "direct_evidence": [
         "tests/test_port_registry.py"
@@ -784,7 +784,7 @@
       ],
       "matrix_row_ids": [
         "NS-WARDBOARD-0030",
-        "NS-WARDBOARD-0085"
+        "NS-WARDBOARD-0088"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_seed_governance_is_durable_explicit_and_non_live"
@@ -810,7 +810,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0031",
-        "NS-INTEGRATIONS-0086"
+        "NS-INTEGRATIONS-0089"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed",
@@ -837,7 +837,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0032",
-        "NS-INTEGRATIONS-0087"
+        "NS-INTEGRATIONS-0090"
       ],
       "direct_evidence": [
         "../lis/backend/tests/test_nursing_context.py"
@@ -863,7 +863,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0033",
-        "NS-INTEGRATIONS-0088"
+        "NS-INTEGRATIONS-0091"
       ],
       "direct_evidence": [
         "../pacs-ris/backend/tests/test_nursing_context.py"
@@ -889,7 +889,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0034",
-        "NS-INTEGRATIONS-0089"
+        "NS-INTEGRATIONS-0092"
       ],
       "direct_evidence": [
         "../pharmacy-system/backend/tests/test_nursing_context.py"
@@ -915,7 +915,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0035",
-        "NS-INTEGRATIONS-0090"
+        "NS-INTEGRATIONS-0093"
       ],
       "direct_evidence": [
         "../blood-transfusion/backend/tests/test_nursing_context.py"
@@ -941,7 +941,7 @@
       ],
       "matrix_row_ids": [
         "NS-REPORTING-0036",
-        "NS-REPORTING-0091"
+        "NS-REPORTING-0094"
       ],
       "direct_evidence": [
         "../HMIS/backend/tests/test_nursing_measures.py"
@@ -967,7 +967,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0037",
-        "NS-INTEGRATIONS-0092"
+        "NS-INTEGRATIONS-0095"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed"
@@ -993,7 +993,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0038",
-        "NS-INTEGRATIONS-0093"
+        "NS-INTEGRATIONS-0096"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts"
@@ -1019,7 +1019,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0039",
-        "NS-INTEGRATIONS-0094"
+        "NS-INTEGRATIONS-0097"
       ],
       "direct_evidence": [
         "backend/nursing_station/main.py"
@@ -1045,7 +1045,7 @@
       ],
       "matrix_row_ids": [
         "NS-INTEGRATIONS-0040",
-        "NS-INTEGRATIONS-0095"
+        "NS-INTEGRATIONS-0098"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed"
@@ -1071,7 +1071,7 @@
       ],
       "matrix_row_ids": [
         "NS-ALERTS-0041",
-        "NS-ALERTS-0096"
+        "NS-ALERTS-0099"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged"
@@ -1097,7 +1097,7 @@
       ],
       "matrix_row_ids": [
         "NS-ALERTS-0042",
-        "NS-ALERTS-0097"
+        "NS-ALERTS-0100"
       ],
       "direct_evidence": [
         "frontend/e2e/clinical.spec.ts",
@@ -1123,8 +1123,7 @@
         }
       ],
       "matrix_row_ids": [
-        "NS-ALERTS-0043",
-        "NS-ALERTS-0098"
+        "NS-ALERTS-0043"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged"
@@ -1149,8 +1148,7 @@
         }
       ],
       "matrix_row_ids": [
-        "NS-INTEGRATIONS-0044",
-        "NS-INTEGRATIONS-0099"
+        "NS-INTEGRATIONS-0044"
       ],
       "direct_evidence": [
         "backend/nursing_station/integration.py",
@@ -1176,8 +1174,7 @@
         }
       ],
       "matrix_row_ids": [
-        "NS-INTEGRATIONS-0045",
-        "NS-INTEGRATIONS-0100"
+        "NS-INTEGRATIONS-0045"
       ],
       "direct_evidence": [
         "tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed"
@@ -1436,6 +1433,85 @@
         "../BulletTrain/tests/integration/journeys/nursing_station_phase2.scenario.yaml"
       ],
       "domain": "alerts"
+    },
+    {
+      "requirement_id": "NFR-NS-024",
+      "title": "The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-024-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-024-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-GOVERNANCE-0056"
+      ],
+      "direct_evidence": [
+        "safety/AGENT_CSO_HITL_PROCEDURE.md",
+        "tests/test_governance_artifacts.py"
+      ],
+      "domain": "governance"
+    },
+    {
+      "requirement_id": "NFR-NS-025",
+      "title": "Clinical deployment decisions require independent passing agent and human keys for the identical scope",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Clinical deployment decisions require independent passing agent and human keys for the identical scope",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-025-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-025-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-GOVERNANCE-0057"
+      ],
+      "direct_evidence": [
+        "safety/CLINICAL_DEPLOYMENT_GATE.json",
+        "scripts/evaluate_clinical_deployment_gate.py",
+        "tests/test_governance_artifacts.py"
+      ],
+      "domain": "governance"
+    },
+    {
+      "requirement_id": "NFR-NS-026",
+      "title": "Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-026-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-026-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-GOVERNANCE-0058"
+      ],
+      "direct_evidence": [
+        "safety/CLINICAL_DEPLOYMENT_GATE.json",
+        "tests/test_governance_artifacts.py"
+      ],
+      "domain": "governance"
     }
   ]
 }

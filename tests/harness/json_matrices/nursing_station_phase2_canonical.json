@@ -83,7 +83,10 @@
       "NFR-NS-020",
       "NFR-NS-021",
       "NFR-NS-022",
-      "NFR-NS-023"
+      "NFR-NS-023",
+      "NFR-NS-024",
+      "NFR-NS-025",
+      "NFR-NS-026"
     ],
     "mapping_policy": "semantic requirement-domain mapping"
   },
@@ -2965,7 +2968,163 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0056",
+      "use_case_id": "NS-GOVERNANCE-0056",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-024"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-024 Agent Clinical Safety Officer and human two-key approval: The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority (positive)",
+      "description": "Verify NFR-NS-024: The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority using the real Phase 2 service and its direct evidence.",
+      "preconditions": [
+        "Durable governed synthetic database is initialised",
+        "Authenticated ward-scoped user unless the negative scenario removes authentication"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/seed"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 56,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.governance.evaluated"
+      ],
+      "expected_outputs": {
+        "requirement_id": "NFR-NS-024",
+        "phase": 2,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-2",
+        "governance",
+        "Positive",
+        "NFR-NS-024",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-GOVERNANCE-0057",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-025"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-025 Agent Clinical Safety Officer and human two-key approval: Clinical deployment decisions require independent passing agent and human keys for the identical scope (positive)",
+      "description": "Verify NFR-NS-025: Clinical deployment decisions require independent passing agent and human keys for the identical scope using the real Phase 2 service and its direct evidence.",
+      "preconditions": [
+        "Durable governed synthetic database is initialised",
+        "Authenticated ward-scoped user unless the negative scenario removes authentication"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/seed"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 57,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.governance.evaluated"
+      ],
+      "expected_outputs": {
+        "requirement_id": "NFR-NS-025",
+        "phase": 2,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-2",
+        "governance",
+        "Positive",
+        "NFR-NS-025",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-GOVERNANCE-0058",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-026"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-026 Agent Clinical Safety Officer and human two-key approval: Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment (positive)",
+      "description": "Verify NFR-NS-026: Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment using the real Phase 2 service and its direct evidence.",
+      "preconditions": [
+        "Durable governed synthetic database is initialised",
+        "Authenticated ward-scoped user unless the negative scenario removes authentication"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/seed"
+      },
+      "input_payload": {
+        "seeded_patient": "pat-001",
+        "scenario_index": 58,
+        "test_type": "Positive"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.governance.evaluated"
+      ],
+      "expected_outputs": {
+        "requirement_id": "NFR-NS-026",
+        "phase": 2,
+        "durable": true,
+        "integration_claim": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 2,
+      "tags": [
+        "phase-2",
+        "governance",
+        "Positive",
+        "NFR-NS-026",
+        "real-seeded-service"
+      ]
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0059",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-001"
@@ -2983,7 +3142,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 56,
+        "scenario_index": 59,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3015,7 +3174,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0057",
+      "use_case_id": "NS-WARDBOARD-0060",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-002"
@@ -3033,7 +3192,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 57,
+        "scenario_index": 60,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3065,7 +3224,7 @@
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0058",
+      "use_case_id": "NS-HANDOVER-0061",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-003"
@@ -3083,7 +3242,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 58,
+        "scenario_index": 61,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3117,7 +3276,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0059",
+      "use_case_id": "NS-WARDBOARD-0062",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-004"
@@ -3135,7 +3294,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 59,
+        "scenario_index": 62,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3167,7 +3326,7 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0060",
+      "use_case_id": "NS-OBSERVATIONS-0063",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-010"
@@ -3185,7 +3344,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 60,
+        "scenario_index": 63,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3219,7 +3378,7 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0061",
+      "use_case_id": "NS-OBSERVATIONS-0064",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-011"
@@ -3237,7 +3396,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 61,
+        "scenario_index": 64,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3271,7 +3430,7 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0062",
+      "use_case_id": "NS-OBSERVATIONS-0065",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-012"
@@ -3289,7 +3448,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 62,
+        "scenario_index": 65,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3323,7 +3482,7 @@
       ]
     },
     {
-      "use_case_id": "NS-TASKS-0063",
+      "use_case_id": "NS-TASKS-0066",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-020"
@@ -3341,7 +3500,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 63,
+        "scenario_index": 66,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3375,7 +3534,7 @@
       ]
     },
     {
-      "use_case_id": "NS-TASKS-0064",
+      "use_case_id": "NS-TASKS-0067",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-021"
@@ -3393,7 +3552,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 64,
+        "scenario_index": 67,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3427,7 +3586,7 @@
       ]
     },
     {
-      "use_case_id": "NS-CAREPLANS-0065",
+      "use_case_id": "NS-CAREPLANS-0068",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-022"
@@ -3445,7 +3604,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 65,
+        "scenario_index": 68,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3479,7 +3638,7 @@
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0066",
+      "use_case_id": "NS-HANDOVER-0069",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-030"
@@ -3497,7 +3656,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 66,
+        "scenario_index": 69,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3531,7 +3690,7 @@
       ]
     },
     {
-      "use_case_id": "NS-HANDOVER-0067",
+      "use_case_id": "NS-HANDOVER-0070",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-031"
@@ -3549,7 +3708,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 67,
+        "scenario_index": 70,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3583,7 +3742,7 @@
       ]
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0068",
+      "use_case_id": "NS-MEDICATIONS-0071",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-040"
@@ -3601,7 +3760,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 68,
+        "scenario_index": 71,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3635,7 +3794,7 @@
       ]
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0069",
+      "use_case_id": "NS-MEDICATIONS-0072",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-041"
@@ -3653,7 +3812,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 69,
+        "scenario_index": 72,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3687,7 +3846,7 @@
       ]
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0070",
+      "use_case_id": "NS-MEDICATIONS-0073",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-042"
@@ -3705,7 +3864,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 70,
+        "scenario_index": 73,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3739,7 +3898,7 @@
       ]
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0071",
+      "use_case_id": "NS-MEDICATIONS-0074",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-043"
@@ -3757,7 +3916,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 71,
+        "scenario_index": 74,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3791,7 +3950,7 @@
       ]
     },
     {
-      "use_case_id": "NS-SAFETY-0072",
+      "use_case_id": "NS-SAFETY-0075",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-050"
@@ -3809,7 +3968,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 72,
+        "scenario_index": 75,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3843,7 +4002,7 @@
       ]
     },
     {
-      "use_case_id": "NS-SAFETY-0073",
+      "use_case_id": "NS-SAFETY-0076",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-051"
@@ -3861,7 +4020,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 73,
+        "scenario_index": 76,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3895,7 +4054,7 @@
       ]
     },
     {
-      "use_case_id": "NS-AUDIT-0074",
+      "use_case_id": "NS-AUDIT-0077",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-060"
@@ -3913,7 +4072,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 74,
+        "scenario_index": 77,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3947,7 +4106,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0075",
+      "use_case_id": "NS-WARDBOARD-0078",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-001"
@@ -3965,7 +4124,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 75,
+        "scenario_index": 78,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -3997,7 +4156,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0076",
+      "use_case_id": "NS-WARDBOARD-0079",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-002"
@@ -4015,7 +4174,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 76,
+        "scenario_index": 79,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4047,7 +4206,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0077",
+      "use_case_id": "NS-WARDBOARD-0080",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-003"
@@ -4065,7 +4224,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 77,
+        "scenario_index": 80,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4097,7 +4256,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0078",
+      "use_case_id": "NS-WARDBOARD-0081",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-004"
@@ -4115,7 +4274,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 78,
+        "scenario_index": 81,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4147,7 +4306,7 @@
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0079",
+      "use_case_id": "NS-WARDBOARD-0082",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-005"
@@ -4165,7 +4324,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 79,
+        "scenario_index": 82,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4197,7 +4356,7 @@
       ]
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0080",
+      "use_case_id": "NS-OBSERVATIONS-0083",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-006"
@@ -4215,7 +4374,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 80,
+        "scenario_index": 83,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4249,7 +4408,7 @@
       ]
     },
     {
-      "use_case_id": "NS-TASKS-0081",
+      "use_case_id": "NS-TASKS-0084",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-007"
@@ -4267,7 +4426,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 81,
+        "scenario_index": 84,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4301,7 +4460,7 @@
       ]
     },
     {
-      "use_case_id": "NS-AUDIT-0082",
+      "use_case_id": "NS-AUDIT-0085",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-008"
@@ -4319,7 +4478,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 82,
+        "scenario_index": 85,
         "test_type": "Positive"
       },
       "expected_connector_calls": [],
@@ -4353,13 +4512,13 @@
       ]
     },
     {
-      "use_case_id": "NS-AUDIT-0083",
+      "use_case_id": "NS-AUDIT-0086",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-009"
       ],
-      "scenario_category": "Positive",
-      "title": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (positive)",
+      "scenario_category": "Negative",
+      "title": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (negative)",
       "description": "Verify NFR-NS-009: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -4371,8 +4530,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 83,
-        "test_type": "Positive"
+        "scenario_index": 86,
+        "test_type": "Negative"
       },
       "expected_connector_calls": [],
       "expected_events": [
@@ -4385,7 +4544,7 @@
         "integration_claim": false
       },
       "fault_profile": {
-        "kind": "none"
+        "kind": "unauthorised-or-boundary-input"
       },
       "security_profile": {
         "tenant_scoped": true,
@@ -4399,19 +4558,19 @@
       "tags": [
         "phase-2",
         "audit",
-        "Positive",
+        "Negative",
         "NFR-NS-009",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0084",
+      "use_case_id": "NS-WARDBOARD-0087",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-010"
       ],
-      "scenario_category": "Positive",
-      "title": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (positive)",
+      "scenario_category": "Negative",
+      "title": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (negative)",
       "description": "Verify NFR-NS-010: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -4423,8 +4582,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 84,
-        "test_type": "Positive"
+        "scenario_index": 87,
+        "test_type": "Negative"
       },
       "expected_connector_calls": [],
       "expected_events": [],
@@ -4435,7 +4594,7 @@
         "integration_claim": false
       },
       "fault_profile": {
-        "kind": "none"
+        "kind": "unauthorised-or-boundary-input"
       },
       "security_profile": {
         "tenant_scoped": true,
@@ -4449,19 +4608,19 @@
       "tags": [
         "phase-2",
         "ward-board",
-        "Positive",
+        "Negative",
         "NFR-NS-010",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-WARDBOARD-0085",
+      "use_case_id": "NS-WARDBOARD-0088",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "NFR-NS-011"
       ],
-      "scenario_category": "Positive",
-      "title": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (positive)",
+      "scenario_category": "Negative",
+      "title": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (negative)",
       "description": "Verify NFR-NS-011: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -4473,8 +4632,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 85,
-        "test_type": "Positive"
+        "scenario_index": 88,
+        "test_type": "Negative"
       },
       "expected_connector_calls": [],
       "expected_events": [],
@@ -4485,7 +4644,7 @@
         "integration_claim": false
       },
       "fault_profile": {
-        "kind": "none"
+        "kind": "unauthorised-or-boundary-input"
       },
       "security_profile": {
         "tenant_scoped": true,
@@ -4499,13 +4658,13 @@
       "tags": [
         "phase-2",
         "ward-board",
-        "Positive",
+        "Negative",
         "NFR-NS-011",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0086",
+      "use_case_id": "NS-INTEGRATIONS-0089",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-070"
@@ -4523,7 +4682,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 86,
+        "scenario_index": 89,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4559,7 +4718,7 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0087",
+      "use_case_id": "NS-INTEGRATIONS-0090",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-071"
@@ -4577,7 +4736,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 87,
+        "scenario_index": 90,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4613,7 +4772,7 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0088",
+      "use_case_id": "NS-INTEGRATIONS-0091",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-072"
@@ -4631,7 +4790,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 88,
+        "scenario_index": 91,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4667,7 +4826,7 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0089",
+      "use_case_id": "NS-INTEGRATIONS-0092",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-073"
@@ -4685,7 +4844,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 89,
+        "scenario_index": 92,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4721,7 +4880,7 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0090",
+      "use_case_id": "NS-INTEGRATIONS-0093",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-074"
@@ -4739,7 +4898,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 90,
+        "scenario_index": 93,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4775,7 +4934,7 @@
       ]
     },
     {
-      "use_case_id": "NS-REPORTING-0091",
+      "use_case_id": "NS-REPORTING-0094",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-075"
@@ -4793,7 +4952,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 91,
+        "scenario_index": 94,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4829,7 +4988,7 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0092",
+      "use_case_id": "NS-INTEGRATIONS-0095",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-076"
@@ -4847,7 +5006,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 92,
+        "scenario_index": 95,
         "test_type": "Negative"
       },
       "expected_connector_calls": [
@@ -4883,13 +5042,13 @@
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0093",
+      "use_case_id": "NS-INTEGRATIONS-0096",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-077"
       ],
-      "scenario_category": "Negative",
-      "title": "FR-NS-077 Governed authoritative sibling context: Each source shows status, freshness, reconciliation, and last retrieval (negative)",
+      "scenario_category": "Edge",
+      "title": "FR-NS-077 Governed authoritative sibling context: Each source shows status, freshness, reconciliation, and last retrieval (edge)",
       "description": "Verify FR-NS-077: Each source shows status, freshness, reconciliation, and last retrieval using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -4901,8 +5060,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 93,
-        "test_type": "Negative"
+        "scenario_index": 96,
+        "test_type": "Edge"
       },
       "expected_connector_calls": [
         "BulletTrain connector hub"
@@ -4931,19 +5090,19 @@
       "tags": [
         "phase-2",
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-077",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0094",
+      "use_case_id": "NS-INTEGRATIONS-0097",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-078"
       ],
-      "scenario_category": "Negative",
-      "title": "FR-NS-078 Governed authoritative sibling context: Imported snapshots cannot overwrite Nursing Station-owned records (negative)",
+      "scenario_category": "Edge",
+      "title": "FR-NS-078 Governed authoritative sibling context: Imported snapshots cannot overwrite Nursing Station-owned records (edge)",
       "description": "Verify FR-NS-078: Imported snapshots cannot overwrite Nursing Station-owned records using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -4955,8 +5114,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 94,
-        "test_type": "Negative"
+        "scenario_index": 97,
+        "test_type": "Edge"
       },
       "expected_connector_calls": [
         "BulletTrain connector hub"
@@ -4985,19 +5144,19 @@
       "tags": [
         "phase-2",
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-078",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0095",
+      "use_case_id": "NS-INTEGRATIONS-0098",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-079"
       ],
-      "scenario_category": "Negative",
-      "title": "FR-NS-079 Governed authoritative sibling context: Authorised refresh reports typed source failures (negative)",
+      "scenario_category": "Edge",
+      "title": "FR-NS-079 Governed authoritative sibling context: Authorised refresh reports typed source failures (edge)",
       "description": "Verify FR-NS-079: Authorised refresh reports typed source failures using the real Phase 2 service and its direct evidence.",
       "preconditions": [
         "Durable governed synthetic database is initialised",
@@ -5009,8 +5168,8 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 95,
-        "test_type": "Negative"
+        "scenario_index": 98,
+        "test_type": "Edge"
       },
       "expected_connector_calls": [
         "BulletTrain connector hub"
@@ -5039,13 +5198,13 @@
       "tags": [
         "phase-2",
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-079",
         "real-seeded-service"
       ]
     },
     {
-      "use_case_id": "NS-ALERTS-0096",
+      "use_case_id": "NS-ALERTS-0099",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-080"
@@ -5063,7 +5222,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 96,
+        "scenario_index": 99,
         "test_type": "Edge"
       },
       "expected_connector_calls": [],
@@ -5097,7 +5256,7 @@
       ]
     },
     {
-      "use_case_id": "NS-ALERTS-0097",
+      "use_case_id": "NS-ALERTS-0100",
       "subsystem": "nursing-station",
       "requirement_ids": [
         "FR-NS-081"
@@ -5115,7 +5274,7 @@
       },
       "input_payload": {
         "seeded_patient": "pat-001",
-        "scenario_index": 97,
+        "scenario_index": 100,
         "test_type": "Edge"
       },
       "expected_connector_calls": [],
@@ -5145,166 +5304,6 @@
         "alerts",
         "Edge",
         "FR-NS-081",
-        "real-seeded-service"
-      ]
-    },
-    {
-      "use_case_id": "NS-ALERTS-0098",
-      "subsystem": "nursing-station",
-      "requirement_ids": [
-        "FR-NS-082"
-      ],
-      "scenario_category": "Edge",
-      "title": "FR-NS-082 Near-real-time critical-result notification and acknowledgement: Authorised nurses explicitly acknowledge alerts without autonomous clinical action (edge)",
-      "description": "Verify FR-NS-082: Authorised nurses explicitly acknowledge alerts without autonomous clinical action using the real Phase 2 service and its direct evidence.",
-      "preconditions": [
-        "Durable governed synthetic database is initialised",
-        "Authenticated ward-scoped user unless the negative scenario removes authentication"
-      ],
-      "trigger": {
-        "method": "POST",
-        "path": "/api/alerts/{alert_id}/acknowledge"
-      },
-      "input_payload": {
-        "seeded_patient": "pat-001",
-        "scenario_index": 98,
-        "test_type": "Edge"
-      },
-      "expected_connector_calls": [],
-      "expected_events": [
-        "nursing-station.alerts.evaluated"
-      ],
-      "expected_outputs": {
-        "requirement_id": "FR-NS-082",
-        "phase": 2,
-        "durable": true,
-        "integration_claim": false
-      },
-      "fault_profile": {
-        "kind": "unauthorised-or-boundary-input"
-      },
-      "security_profile": {
-        "tenant_scoped": true,
-        "facility_scoped": true,
-        "ward_scoped": true,
-        "audit_required": true
-      },
-      "priority": "high",
-      "automation_status": "automated",
-      "estimated_duration_seconds": 2,
-      "tags": [
-        "phase-2",
-        "alerts",
-        "Edge",
-        "FR-NS-082",
-        "real-seeded-service"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0099",
-      "subsystem": "nursing-station",
-      "requirement_ids": [
-        "NFR-NS-012"
-      ],
-      "scenario_category": "Edge",
-      "title": "NFR-NS-012 Governed authoritative sibling context: Every exchange uses the authenticated BulletTrain hub governance envelope (edge)",
-      "description": "Verify NFR-NS-012: Every exchange uses the authenticated BulletTrain hub governance envelope using the real Phase 2 service and its direct evidence.",
-      "preconditions": [
-        "Durable governed synthetic database is initialised",
-        "Authenticated ward-scoped user unless the negative scenario removes authentication"
-      ],
-      "trigger": {
-        "method": "POST",
-        "path": "/api/patients/pat-005/integrations/refresh"
-      },
-      "input_payload": {
-        "seeded_patient": "pat-001",
-        "scenario_index": 99,
-        "test_type": "Edge"
-      },
-      "expected_connector_calls": [
-        "BulletTrain connector hub"
-      ],
-      "expected_events": [
-        "nursing-station.integrations.evaluated"
-      ],
-      "expected_outputs": {
-        "requirement_id": "NFR-NS-012",
-        "phase": 2,
-        "durable": true,
-        "integration_claim": true
-      },
-      "fault_profile": {
-        "kind": "unauthorised-or-boundary-input"
-      },
-      "security_profile": {
-        "tenant_scoped": true,
-        "facility_scoped": true,
-        "ward_scoped": true,
-        "audit_required": true
-      },
-      "priority": "high",
-      "automation_status": "automated",
-      "estimated_duration_seconds": 2,
-      "tags": [
-        "phase-2",
-        "integrations",
-        "Edge",
-        "NFR-NS-012",
-        "real-seeded-service"
-      ]
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0100",
-      "subsystem": "nursing-station",
-      "requirement_ids": [
-        "NFR-NS-013"
-      ],
-      "scenario_category": "Edge",
-      "title": "NFR-NS-013 Governed authoritative sibling context: Hub URL, token, and timeout are explicit and fail closed (edge)",
-      "description": "Verify NFR-NS-013: Hub URL, token, and timeout are explicit and fail closed using the real Phase 2 service and its direct evidence.",
-      "preconditions": [
-        "Durable governed synthetic database is initialised",
-        "Authenticated ward-scoped user unless the negative scenario removes authentication"
-      ],
-      "trigger": {
-        "method": "POST",
-        "path": "/api/patients/pat-005/integrations/refresh"
-      },
-      "input_payload": {
-        "seeded_patient": "pat-001",
-        "scenario_index": 100,
-        "test_type": "Edge"
-      },
-      "expected_connector_calls": [
-        "BulletTrain connector hub"
-      ],
-      "expected_events": [
-        "nursing-station.integrations.evaluated"
-      ],
-      "expected_outputs": {
-        "requirement_id": "NFR-NS-013",
-        "phase": 2,
-        "durable": true,
-        "integration_claim": true
-      },
-      "fault_profile": {
-        "kind": "unauthorised-or-boundary-input"
-      },
-      "security_profile": {
-        "tenant_scoped": true,
-        "facility_scoped": true,
-        "ward_scoped": true,
-        "audit_required": true
-      },
-      "priority": "high",
-      "automation_status": "automated",
-      "estimated_duration_seconds": 2,
-      "tags": [
-        "phase-2",
-        "integrations",
-        "Edge",
-        "NFR-NS-013",
         "real-seeded-service"
       ]
     }

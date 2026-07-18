@@ -15,3 +15,11 @@ UI, authenticated critical-result alert receipt and acknowledgement, authoritati
 sibling endpoint tests, BulletTrain connector tests, the real seeded cross-system
 journey, and signed headed SignalBox evidence for the nurse and nurse-superpersona.
 A unit test or generated matrix alone is not Phase 2 integration evidence.
+
+`NFR-NS-024` through `NFR-NS-026` are evidenced by
+`safety/AGENT_CSO_HITL_PROCEDURE.md`, the machine-readable
+`safety/CLINICAL_DEPLOYMENT_GATE.json`,
+`scripts/evaluate_clinical_deployment_gate.py`, and the direct governance tests.
+The agent persona prepares and recommends; the human decides. The approved
+synthetic clinical-simulation scope cannot be interpreted as live-patient,
+professional-registration, statutory, or medical-device approval.

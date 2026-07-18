@@ -23,6 +23,8 @@ PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, and HMIS remain author
 
 Phase 1 is complete. Phase 2 source contracts, connector manifests, API and UI implementation, direct service tests, and catalogue cascades are implemented. The evidence commands below determine the current local gate state. This repository is not approved for clinical production use. CAID's clinical release gate remains blocked until the intended-use statement has human Clinical Safety Officer approval, release authority has accepted the safety case, the DPIA has DPO approval, and MHRA review is evidenced where required. Publishing source code does not satisfy or bypass those approvals.
 
+The governed synthetic clinical-simulation version has a two-key approval recorded in `safety/CLINICAL_DEPLOYMENT_GATE.json`: the registered `clinical-safety-officer-superpersona` performed the evidence review and recommendation, and the human workspace owner approved that exact synthetic scope. The agent does not claim professional registration or statutory authority. Live-patient clinical deployment remains separately blocked.
+
 ## Run
 
 The workspace port registry owns the local allocations:

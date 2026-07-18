@@ -72,6 +72,9 @@ records.
 - `NFR-NS-021`: Inbound clinical notifications SHALL use a secret-managed HMAC-SHA256 signature, event-kind and event-identity checks, tenant and ward scoping, append-only audit, and fail-closed behaviour when authentication is unavailable.
 - `NFR-NS-022`: Critical-result delivery and acknowledgement SHALL be idempotent. Every accepted event SHALL retain its source event identifier, content hash, source resource identifier, observed and received times, correlation identifier, and acknowledgement actor and time.
 - `NFR-NS-023`: Near-real-time acceptance SHALL be proven with a real seeded LIS result, the registered BulletTrain hub and Nursing Station ports, an emitted hub exchange, automatic dashboard revalidation, and separate headed SignalBox sessions for the nurse persona and nurse-superpersona. Synthetic counters, direct callback bypasses, and page reload evidence are prohibited.
+- `NFR-NS-024`: A governed `clinical-safety-officer-superpersona` SHALL execute the clinical-safety assurance procedure, review metadata and de-identified evidence only, and produce a scope-bound recommendation. The agent SHALL NOT claim professional registration, statutory office, independent approval authority, or a legal signature.
+- `NFR-NS-025`: Deployment approval SHALL require two independent keys: a passing agent Clinical Safety Officer evidence battery and an explicit human decision for the identical scope. A missing check, missing human decision, or scope mismatch SHALL fail closed.
+- `NFR-NS-026`: Synthetic clinical-simulation approval SHALL remain distinguishable from live-patient release. Any live-patient deployment SHALL require a new controller, jurisdiction, privacy, regulatory, operational, and named accountable-human assessment and SHALL NOT inherit the synthetic approval.
 
 ## Standards basis and local adoption boundary
 

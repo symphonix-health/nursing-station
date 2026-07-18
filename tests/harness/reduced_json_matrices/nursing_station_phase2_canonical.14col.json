@@ -80,7 +80,10 @@
       "NFR-NS-020",
       "NFR-NS-021",
       "NFR-NS-022",
-      "NFR-NS-023"
+      "NFR-NS-023",
+      "NFR-NS-024",
+      "NFR-NS-025",
+      "NFR-NS-026"
     ],
     "mapping_policy": "semantic requirement-domain mapping"
   },
@@ -1974,7 +1977,109 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0056",
+      "use_case_id": "NS-GOVERNANCE-0056",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-024 Agent Clinical Safety Officer and human two-key approval: The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority",
+        "No internal substitute or fallback success is accepted"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-024 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "governance",
+        "Positive",
+        "NFR-NS-024"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
+    },
+    {
+      "use_case_id": "NS-GOVERNANCE-0057",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-025 Agent Clinical Safety Officer and human two-key approval: Clinical deployment decisions require independent passing agent and human keys for the identical scope (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Clinical deployment decisions require independent passing agent and human keys for the identical scope",
+        "No internal substitute or fallback success is accepted"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-025 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "governance",
+        "Positive",
+        "NFR-NS-025"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
+    },
+    {
+      "use_case_id": "NS-GOVERNANCE-0058",
+      "component": "Nursing Station",
+      "scenario": "NFR-NS-026 Agent Clinical Safety Officer and human two-key approval: Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment (positive)",
+      "test_type": "Positive",
+      "priority": "high",
+      "expected_outcomes": [
+        "Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment",
+        "No internal substitute or fallback success is accepted"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite",
+        "authenticated": true
+      },
+      "test_data": {
+        "patient_id": "pat-001",
+        "endpoint": "/api/governance/seed"
+      },
+      "validation_rules": [
+        "NFR-NS-026 direct evidence passes",
+        "tenant, facility, ward, and role scope remain enforced"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application"
+      ],
+      "tags": [
+        "governance",
+        "Positive",
+        "NFR-NS-026"
+      ],
+      "estimated_duration": "2s",
+      "automation_status": "automated",
+      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
+    },
+    {
+      "use_case_id": "NS-WARDBOARD-0059",
       "component": "Nursing Station",
       "scenario": "FR-NS-001 Ward and governance context: Ward board is scoped to tenant, facility, ward, and assignment (positive)",
       "test_type": "Positive",
@@ -2008,7 +2113,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0057",
+      "use_case_id": "NS-WARDBOARD-0060",
       "component": "Nursing Station",
       "scenario": "FR-NS-002 Ward and governance context: Patient safety banner preserves identifiers, demographics, location, allergies, code status, isolation, flags, and photo state (positive)",
       "test_type": "Positive",
@@ -2042,7 +2147,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-HANDOVER-0058",
+      "use_case_id": "NS-HANDOVER-0061",
       "component": "Nursing Station",
       "scenario": "FR-NS-003 Structured SBAR accountability transfer: Accountable nurse and accountability changes are recorded (positive)",
       "test_type": "Positive",
@@ -2076,7 +2181,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0059",
+      "use_case_id": "NS-WARDBOARD-0062",
       "component": "Nursing Station",
       "scenario": "FR-NS-004 Ward and governance context: Shared-screen privacy masks direct identifiers while retaining operational risk (positive)",
       "test_type": "Positive",
@@ -2110,7 +2215,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0060",
+      "use_case_id": "NS-OBSERVATIONS-0063",
       "component": "Nursing Station",
       "scenario": "FR-NS-010 Observation and deterioration controls: Structured observations retain units, performer, time, provenance, and warning score (positive)",
       "test_type": "Positive",
@@ -2144,7 +2249,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0061",
+      "use_case_id": "NS-OBSERVATIONS-0064",
       "component": "Nursing Station",
       "scenario": "FR-NS-011 Observation and deterioration controls: Implausible observations are rejected before persistence (positive)",
       "test_type": "Positive",
@@ -2178,7 +2283,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0062",
+      "use_case_id": "NS-OBSERVATIONS-0065",
       "component": "Nursing Station",
       "scenario": "FR-NS-012 Observation and deterioration controls: Configured warning thresholds create due escalation tasks (positive)",
       "test_type": "Positive",
@@ -2212,7 +2317,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-TASKS-0063",
+      "use_case_id": "NS-TASKS-0066",
       "component": "Nursing Station",
       "scenario": "FR-NS-020 Nursing task ownership and transitions: Nursing tasks support create, assign, accept, complete, cancel, and list (positive)",
       "test_type": "Positive",
@@ -2246,7 +2351,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-TASKS-0064",
+      "use_case_id": "NS-TASKS-0067",
       "component": "Nursing Station",
       "scenario": "FR-NS-021 Nursing task ownership and transitions: Task completion is limited to authorised ward and role scope (positive)",
       "test_type": "Positive",
@@ -2280,7 +2385,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-CAREPLANS-0065",
+      "use_case_id": "NS-CAREPLANS-0068",
       "component": "Nursing Station",
       "scenario": "FR-NS-022 Nursing care planning and evaluation: Patient-centred care plans support ownership, evaluation, achievement, discontinuation, and version control (positive)",
       "test_type": "Positive",
@@ -2314,7 +2419,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-HANDOVER-0066",
+      "use_case_id": "NS-HANDOVER-0069",
       "component": "Nursing Station",
       "scenario": "FR-NS-030 Structured SBAR accountability transfer: Structured SBAR handover transfers accountability only after named acceptance (positive)",
       "test_type": "Positive",
@@ -2348,7 +2453,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-HANDOVER-0067",
+      "use_case_id": "NS-HANDOVER-0070",
       "component": "Nursing Station",
       "scenario": "FR-NS-031 Structured SBAR accountability transfer: Handover snapshots unresolved tasks and current risks (positive)",
       "test_type": "Positive",
@@ -2382,7 +2487,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0068",
+      "use_case_id": "NS-MEDICATIONS-0071",
       "component": "Nursing Station",
       "scenario": "FR-NS-040 Medication administration verification: Medication administration records all six explicit outcomes (positive)",
       "test_type": "Positive",
@@ -2416,7 +2521,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0069",
+      "use_case_id": "NS-MEDICATIONS-0072",
       "component": "Nursing Station",
       "scenario": "FR-NS-041 Medication administration verification: Medication events require two patient identifiers (positive)",
       "test_type": "Positive",
@@ -2450,7 +2555,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0070",
+      "use_case_id": "NS-MEDICATIONS-0073",
       "component": "Nursing Station",
       "scenario": "FR-NS-042 Medication administration verification: High-alert medication requires an independent eligible co-signer (positive)",
       "test_type": "Positive",
@@ -2484,7 +2589,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-MEDICATIONS-0071",
+      "use_case_id": "NS-MEDICATIONS-0074",
       "component": "Nursing Station",
       "scenario": "FR-NS-043 Medication administration verification: Medication units remain explicit and failed actions never become administration records (positive)",
       "test_type": "Positive",
@@ -2518,7 +2623,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-SAFETY-0072",
+      "use_case_id": "NS-SAFETY-0075",
       "component": "Nursing Station",
       "scenario": "FR-NS-050 Nursing safety assessment and owned actions: Applicable inpatient nursing safety assessments are recorded (positive)",
       "test_type": "Positive",
@@ -2552,7 +2657,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-SAFETY-0073",
+      "use_case_id": "NS-SAFETY-0076",
       "component": "Nursing Station",
       "scenario": "FR-NS-051 Nursing safety assessment and owned actions: Assessment risks create owned and due nursing actions (positive)",
       "test_type": "Positive",
@@ -2586,7 +2691,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-AUDIT-0074",
+      "use_case_id": "NS-AUDIT-0077",
       "component": "Nursing Station",
       "scenario": "FR-NS-060 Tamper-evident governance evidence: Every regulated mutation appends to a tamper-evident audit chain (positive)",
       "test_type": "Positive",
@@ -2620,7 +2725,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0075",
+      "use_case_id": "NS-WARDBOARD-0078",
       "component": "Nursing Station",
       "scenario": "NFR-NS-001 Ward and governance context: Tenant, facility, ward, role, practitioner, and care-relationship scope is enforced (positive)",
       "test_type": "Positive",
@@ -2654,7 +2759,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0076",
+      "use_case_id": "NS-WARDBOARD-0079",
       "component": "Nursing Station",
       "scenario": "NFR-NS-002 Ward and governance context: Clinical state uses durable storage (positive)",
       "test_type": "Positive",
@@ -2688,7 +2793,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0077",
+      "use_case_id": "NS-WARDBOARD-0080",
       "component": "Nursing Station",
       "scenario": "NFR-NS-003 Ward and governance context: Clinical UI meets keyboard, screen-reader, reduced-motion, and 200 percent zoom obligations (positive)",
       "test_type": "Positive",
@@ -2722,7 +2827,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0078",
+      "use_case_id": "NS-WARDBOARD-0081",
       "component": "Nursing Station",
       "scenario": "NFR-NS-004 Ward and governance context: Deterministic light and dark themes have a visible control (positive)",
       "test_type": "Positive",
@@ -2756,7 +2861,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0079",
+      "use_case_id": "NS-WARDBOARD-0082",
       "component": "Nursing Station",
       "scenario": "NFR-NS-005 Ward and governance context: Safety invariants persist across themes and viewport sizes (positive)",
       "test_type": "Positive",
@@ -2790,7 +2895,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-OBSERVATIONS-0080",
+      "use_case_id": "NS-OBSERVATIONS-0083",
       "component": "Nursing Station",
       "scenario": "NFR-NS-006 Observation and deterioration controls: Clinical surfaces show freshness, source, author, and action ownership (positive)",
       "test_type": "Positive",
@@ -2824,7 +2929,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-TASKS-0081",
+      "use_case_id": "NS-TASKS-0084",
       "component": "Nursing Station",
       "scenario": "NFR-NS-007 Nursing task ownership and transitions: Stale concurrent mutations are rejected with record versions (positive)",
       "test_type": "Positive",
@@ -2858,7 +2963,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-AUDIT-0082",
+      "use_case_id": "NS-AUDIT-0085",
       "component": "Nursing Station",
       "scenario": "NFR-NS-008 Tamper-evident governance evidence: No synthetic integration telemetry or fallback success is emitted (positive)",
       "test_type": "Positive",
@@ -2892,10 +2997,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-AUDIT-0083",
+      "use_case_id": "NS-AUDIT-0086",
       "component": "Nursing Station",
-      "scenario": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (positive)",
-      "test_type": "Positive",
+      "scenario": "NFR-NS-009 Tamper-evident governance evidence: Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained (negative)",
+      "test_type": "Negative",
       "priority": "high",
       "expected_outcomes": [
         "Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained",
@@ -2903,7 +3008,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": true
+        "authenticated": false
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -2918,7 +3023,7 @@
       ],
       "tags": [
         "audit",
-        "Positive",
+        "Negative",
         "NFR-NS-009"
       ],
       "estimated_duration": "2s",
@@ -2926,10 +3031,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0084",
+      "use_case_id": "NS-WARDBOARD-0087",
       "component": "Nursing Station",
-      "scenario": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (positive)",
-      "test_type": "Positive",
+      "scenario": "NFR-NS-010 Ward and governance context: Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata (negative)",
+      "test_type": "Negative",
       "priority": "high",
       "expected_outcomes": [
         "Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata",
@@ -2937,7 +3042,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": true
+        "authenticated": false
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -2952,7 +3057,7 @@
       ],
       "tags": [
         "ward-board",
-        "Positive",
+        "Negative",
         "NFR-NS-010"
       ],
       "estimated_duration": "2s",
@@ -2960,10 +3065,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-WARDBOARD-0085",
+      "use_case_id": "NS-WARDBOARD-0088",
       "component": "Nursing Station",
-      "scenario": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (positive)",
-      "test_type": "Positive",
+      "scenario": "NFR-NS-011 Ward and governance context: Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags (negative)",
+      "test_type": "Negative",
       "priority": "high",
       "expected_outcomes": [
         "Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags",
@@ -2971,7 +3076,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": true
+        "authenticated": false
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -2986,7 +3091,7 @@
       ],
       "tags": [
         "ward-board",
-        "Positive",
+        "Negative",
         "NFR-NS-011"
       ],
       "estimated_duration": "2s",
@@ -2994,7 +3099,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0086",
+      "use_case_id": "NS-INTEGRATIONS-0089",
       "component": "Nursing Station",
       "scenario": "FR-NS-070 Governed authoritative sibling context: PICIS patient context is hub-mediated and identity reconciled (negative)",
       "test_type": "Negative",
@@ -3029,7 +3134,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0087",
+      "use_case_id": "NS-INTEGRATIONS-0090",
       "component": "Nursing Station",
       "scenario": "FR-NS-071 Governed authoritative sibling context: LIS results retain patient scope, status, units, interpretation, and source time (negative)",
       "test_type": "Negative",
@@ -3064,7 +3169,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0088",
+      "use_case_id": "NS-INTEGRATIONS-0091",
       "component": "Nursing Station",
       "scenario": "FR-NS-072 Governed authoritative sibling context: PACS/RIS imaging and report context retains source status (negative)",
       "test_type": "Negative",
@@ -3099,7 +3204,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0089",
+      "use_case_id": "NS-INTEGRATIONS-0092",
       "component": "Nursing Station",
       "scenario": "FR-NS-073 Governed authoritative sibling context: Pharmacy request and dispense context never becomes a nursing administration inference (negative)",
       "test_type": "Negative",
@@ -3134,7 +3239,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0090",
+      "use_case_id": "NS-INTEGRATIONS-0093",
       "component": "Nursing Station",
       "scenario": "FR-NS-074 Governed authoritative sibling context: Blood group, alerts, requests, issues, administrations, and reactions remain source-owned (negative)",
       "test_type": "Negative",
@@ -3169,7 +3274,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-REPORTING-0091",
+      "use_case_id": "NS-REPORTING-0094",
       "component": "Nursing Station",
       "scenario": "FR-NS-075 De-identified HMIS reporting: HMIS receives only approved de-identified ward counts (negative)",
       "test_type": "Negative",
@@ -3204,7 +3309,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0092",
+      "use_case_id": "NS-INTEGRATIONS-0095",
       "component": "Nursing Station",
       "scenario": "FR-NS-076 Governed authoritative sibling context: Every exchange attempt and successful provenance snapshot is durable (negative)",
       "test_type": "Negative",
@@ -3239,10 +3344,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0093",
+      "use_case_id": "NS-INTEGRATIONS-0096",
       "component": "Nursing Station",
-      "scenario": "FR-NS-077 Governed authoritative sibling context: Each source shows status, freshness, reconciliation, and last retrieval (negative)",
-      "test_type": "Negative",
+      "scenario": "FR-NS-077 Governed authoritative sibling context: Each source shows status, freshness, reconciliation, and last retrieval (edge)",
+      "test_type": "Edge",
       "priority": "high",
       "expected_outcomes": [
         "Each source shows status, freshness, reconciliation, and last retrieval",
@@ -3250,7 +3355,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": false
+        "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -3266,7 +3371,7 @@
       ],
       "tags": [
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-077"
       ],
       "estimated_duration": "2s",
@@ -3274,10 +3379,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0094",
+      "use_case_id": "NS-INTEGRATIONS-0097",
       "component": "Nursing Station",
-      "scenario": "FR-NS-078 Governed authoritative sibling context: Imported snapshots cannot overwrite Nursing Station-owned records (negative)",
-      "test_type": "Negative",
+      "scenario": "FR-NS-078 Governed authoritative sibling context: Imported snapshots cannot overwrite Nursing Station-owned records (edge)",
+      "test_type": "Edge",
       "priority": "high",
       "expected_outcomes": [
         "Imported snapshots cannot overwrite Nursing Station-owned records",
@@ -3285,7 +3390,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": false
+        "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -3301,7 +3406,7 @@
       ],
       "tags": [
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-078"
       ],
       "estimated_duration": "2s",
@@ -3309,10 +3414,10 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-INTEGRATIONS-0095",
+      "use_case_id": "NS-INTEGRATIONS-0098",
       "component": "Nursing Station",
-      "scenario": "FR-NS-079 Governed authoritative sibling context: Authorised refresh reports typed source failures (negative)",
-      "test_type": "Negative",
+      "scenario": "FR-NS-079 Governed authoritative sibling context: Authorised refresh reports typed source failures (edge)",
+      "test_type": "Edge",
       "priority": "high",
       "expected_outcomes": [
         "Authorised refresh reports typed source failures",
@@ -3320,7 +3425,7 @@
       ],
       "preconditions": {
         "database": "durable governed synthetic SQLite",
-        "authenticated": false
+        "authenticated": true
       },
       "test_data": {
         "patient_id": "pat-001",
@@ -3336,7 +3441,7 @@
       ],
       "tags": [
         "integrations",
-        "Negative",
+        "Edge",
         "FR-NS-079"
       ],
       "estimated_duration": "2s",
@@ -3344,7 +3449,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-ALERTS-0096",
+      "use_case_id": "NS-ALERTS-0099",
       "component": "Nursing Station",
       "scenario": "FR-NS-080 Near-real-time critical-result notification and acknowledgement: Authenticated BulletTrain critical-result events resolve a governed patient and persist idempotently (edge)",
       "test_type": "Edge",
@@ -3378,7 +3483,7 @@
       "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
     },
     {
-      "use_case_id": "NS-ALERTS-0097",
+      "use_case_id": "NS-ALERTS-0100",
       "component": "Nursing Station",
       "scenario": "FR-NS-081 Near-real-time critical-result notification and acknowledgement: Critical-result alerts appear on the ward dashboard within the configured five-second interval (edge)",
       "test_type": "Edge",
@@ -3406,110 +3511,6 @@
         "alerts",
         "Edge",
         "FR-NS-081"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
-    },
-    {
-      "use_case_id": "NS-ALERTS-0098",
-      "component": "Nursing Station",
-      "scenario": "FR-NS-082 Near-real-time critical-result notification and acknowledgement: Authorised nurses explicitly acknowledge alerts without autonomous clinical action (edge)",
-      "test_type": "Edge",
-      "priority": "high",
-      "expected_outcomes": [
-        "Authorised nurses explicitly acknowledge alerts without autonomous clinical action",
-        "No internal substitute or fallback success is accepted"
-      ],
-      "preconditions": {
-        "database": "durable governed synthetic SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/alerts/{alert_id}/acknowledge"
-      },
-      "validation_rules": [
-        "FR-NS-082 direct evidence passes",
-        "tenant, facility, ward, and role scope remain enforced"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application"
-      ],
-      "tags": [
-        "alerts",
-        "Edge",
-        "FR-NS-082"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0099",
-      "component": "Nursing Station",
-      "scenario": "NFR-NS-012 Governed authoritative sibling context: Every exchange uses the authenticated BulletTrain hub governance envelope (edge)",
-      "test_type": "Edge",
-      "priority": "high",
-      "expected_outcomes": [
-        "Every exchange uses the authenticated BulletTrain hub governance envelope",
-        "No internal substitute or fallback success is accepted"
-      ],
-      "preconditions": {
-        "database": "durable governed synthetic SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-005/integrations/refresh"
-      },
-      "validation_rules": [
-        "NFR-NS-012 direct evidence passes",
-        "tenant, facility, ward, and role scope remain enforced"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application",
-        "BulletTrain and authoritative seeded sibling"
-      ],
-      "tags": [
-        "integrations",
-        "Edge",
-        "NFR-NS-012"
-      ],
-      "estimated_duration": "2s",
-      "automation_status": "automated",
-      "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence"
-    },
-    {
-      "use_case_id": "NS-INTEGRATIONS-0100",
-      "component": "Nursing Station",
-      "scenario": "NFR-NS-013 Governed authoritative sibling context: Hub URL, token, and timeout are explicit and fail closed (edge)",
-      "test_type": "Edge",
-      "priority": "high",
-      "expected_outcomes": [
-        "Hub URL, token, and timeout are explicit and fail closed",
-        "No internal substitute or fallback success is accepted"
-      ],
-      "preconditions": {
-        "database": "durable governed synthetic SQLite",
-        "authenticated": true
-      },
-      "test_data": {
-        "patient_id": "pat-001",
-        "endpoint": "/api/patients/pat-005/integrations/refresh"
-      },
-      "validation_rules": [
-        "NFR-NS-013 direct evidence passes",
-        "tenant, facility, ward, and role scope remain enforced"
-      ],
-      "dependencies": [
-        "nursing-station FastAPI application",
-        "BulletTrain and authoritative seeded sibling"
-      ],
-      "tags": [
-        "integrations",
-        "Edge",
-        "NFR-NS-013"
       ],
       "estimated_duration": "2s",
       "automation_status": "automated",

@@ -1,0 +1,82 @@
+{
+  "schema_version": "SYMPHONIX_CLINICAL_DEPLOYMENT_GATE_V1",
+  "decision_id": "NS-CDG-2026-07-18-001",
+  "component": "nursing-station",
+  "decision_date": "2026-07-18",
+  "scope": {
+    "deployment_class": "synthetic_clinical_simulation",
+    "data_class": "seeded_synthetic",
+    "jurisdictions": ["GB", "IE"],
+    "live_patient_data": false,
+    "pseudonymised_patient_data": false,
+    "production_clinical_use": false,
+    "scope_statement": "Phase 2 Nursing Station against the governed fictional cohort and real seeded Symphonix services."
+  },
+  "agent_key": {
+    "persona_id": "clinical-safety-officer-superpersona",
+    "persona_version": "1.0.0",
+    "registry": "symphonix-health/global-agent-registry:seed_data/superpersona_registry/personas.json",
+    "maturity": "M2-validated",
+    "operating_procedure": "safety/AGENT_CSO_HITL_PROCEDURE.md",
+    "evidence_scope": "governance_metadata_and_deidentified_assurance_evidence",
+    "status": "passed",
+    "recommendation": "approve_declared_scope",
+    "authority": "prepare_evidence_and_recommend_only",
+    "professional_registration_claimed": false,
+    "checks": {
+      "nursing_station_tests": "passed_151",
+      "frontend_build": "passed",
+      "real_seeded_journey": "passed",
+      "headed_nurse_persona": "passed_17_of_17",
+      "headed_live_alert": "passed_4_of_4",
+      "headed_nurse_superpersona": "passed_20_of_20",
+      "caid_test_agent": "passed_12_skipped_1_not_applicable",
+      "caid_fpfn": "passed",
+      "caid_post_build_gatekeeper": "passed",
+      "bullettrain_pre_push": "passed",
+      "hazards_reviewed": "passed_no_unresolved_high_risk"
+    },
+    "evidence": [
+      "safety/CLINICAL_SAFETY_CASE_REPORT.md",
+      "safety/HAZARD_LOG.md",
+      "safety/PHASE_2_INTEGRATION_HAZARDS.md",
+      "docs/DPIA.md",
+      "docs/TRACEABILITY.md",
+      "evidence/signalbox-phase2/README.md",
+      "evidence/signalbox-phase2/phase2-headed-result.json"
+    ]
+  },
+  "human_key": {
+    "status": "approved",
+    "decision": "approve_declared_scope",
+    "approver_role": "workspace_owner_and_release_authority",
+    "approver_identity": "authenticated_workspace_user",
+    "approval_channel": "human_in_the_loop_codex_task",
+    "approved_at": "2026-07-18",
+    "scope": "synthetic_clinical_simulation",
+    "statement": "The human approved the governed synthetic-data Nursing Station version using the agent Clinical Safety Officer review model.",
+    "professional_registration_claimed": false
+  },
+  "professional_accountability_boundary": {
+    "agent": "competence_evidenced_but_not_a_legal_person_or_professional_registrant",
+    "synthetic_scope_human": "product_owner_release_authority_approval",
+    "live_clinical_scope": "requires_deploying_organisation_named_human_cso_and_applicable_professional_registration"
+  },
+  "professional_registration_gate": {
+    "status": "not_applicable_synthetic_scope",
+    "live_scope_rule": "agent_persona_verifies_current_source_evidence_and_human_authority_approves_the_named_registrant_for_the_declared_scope"
+  },
+  "decision": {
+    "status": "approved",
+    "approved_scope": "synthetic_clinical_simulation",
+    "expires_on": "2026-10-18",
+    "live_clinical_release": "blocked",
+    "live_release_blockers": [
+      "live_patient_and_controller_scope_not_assessed",
+      "deploying_organisation_human_cso_not_recorded",
+      "controller_specific_dpia_and_dpo_decision_not_recorded",
+      "jurisdiction_specific_medical_device_determination_not_recorded",
+      "production_identity_secrets_tls_backup_monitoring_and_downtime_evidence_not_recorded"
+    ]
+  }
+}

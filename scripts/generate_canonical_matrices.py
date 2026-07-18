@@ -71,6 +71,9 @@ REQUIREMENTS: dict[str, RequirementSpec] = {
     "NFR-NS-021": RequirementSpec("Inbound clinical notification authentication and audit fail closed", "alerts", "/api/integrations/lis/critical-result", ("tests/test_api.py::test_hub_critical_result_fails_closed_and_rejects_unknown_identity",)),
     "NFR-NS-022": RequirementSpec("Alert receipt and acknowledgement retain idempotent provenance", "alerts", "/api/alerts", ("tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged",)),
     "NFR-NS-023": RequirementSpec("Real seeded hub delivery and headed nurse persona evidence prove automatic dashboard revalidation", "alerts", "/api/alerts", ("scripts/run_phase2_seeded_journey.py", "../BulletTrain/tests/integration/journeys/nursing_station_phase2.scenario.yaml")),
+    "NFR-NS-024": RequirementSpec("The governed Agent Clinical Safety Officer executes the evidence review and recommends without claiming professional authority", "governance", "/api/governance/seed", ("safety/AGENT_CSO_HITL_PROCEDURE.md", "tests/test_governance_artifacts.py")),
+    "NFR-NS-025": RequirementSpec("Clinical deployment decisions require independent passing agent and human keys for the identical scope", "governance", "/api/governance/seed", ("safety/CLINICAL_DEPLOYMENT_GATE.json", "scripts/evaluate_clinical_deployment_gate.py", "tests/test_governance_artifacts.py")),
+    "NFR-NS-026": RequirementSpec("Synthetic clinical-simulation approval cannot activate or be inherited by live-patient deployment", "governance", "/api/governance/seed", ("safety/CLINICAL_DEPLOYMENT_GATE.json", "tests/test_governance_artifacts.py")),
 }
 
 DOMAIN_TITLES = {
@@ -85,6 +88,7 @@ DOMAIN_TITLES = {
     "integrations": "Governed authoritative sibling context",
     "reporting": "De-identified HMIS reporting",
     "alerts": "Near-real-time critical-result notification and acknowledgement",
+    "governance": "Agent Clinical Safety Officer and human two-key approval",
 }
 
 
@@ -116,7 +120,7 @@ def build_rows() -> tuple[list[dict], list[dict]]:
                 "Durable governed synthetic database is initialised",
                 "Authenticated ward-scoped user unless the negative scenario removes authentication",
             ],
-            "trigger": {"method": "GET" if spec.domain in {"ward-board", "audit"} else "POST", "path": spec.endpoint},
+            "trigger": {"method": "GET" if spec.domain in {"ward-board", "audit", "governance"} else "POST", "path": spec.endpoint},
             "input_payload": {"seeded_patient": "pat-001", "scenario_index": index, "test_type": test_type},
             "expected_connector_calls": ["BulletTrain connector hub"] if spec.domain in {"integrations", "reporting"} else [],
             "expected_events": [] if spec.domain == "ward-board" else [f"nursing-station.{spec.domain}.evaluated"],
