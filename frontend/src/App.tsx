@@ -2,6 +2,7 @@ import { FormEvent, KeyboardEvent, useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Activity,
+  BellRing,
   ClipboardCheck,
   ClipboardList,
   FileClock,
@@ -9,6 +10,8 @@ import {
   LayoutDashboard,
   LogOut,
   Moon,
+  Network,
+  RefreshCw,
   ShieldCheck,
   Sun,
   UsersRound,
@@ -17,7 +20,9 @@ import { NavLink, Navigate, Route, Routes, useNavigate, useParams } from 'react-
 import { auth, request } from './api/client'
 import type {
   CarePlan,
+  ClinicalAlertFeed,
   HandoverRecord,
+  PatientIntegrations,
   Medication,
   Nurse,
   Patient,
@@ -35,6 +40,7 @@ const PATIENT_TABS = [
   'medications',
   'handover',
   'safety',
+  'integrations',
 ] as const
 
 function ThemeToggle() {
@@ -86,7 +92,7 @@ function Login() {
       <form className="login-card" onSubmit={submit}>
         <div className="eyebrow">Symphonix Health / Clinical</div>
         <h1>Nursing Station</h1>
-        <p>Sign in to your assigned ward. Phase 1 uses governed, fictional synthetic records.</p>
+        <p>Sign in to your assigned ward. Phase 2 adds governed sibling context for linked fictional patients.</p>
         {error && <div className="alert danger" role="alert">{error}</div>}
         <div className="field">
           <label htmlFor="email">Email</label>
@@ -97,9 +103,43 @@ function Login() {
           <input id="password" type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" />
         </div>
         <button className="btn btn-primary" type="submit">Sign in</button>
-        <p className="sub">Phase 1 / Standalone / Governed synthetic patients</p>
+        <p className="sub">Phase 2 / BulletTrain mediated / Governed synthetic patients</p>
       </form>
     </main>
+  )
+}
+
+function ClinicalAlerts({ privacy }: { privacy: boolean }) {
+  const queryClient = useQueryClient()
+  const feed = useQuery({
+    queryKey: ['clinical-alerts'],
+    queryFn: () => request<ClinicalAlertFeed>('/api/alerts'),
+    refetchInterval: query => Math.max(1, query.state.data?.refresh_seconds ?? 5) * 1000,
+  })
+  const acknowledge = useMutation({
+    mutationFn: (alertId: string) => request(`/api/alerts/${alertId}/acknowledge`, { method: 'POST' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clinical-alerts'] }),
+  })
+  if (feed.error) {
+    return <div className="alert danger" role="alert">Live clinical alert feed unavailable: {(feed.error as Error).message}</div>
+  }
+  if (!feed.data?.alerts.length) return <div className="sr-only" data-testid="clinical-alert-count">0 open clinical alerts</div>
+  return (
+    <section className="clinical-alert-stack" aria-label="Open clinical alerts" aria-live="polite" data-testid="clinical-alert-feed">
+      {feed.data.alerts.map(alert => (
+        <article className="clinical-alert" key={alert.id} data-testid={`clinical-alert-${alert.event_id}`}>
+          <BellRing size={21} aria-hidden="true" />
+          <div>
+            <strong>{alert.title}</strong>
+            <div>{privacy ? `Patient ${alert.bed}` : `${alert.patient_name} / ${alert.mrn}`} / Bed {alert.bed}</div>
+            <div className="sub">{alert.summary} / observed {new Date(alert.observed_at).toLocaleString()} / source {alert.source_system} / correlation {alert.correlation_id}</div>
+          </div>
+          <button className="btn btn-danger" onClick={() => acknowledge.mutate(alert.id)} disabled={acknowledge.isPending}>
+            Acknowledge
+          </button>
+        </article>
+      ))}
+    </section>
   )
 }
 
@@ -144,7 +184,7 @@ function Layout({ user }: { user: User }) {
         <header className="bt-header">
           <div>
             <div className="header-title">Clinical operations</div>
-            <div className="header-meta">Phase 1 standalone / durable governed synthetic data</div>
+            <div className="header-meta">Phase 2 / durable nursing record / governed sibling context</div>
           </div>
           <div className="header-actions">
             <button className="btn" aria-pressed={privacy} onClick={togglePrivacy}>
@@ -161,6 +201,7 @@ function Layout({ user }: { user: User }) {
               <div><strong>Privacy mode active</strong><div>Direct identifiers are masked across the workspace. Clinical risk remains visible.</div></div>
             </div>
           )}
+          <ClinicalAlerts privacy={privacy} />
           <Routes>
             <Route path="/ward" element={<WardPage privacy={privacy} />} />
             <Route path="/patients/:patientId" element={<PatientPage user={user} privacy={privacy} />} />
@@ -225,6 +266,7 @@ function WardPage({ privacy }: { privacy: boolean }) {
         {data.patients.map(patient => (
           <NavLink
             className="board-row"
+            data-testid={`patient-link-${patient.id}`}
             role="row"
             to={`/patients/${patient.id}`}
             key={patient.id}
@@ -318,6 +360,7 @@ function PatientPage({ user, privacy }: { user: User; privacy: boolean }) {
             aria-controls="patient-tab-panel"
             tabIndex={tab === label ? 0 : -1}
             className={tab === label ? 'active' : ''}
+            data-testid={`patient-tab-${label.replaceAll(' ', '-')}`}
             onClick={() => setTab(label)}
             onKeyDown={event => tabKeyDown(event, index)}
             key={label}
@@ -334,8 +377,73 @@ function PatientPage({ user, privacy }: { user: User; privacy: boolean }) {
         {tab === 'medications' && <Medications patient={data} user={user} privacy={privacy} onSaved={refresh} />}
         {tab === 'handover' && <Handover patient={data} user={user} />}
         {tab === 'safety' && <Safety patient={data} onSaved={refresh} />}
+        {tab === 'integrations' && <Integrations patient={data} />}
       </div>
     </>
+  )
+}
+
+function sourceSummary(source: PatientIntegrations['sources'][number]) {
+  const data = source.snapshot?.data
+  if (!data) return 'No successful snapshot has been recorded.'
+  const collectionKeys = ['results', 'orders', 'studies', 'reports', 'medication_requests', 'dispense_events', 'requests', 'issues', 'administrations', 'reactions']
+  const counts = collectionKeys
+    .filter(key => Array.isArray(data[key]))
+    .map(key => `${(data[key] as unknown[]).length} ${key.replaceAll('_', ' ')}`)
+  const patient = data.patient as Record<string, unknown> | undefined
+  if (patient?.abo_group) counts.unshift(`Blood group ${String(patient.abo_group)} ${String(patient.rhd ?? '')}`.trim())
+  return counts.length ? counts.join(' / ') : 'Patient context received; no reportable items.'
+}
+
+function Integrations({ patient }: { patient: Patient }) {
+  const queryClient = useQueryClient()
+  const context = useQuery({
+    queryKey: ['patient-integrations', patient.id],
+    queryFn: () => request<PatientIntegrations>(`/api/patients/${patient.id}/integrations`),
+  })
+  const refresh = useMutation({
+    mutationFn: () => request<{ all_succeeded: boolean }>(`/api/patients/${patient.id}/integrations/refresh`, { method: 'POST' }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['patient-integrations', patient.id] }),
+  })
+  if (context.isLoading) return <div className="panel" aria-busy="true">Loading governed sibling context...</div>
+  if (context.error) return <div className="alert danger" role="alert">{(context.error as Error).message}</div>
+  if (!context.data) return null
+  return (
+    <section className="panel integration-panel">
+      <div className="panel-head">
+        <div><h2>Sibling clinical context</h2><p>Read-only snapshots mediated by the BulletTrain hub. Nursing observations, tasks and handovers remain owned here.</p></div>
+        <button data-testid="refresh-integrations" className="btn btn-primary" disabled={!context.data.linked || refresh.isPending} onClick={() => refresh.mutate()}>
+          <RefreshCw size={16} aria-hidden="true" /> {refresh.isPending ? 'Refreshing...' : 'Refresh all sources'}
+        </button>
+      </div>
+      {!context.data.linked && <div className="alert caution"><Network size={18} /><div><strong>No governed identity link</strong><div>This patient cannot be queried across sibling systems. No fallback data is shown.</div></div></div>}
+      {refresh.error && <div className="alert danger" role="alert">{(refresh.error as Error).message}</div>}
+      {refresh.data && !refresh.data.all_succeeded && <div className="alert caution" role="status">One or more sources failed. Existing successful snapshots are marked with their freshness; failed sources remain explicit.</div>}
+      <div className="integration-grid">
+        {context.data.sources.map(source => {
+          const failed = source.state === 'failed'
+          const current = source.snapshot?.status === 'current' && !failed
+          return (
+            <article className="integration-card" key={source.source_system}>
+              <div className="panel-head">
+                <h3>{source.source_system.replaceAll('-', ' ')}</h3>
+                <Status kind={failed ? 'danger' : current ? 'normal' : 'caution'} label={failed ? 'Unavailable' : current ? 'Current' : source.snapshot ? 'Stale' : 'Not refreshed'} />
+              </div>
+              <p>{sourceSummary(source)}</p>
+              <dl className="provenance-list">
+                <div><dt>Contract</dt><dd>{source.resource_type}</dd></div>
+                <div><dt>Semantics</dt><dd>{source.semantics.join(', ')}</dd></div>
+                <div><dt>Source updated</dt><dd>{source.snapshot?.source_updated_at ? new Date(source.snapshot.source_updated_at).toLocaleString() : 'Not supplied'}</dd></div>
+                <div><dt>Fetched</dt><dd>{source.snapshot?.fetched_at ? new Date(source.snapshot.fetched_at).toLocaleString() : 'Never'}</dd></div>
+                <div><dt>Identity check</dt><dd>{source.snapshot?.reconciliation_status ?? 'Not performed'}</dd></div>
+                <div><dt>Correlation</dt><dd className="sub">{source.last_attempt?.correlation_id ?? source.snapshot?.correlation_id ?? 'None'}</dd></div>
+              </dl>
+              {failed && <div className="alert danger" role="status"><strong>{source.last_attempt?.error_code ?? 'Source failed'}</strong><div>{source.last_attempt?.error_detail ?? 'No further detail returned.'}</div></div>}
+            </article>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 
@@ -737,9 +845,9 @@ function GovernancePage() {
       )}
       <div className="panel governance-panel">
         <h2>Phase boundary</h2>
-        <p>Phase 1 proves durable standalone nursing workflows with governed fictional patients. Patient identity, encounter movement, prescribing, dispensing, laboratory, imaging, blood-product and HMIS connections are Phase 2 contracts and are not simulated.</p>
+        <p>Phase 2 preserves durable nursing-owned workflows and adds governed BulletTrain context from the real seeded sibling services. Critical LIS results enter the ward alert feed through an authenticated, audited hub event and require explicit nurse acknowledgement.</p>
         <p>Warning profile: {health?.warning_profile ?? 'checking'}. Integration state: {health?.integrations ?? 'checking'}.</p>
-        <div className="alert caution"><FileClock size={18} /><div><strong>Clinical deployment is not authorised.</strong><div>Clinical Safety Officer review, local policy configuration, production security, master-registry resolution, and Phase 2 integration evidence remain required.</div></div></div>
+        <div className="alert caution"><FileClock size={18} /><div><strong>Clinical deployment is not authorised.</strong><div>Clinical Safety Officer review, local escalation policy, production security, secret management, and master-registry approval remain required.</div></div></div>
       </div>
     </>
   )

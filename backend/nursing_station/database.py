@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS patients (
  isolation_status TEXT NOT NULL, flags_json TEXT NOT NULL,
  photo_status TEXT NOT NULL DEFAULT 'unavailable', accountable_nurse_id TEXT,
  version INTEGER NOT NULL DEFAULT 1, data_class TEXT NOT NULL DEFAULT 'seeded_synthetic',
- seed_manifest_id TEXT NOT NULL DEFAULT 'seed.uk.nursing_station.phase1_v1',
+ seed_manifest_id TEXT NOT NULL DEFAULT 'seed.uk.nursing_station.phase2_v1',
+ external_nhs_number TEXT, source_patient_id TEXT,
  UNIQUE(tenant_id, mrn), FOREIGN KEY(ward_id) REFERENCES wards(id),
  FOREIGN KEY(accountable_nurse_id) REFERENCES users(id)
 );
@@ -110,6 +111,34 @@ CREATE TABLE IF NOT EXISTS seed_runs (
  generated_at TEXT NOT NULL, data_class TEXT NOT NULL,
  record_counts_json TEXT NOT NULL, declaration_json TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS integration_snapshots (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, patient_id TEXT NOT NULL,
+ source_system TEXT NOT NULL, resource_type TEXT NOT NULL,
+ content_hash TEXT NOT NULL, source_updated_at TEXT, fetched_at TEXT NOT NULL,
+ status TEXT NOT NULL, reconciliation_status TEXT NOT NULL,
+ correlation_id TEXT NOT NULL, data_json TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 1,
+ UNIQUE(tenant_id, patient_id, source_system),
+ FOREIGN KEY(patient_id) REFERENCES patients(id)
+);
+CREATE TABLE IF NOT EXISTS integration_attempts (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, patient_id TEXT,
+ source_system TEXT NOT NULL, resource_type TEXT NOT NULL,
+ correlation_id TEXT NOT NULL, attempted_at TEXT NOT NULL,
+ completed_at TEXT, status TEXT NOT NULL, error_code TEXT, error_detail TEXT,
+ content_hash TEXT, hub_audit_event_id TEXT, duration_ms REAL,
+ UNIQUE(source_system, correlation_id)
+);
+CREATE TABLE IF NOT EXISTS clinical_alerts (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL,
+ patient_id TEXT NOT NULL, event_id TEXT NOT NULL, source_system TEXT NOT NULL,
+ source_resource_id TEXT NOT NULL, alert_type TEXT NOT NULL, severity TEXT NOT NULL,
+ title TEXT NOT NULL, summary TEXT NOT NULL, observed_at TEXT NOT NULL,
+ received_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'open',
+ acknowledged_at TEXT, acknowledged_by TEXT, correlation_id TEXT NOT NULL,
+ content_hash TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 1,
+ UNIQUE(source_system, event_id), FOREIGN KEY(patient_id) REFERENCES patients(id),
+ FOREIGN KEY(acknowledged_by) REFERENCES users(id)
+);
 CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit_events
 BEGIN SELECT RAISE(ABORT, 'audit events are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit_events
@@ -142,7 +171,11 @@ class Database:
             self._migrate(conn)
             if not conn.execute("SELECT 1 FROM wards LIMIT 1").fetchone():
                 self._seed(conn)
-            elif not conn.execute("SELECT 1 FROM seed_runs LIMIT 1").fetchone():
+            else:
+                self._ensure_phase2_seed(conn)
+            if not conn.execute(
+                "SELECT 1 FROM seed_runs WHERE seed_manifest_id=?", (SEED_MANIFEST_ID,)
+            ).fetchone():
                 self._record_seed_run(conn, self._now())
 
     @staticmethod
@@ -168,6 +201,23 @@ class Database:
                 "ALTER TABLE patients ADD COLUMN seed_manifest_id TEXT NOT NULL "
                 "DEFAULT 'seed.uk.nursing_station.phase1_v1'"
             )
+        if "external_nhs_number" not in patient_columns:
+            conn.execute("ALTER TABLE patients ADD COLUMN external_nhs_number TEXT")
+        if "source_patient_id" not in patient_columns:
+            conn.execute("ALTER TABLE patients ADD COLUMN source_patient_id TEXT")
+
+    @staticmethod
+    def _ensure_phase2_seed(conn: sqlite3.Connection) -> None:
+        tenant = "tenant-st-brigids"
+        timestamp = datetime.now(UTC)
+        rows = [
+            ("pat-005", tenant, "ward-med-a", "MRN-104401", "0003", "Ava Patel", "1964-12-30", "female", "A-18", "Critical care step-down after renal support", (timestamp-timedelta(hours=10)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Renal replacement therapy", "Atrial fibrillation"]), "unavailable", "usr-grace", 1, DATA_CLASS, SEED_MANIFEST_ID, "9991000003", "pat-ava"),
+            ("pat-006", tenant, "ward-med-a", "MRN-104402", "0042", "Finn Jackson", "2001-06-08", "male", "A-20", "Monitored recovery after overdose", (timestamp-timedelta(hours=5)).isoformat(), json.dumps([{"substance":"Codeine","reaction":"Nausea","severity":"moderate"}]), "Full escalation", "None", json.dumps(["Mental health review pending"]), "unavailable", "usr-amina", 1, DATA_CLASS, SEED_MANIFEST_ID, "9990000042", "pat-finn"),
+        ]
+        conn.executemany(
+            "INSERT OR IGNORE INTO patients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            rows,
+        )
 
     def fetchall(self, sql: str, params: tuple[Any, ...] = ()) -> list[dict[str, Any]]:
         with self.connect() as conn:
@@ -270,10 +320,19 @@ class Database:
             ("pat-002", tenant, "ward-med-a", "MRN-104311", "2059", "Kwame Boateng", "1968-02-03", "male", "A-14", "Decompensated heart failure", (now-timedelta(days=2)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Fluid restriction"]), "unavailable", "usr-grace", 1),
             ("pat-003", tenant, "ward-med-a", "MRN-104329", "7740", "Nkiru Adeyemi", "1981-11-22", "female", "A-16", "Diabetic foot infection", (now-timedelta(days=1)).isoformat(), json.dumps([{"substance":"Latex","reaction":"Contact dermatitis","severity":"moderate"}]), "Full escalation", "Contact", json.dumps(["High-alert medication","Pressure injury risk"]), "unavailable", "usr-amina", 1),
             ("pat-004", tenant, "ward-surg-b", "MRN-104350", "9014", "Liam O'Connor", "1974-06-18", "male", "B-03", "Post-operative bowel resection", (now-timedelta(hours=18)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Falls risk"]), "unavailable", "usr-samuel", 1),
+            ("pat-005", tenant, "ward-med-a", "MRN-104401", "0003", "Ava Patel", "1964-12-30", "female", "A-18", "Critical care step-down after renal support", (now-timedelta(hours=10)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Renal replacement therapy", "Atrial fibrillation"]), "unavailable", "usr-grace", 1),
+            ("pat-006", tenant, "ward-med-a", "MRN-104402", "0042", "Finn Jackson", "2001-06-08", "male", "A-20", "Monitored recovery after overdose", (now-timedelta(hours=5)).isoformat(), json.dumps([{"substance":"Codeine","reaction":"Nausea","severity":"moderate"}]), "Full escalation", "None", json.dumps(["Mental health review pending"]), "unavailable", "usr-amina", 1),
         ]
-        patients = [row + (DATA_CLASS, SEED_MANIFEST_ID) for row in patients]
+        external_identity = {
+            "pat-005": ("9991000003", "pat-ava"),
+            "pat-006": ("9990000042", "pat-finn"),
+        }
+        patients = [
+            row + (DATA_CLASS, SEED_MANIFEST_ID, *external_identity.get(row[0], (None, None)))
+            for row in patients
+        ]
         conn.executemany(
-            "INSERT INTO patients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO patients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             patients,
         )
         tasks = [
@@ -322,7 +381,7 @@ class Database:
             (id,seed_manifest_id,seeder_name,metadata_pack_id,generated_at,data_class,
              record_counts_json,declaration_json) VALUES (?,?,?,?,?,?,?,?)""",
             (
-                "seed-run-phase1-v1",
+                "seed-run-phase2-v1",
                 declaration["seed_manifest_id"],
                 declaration["seeder_name"],
                 declaration["metadata_pack_id"],

@@ -1,0 +1,236 @@
+{
+  "anchor": {
+    "anchored_at": "2026-07-18T17:19:24Z",
+    "entry_hash": "0b9938720805db0b3a82a1edc975e5989b5df012f92f2ca4209e3a5f22c7c5d6",
+    "ledger_seq": 1097
+  },
+  "evidence": {
+    "accessibility_sha256": "3898da1cc37e26f68e0dee949367b90411e7c4548866801c15c3e4a2a1b4131f",
+    "backend_audit_ids": [
+      "cf66069263b53d0a",
+      "81bbb2a3e4a4be82",
+      "01e634743fb0ff09",
+      "81bbb2a3e4a4be82",
+      "6667879a07e9e56a",
+      "ca2112ff329a090b",
+      "76befa59d0d88b56",
+      "ca2112ff329a090b",
+      "2d49e59c74d3f1be",
+      "ca2112ff329a090b",
+      "f3cd0fdb7fd4dc87",
+      "5e8bb053b472d02f",
+      "f3cd0fdb7fd4dc87",
+      "ca2112ff329a090b",
+      "81bbb2a3e4a4be82",
+      "6667879a07e9e56a",
+      "ca2112ff329a090b",
+      "76befa59d0d88b56",
+      "ca2112ff329a090b",
+      "a1def93deb9938f6",
+      "ca2112ff329a090b",
+      "ca2112ff329a090b"
+    ],
+    "console_errors": [],
+    "failed_network": [],
+    "screenshot_sha256": "b711708eeb662226509ca3298752dc04150cbabf0ebad1cf8f187a923aa2a7bd"
+  },
+  "produced_at": "2026-07-18T17:19:24Z",
+  "repository": {
+    "commit": "c977abc6770b91a0800fd74fe4e2ca571f244c91",
+    "commit_subject": "Merge remote-tracking branch 'origin/main'",
+    "origin": "https://github.com/symphonix-health/nursing-station.git"
+  },
+  "result": {
+    "duration_ms": 33671.0,
+    "failed_steps": 0,
+    "final_url": "http://127.0.0.1:5282/ward",
+    "final_url_sha256": "66d4991fd1688f25883981b9f85770c7220c096323866224ecf0c9d8ab1f13eb",
+    "passed_steps": 20,
+    "skipped_steps": 0,
+    "status": "pass",
+    "total_steps": 20
+  },
+  "scenario": {
+    "base_url": "http://127.0.0.1:5282",
+    "name": "nurse superpersona reviews hub context and acknowledges critical result",
+    "scenario_sha256": "e926c3cd99ad66481649d297cc8ebb1ff6f442637832160b466241fad7227a37",
+    "total_steps": 20
+  },
+  "scenario_evidence_id": "f97be553-e35e-4a36-84e5-8c4bd3ab7552",
+  "schema_type": "signalbox.scenario_evidence",
+  "schema_version": "1",
+  "session": {
+    "headed": true,
+    "operator_id": "",
+    "persona": "nurse-superpersona",
+    "session_id": "ns-phase2-nurse-superpersona-headed",
+    "tenant_id": ""
+  },
+  "signature": {
+    "algorithm": "Ed25519",
+    "key_id": "ws-gqfLoOB_GTNARHPF",
+    "value": "a-Q2fB3N8i07NoMvV7GM1jiZAdCi0B_ptW0nAcy6kHkyffGPUKTXHbo7CWHaQWx0s_3GI2eV6_47V3JIi5yQCg"
+  },
+  "steps": [
+    {
+      "action": "navigate",
+      "duration_ms": 1109.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 0,
+      "step_name": "open login"
+    },
+    {
+      "action": "type",
+      "duration_ms": 359.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 1,
+      "step_name": "enter nurse email"
+    },
+    {
+      "action": "type",
+      "duration_ms": 313.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 2,
+      "step_name": "enter nurse password"
+    },
+    {
+      "action": "click",
+      "duration_ms": 547.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 3,
+      "step_name": "sign in"
+    },
+    {
+      "action": "sleep",
+      "duration_ms": 5000.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 4,
+      "step_name": "gentle transition"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 0.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 5,
+      "step_name": "ward loaded"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 31.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 6,
+      "step_name": "critical result visible"
+    },
+    {
+      "action": "click",
+      "duration_ms": 562.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 7,
+      "step_name": "open governed patient"
+    },
+    {
+      "action": "sleep",
+      "duration_ms": 5016.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 8,
+      "step_name": "gentle patient transition"
+    },
+    {
+      "action": "click",
+      "duration_ms": 531.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 9,
+      "step_name": "open integrations"
+    },
+    {
+      "action": "click",
+      "duration_ms": 532.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 10,
+      "step_name": "refresh hub context"
+    },
+    {
+      "action": "sleep",
+      "duration_ms": 8015.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 11,
+      "step_name": "wait for sources"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 16.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 12,
+      "step_name": "five current sources"
+    },
+    {
+      "action": "navigate",
+      "duration_ms": 1062.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 13,
+      "step_name": "return to ward alert"
+    },
+    {
+      "action": "sleep",
+      "duration_ms": 5000.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 14,
+      "step_name": "gentle ward transition"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 32.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 15,
+      "step_name": "alert still open"
+    },
+    {
+      "action": "click",
+      "duration_ms": 531.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 16,
+      "step_name": "human acknowledgement"
+    },
+    {
+      "action": "sleep",
+      "duration_ms": 5015.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 17,
+      "step_name": "wait for durable acknowledgement"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 0.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 18,
+      "step_name": "alert closed"
+    },
+    {
+      "action": "assert",
+      "duration_ms": 0.0,
+      "error": "",
+      "status": "pass",
+      "step_index": 19,
+      "step_name": "console remains clean"
+    }
+  ]
+}

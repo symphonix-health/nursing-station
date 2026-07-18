@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from nursing_station import main
 from nursing_station.database import Database
 
-MATRIX = Path(__file__).parent / "json_matrices" / "nursing_station_phase1_canonical.json"
+MATRIX = Path(__file__).parent / "json_matrices" / "nursing_station_phase2_canonical.json"
 ALL_SCENARIOS = json.loads(MATRIX.read_text(encoding="utf-8"))["scenarios"]
 SHARD_TOTAL = max(1, int(os.getenv("BT_MATRIX_APP_HARNESS_SHARD_TOTAL", "1")))
 SHARD_INDEX = int(os.getenv("BT_MATRIX_APP_HARNESS_SHARD_INDEX", "0"))
@@ -102,6 +102,18 @@ def _request(client, domain: str, headers: dict[str, str], category: str):
         if edge:
             audit_headers = headers
         return client.get("/api/audit", headers=audit_headers)
+    if domain == "integrations":
+        patient_id = "pat-004" if edge else "pat-005"
+        return client.get(f"/api/patients/{patient_id}/integrations", headers=active_headers)
+    if domain == "reporting":
+        report_headers = {} if unauthenticated else _login(client, "grace.mensah@nursing.test")
+        if edge:
+            report_headers = headers
+        return client.post("/api/wards/ward-med-a/hmis-measures", headers=report_headers)
+    if domain == "alerts":
+        if edge:
+            return client.post("/api/alerts/missing/acknowledge", headers=headers)
+        return client.get("/api/alerts", headers={} if unauthenticated else headers)
     raise AssertionError(f"Unhandled matrix domain: {domain}")
 
 
@@ -111,13 +123,13 @@ def test_matrix_scenario(client, scenario):
     category = scenario["scenario_category"].lower()
     domain = next(tag for tag in scenario["tags"] if tag in {
         "ward-board", "observations", "tasks", "care-plans", "handover",
-        "medications", "safety", "audit",
+        "medications", "safety", "audit", "integrations", "reporting", "alerts",
     })
     response = _request(client, domain, headers, category)
-    expected = 200 if domain in {"ward-board", "audit", "tasks"} else 201
+    expected = 503 if domain == "reporting" else 200 if domain in {"ward-board", "audit", "tasks", "integrations", "alerts"} else 201
     if category == "positive":
         assert response.status_code == expected
     elif category == "negative":
         assert response.status_code == 401
     else:
-        assert response.status_code in {403, 422}
+        assert response.status_code in {403, 404, 422}

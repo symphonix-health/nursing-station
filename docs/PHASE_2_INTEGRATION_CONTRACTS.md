@@ -1,13 +1,11 @@
 # Phase 2 integration contracts
 
-These are contracts only. They are intentionally not implemented or simulated in Phase 1.
+These contracts are implemented in Phase 2. Runtime acceptance still requires the real seeded journey and the existing safety, privacy, security, port, CAID, and headed-browser gates.
 
 | Boundary | Authoritative owner | Future governed contract |
 |---|---|---|
-| Patient identity | Platform identity/MPI | FHIR Patient read through BulletTrain |
-| Encounter and movement | Future inpatient administration owner | FHIR Encounter and Location events |
-| Prescribing | GP/EPS or inpatient prescribing owner | MedicationRequest read |
-| Dispensing and supply | Pharmacy and supply-chain systems | MedicationDispense and SupplyDelivery read |
+| Patient identity and encounter | PICIS | FHIR Patient/Encounter semantics through BulletTrain |
+| Prescribing and dispensing | pharmacy-system | MedicationRequest/MedicationDispense semantics through BulletTrain |
 | Laboratory | LIS | Observation/DiagnosticReport read |
 | Imaging | PACS-RIS | ImagingStudy/DiagnosticReport read |
 | Blood products | blood-transfusion | Transfusion status and administration event |
@@ -15,9 +13,9 @@ These are contracts only. They are intentionally not implemented or simulated in
 
 All transport must be hub-mediated, authenticated, tenant-qualified, replayable, observable, and fail explicitly. No direct sibling calls or selectable fake fallbacks are allowed.
 
-## Requirement-led entry gate
+## Implemented control boundary
 
-Phase 2 does not begin by wiring endpoints. CAID must first add and review requirement IDs for each boundary, then cascade them through use cases, the BulletTrain 14-column functional matrix, the CAID 18-column non-functional matrix, safety hazards, seeded journeys, direct service tests, and the requirement traceability matrix.
+`FR-NS-070` through `FR-NS-079` and `NFR-NS-012` through `NFR-NS-020` define the implemented boundary. Ava Patel (`9991000003`, `pat-ava`) and Finn Jackson (`9990000042`, `pat-finn`) are governed fictional identity-alignment records already present in each source seeder.
 
 The Phase 2 requirements must cover at least:
 
@@ -27,4 +25,10 @@ The Phase 2 requirements must cover at least:
 - terminology binding, data minimisation, retention, audit, clinical-safety ownership, DPIA effects, and human override or escalation;
 - real seeded cross-system journeys and headed SignalBox evidence, with no internal mock, stub, fallback, or synthetic telemetry accepted as integration proof.
 
-An interface may be added to the BulletTrain integration catalogue only when its requirement-to-use-case-to-test chain and real-service evidence pass the existing governance gates. Any `BLOCKED`, `PARTIAL`, or unknown result remains an explicit Phase 2 gap.
+The BulletTrain catalogue contains one row per implemented exchange. A `BLOCKED`, `PARTIAL`, unavailable, mismatched, or unknown result remains visible and cannot be converted into success by cached or locally fabricated data.
+
+## Critical LIS result notification
+
+LIS emits `CriticalResultAlert` through the registered BulletTrain Nursing Station connector. BulletTrain signs the canonical payload with HMAC-SHA256 and forwards it to `/api/integrations/lis/critical-result`. Nursing Station validates the signature, event kind, source event identity, governed NHS-number link, tenant and ward scope, and content hash before persisting an open alert. Replays with the same event and content are idempotent; changed replays fail closed.
+
+The dashboard polls `/api/alerts` at the governed five-second interval and shows non-colour critical status, source provenance, observed time, and correlation identity. Receipt and display do not diagnose, treat, complete a task, or acknowledge the result. An assigned nurse must use the explicit acknowledgement action, which records the actor and time in durable state and the audit chain.

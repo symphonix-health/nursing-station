@@ -11,3 +11,7 @@ frontend/playwright-report/
 *.tsbuildinfo
 tests/screenshots/*.png
 !data/.gitkeep
+.signalbox/
+evidence/**/keys/workspace_ed25519
+evidence/**/evidence-state.json
+evidence/**/state/

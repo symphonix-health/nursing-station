@@ -46,6 +46,31 @@ REQUIREMENTS: dict[str, RequirementSpec] = {
     "NFR-NS-009": RequirementSpec("Safety case, hazard log, DPIA, privacy, retention, and operations artefacts are maintained", "audit", "/api/audit", ("tests/test_governance_artifacts.py",)),
     "NFR-NS-010": RequirementSpec("Dedicated ports resolve from the workspace registry and cascade to conflict-checked catalogues and topology metadata", "ward-board", "/api/ward-board", ("tests/test_port_registry.py",)),
     "NFR-NS-011": RequirementSpec("Durable runtime state declares governed synthetic lineage, landed counts, and non-live privacy flags", "ward-board", "/api/governance/seed", ("tests/test_api.py::test_seed_governance_is_durable_explicit_and_non_live",)),
+    "FR-NS-070": RequirementSpec("PICIS patient context is hub-mediated and identity reconciled", "integrations", "/api/patients/pat-005/integrations/refresh", ("tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed", "../picis-system/tests/test_api.py::test_nursing_context_requires_staff_and_returns_seeded_patient")),
+    "FR-NS-071": RequirementSpec("LIS results retain patient scope, status, units, interpretation, and source time", "integrations", "/api/patients/pat-005/integrations/refresh", ("../lis/backend/tests/test_nursing_context.py",)),
+    "FR-NS-072": RequirementSpec("PACS/RIS imaging and report context retains source status", "integrations", "/api/patients/pat-005/integrations/refresh", ("../pacs-ris/backend/tests/test_nursing_context.py",)),
+    "FR-NS-073": RequirementSpec("Pharmacy request and dispense context never becomes a nursing administration inference", "integrations", "/api/patients/pat-005/integrations/refresh", ("../pharmacy-system/backend/tests/test_nursing_context.py",)),
+    "FR-NS-074": RequirementSpec("Blood group, alerts, requests, issues, administrations, and reactions remain source-owned", "integrations", "/api/patients/pat-005/integrations/refresh", ("../blood-transfusion/backend/tests/test_nursing_context.py",)),
+    "FR-NS-075": RequirementSpec("HMIS receives only approved de-identified ward counts", "reporting", "/api/wards/ward-med-a/hmis-measures", ("../HMIS/backend/tests/test_nursing_measures.py",)),
+    "FR-NS-076": RequirementSpec("Every exchange attempt and successful provenance snapshot is durable", "integrations", "/api/patients/pat-005/integrations", ("tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed",)),
+    "FR-NS-077": RequirementSpec("Each source shows status, freshness, reconciliation, and last retrieval", "integrations", "/api/patients/pat-005/integrations", ("frontend/e2e/clinical.spec.ts",)),
+    "FR-NS-078": RequirementSpec("Imported snapshots cannot overwrite Nursing Station-owned records", "integrations", "/api/patients/pat-005/integrations", ("backend/nursing_station/main.py",)),
+    "FR-NS-079": RequirementSpec("Authorised refresh reports typed source failures", "integrations", "/api/patients/pat-005/integrations/refresh", ("tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed",)),
+    "FR-NS-080": RequirementSpec("Authenticated BulletTrain critical-result events resolve a governed patient and persist idempotently", "alerts", "/api/integrations/lis/critical-result", ("tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged",)),
+    "FR-NS-081": RequirementSpec("Critical-result alerts appear on the ward dashboard within the configured five-second interval", "alerts", "/api/alerts", ("frontend/e2e/clinical.spec.ts", "../BulletTrain/tests/integration/journeys/nursing_station_phase2.scenario.yaml")),
+    "FR-NS-082": RequirementSpec("Authorised nurses explicitly acknowledge alerts without autonomous clinical action", "alerts", "/api/alerts/{alert_id}/acknowledge", ("tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged",)),
+    "NFR-NS-012": RequirementSpec("Every exchange uses the authenticated BulletTrain hub governance envelope", "integrations", "/api/patients/pat-005/integrations/refresh", ("backend/nursing_station/integration.py", "../BulletTrain/tests/unit/connectors/test_symphonix_sibling_connector.py")),
+    "NFR-NS-013": RequirementSpec("Hub URL, token, and timeout are explicit and fail closed", "integrations", "/api/patients/pat-005/integrations/refresh", ("tests/test_api.py::test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed",)),
+    "NFR-NS-014": RequirementSpec("Snapshots and HMIS reports are idempotent and reject older source versions", "integrations", "/api/patients/pat-005/integrations/refresh", ("backend/nursing_station/main.py", "../HMIS/backend/tests/test_nursing_measures.py")),
+    "NFR-NS-015": RequirementSpec("FHIR semantics, source codes, and units retain provenance", "integrations", "/api/patients/pat-005/integrations", ("backend/nursing_station/integration.py",)),
+    "NFR-NS-016": RequirementSpec("Integration access is minimised, purpose-bound, retained, and audited", "audit", "/api/audit", ("tests/test_api.py::test_audit_chain_is_append_only_and_verifiable",)),
+    "NFR-NS-017": RequirementSpec("Downtime retains the last successful snapshot and marks it stale", "integrations", "/api/patients/pat-005/integrations", ("backend/nursing_station/main.py",)),
+    "NFR-NS-018": RequirementSpec("Acceptance uses the real shared seeded cohort without internal substitutes", "integrations", "/api/patients/pat-005/integrations/refresh", ("scripts/run_phase2_seeded_journey.py",)),
+    "NFR-NS-019": RequirementSpec("Proven interfaces are catalogued and retain conflict-free registered topology", "integrations", "/api/patients/pat-005/integrations", ("tests/test_port_registry.py", "../BulletTrain/config/integration_interfaces.yaml")),
+    "NFR-NS-020": RequirementSpec("Integration state and controls meet accessible non-colour interaction requirements", "integrations", "/api/patients/pat-005/integrations", ("frontend/e2e/clinical.spec.ts",)),
+    "NFR-NS-021": RequirementSpec("Inbound clinical notification authentication and audit fail closed", "alerts", "/api/integrations/lis/critical-result", ("tests/test_api.py::test_hub_critical_result_fails_closed_and_rejects_unknown_identity",)),
+    "NFR-NS-022": RequirementSpec("Alert receipt and acknowledgement retain idempotent provenance", "alerts", "/api/alerts", ("tests/test_api.py::test_hub_critical_result_is_authenticated_idempotent_and_acknowledged",)),
+    "NFR-NS-023": RequirementSpec("Real seeded hub delivery and headed nurse persona evidence prove automatic dashboard revalidation", "alerts", "/api/alerts", ("scripts/run_phase2_seeded_journey.py", "../BulletTrain/tests/integration/journeys/nursing_station_phase2.scenario.yaml")),
 }
 
 DOMAIN_TITLES = {
@@ -57,6 +82,9 @@ DOMAIN_TITLES = {
     "medications": "Medication administration verification",
     "safety": "Nursing safety assessment and owned actions",
     "audit": "Tamper-evident governance evidence",
+    "integrations": "Governed authoritative sibling context",
+    "reporting": "De-identified HMIS reporting",
+    "alerts": "Near-real-time critical-result notification and acknowledgement",
 }
 
 
@@ -83,22 +111,22 @@ def build_rows() -> tuple[list[dict], list[dict]]:
             "requirement_ids": [requirement_id],
             "scenario_category": test_type,
             "title": f"{requirement_id} {title}: {spec.statement} ({test_type.lower()})",
-            "description": f"Verify {requirement_id}: {spec.statement} using the real Phase 1 service and its direct evidence.",
+            "description": f"Verify {requirement_id}: {spec.statement} using the real Phase 2 service and its direct evidence.",
             "preconditions": [
                 "Durable governed synthetic database is initialised",
                 "Authenticated ward-scoped user unless the negative scenario removes authentication",
             ],
             "trigger": {"method": "GET" if spec.domain in {"ward-board", "audit"} else "POST", "path": spec.endpoint},
             "input_payload": {"seeded_patient": "pat-001", "scenario_index": index, "test_type": test_type},
-            "expected_connector_calls": [],
+            "expected_connector_calls": ["BulletTrain connector hub"] if spec.domain in {"integrations", "reporting"} else [],
             "expected_events": [] if spec.domain == "ward-board" else [f"nursing-station.{spec.domain}.evaluated"],
-            "expected_outputs": {"requirement_id": requirement_id, "phase": 1, "durable": True, "integration_claim": False},
+            "expected_outputs": {"requirement_id": requirement_id, "phase": 2, "durable": True, "integration_claim": spec.domain in {"integrations", "reporting"}},
             "fault_profile": {"kind": "none" if test_type == "Positive" else "unauthorised-or-boundary-input"},
             "security_profile": {"tenant_scoped": True, "facility_scoped": True, "ward_scoped": True, "audit_required": spec.domain != "ward-board"},
             "priority": "critical" if spec.domain in {"observations", "medications", "handover"} else "high",
             "automation_status": "automated",
             "estimated_duration_seconds": 2,
-            "tags": ["phase-1", spec.domain, test_type, requirement_id, "real-seeded-service"],
+            "tags": ["phase-2", spec.domain, test_type, requirement_id, "real-seeded-service"],
         })
         reduced.append({
             "use_case_id": use_case_id,
@@ -106,15 +134,15 @@ def build_rows() -> tuple[list[dict], list[dict]]:
             "scenario": f"{requirement_id} {title}: {spec.statement} ({test_type.lower()})",
             "test_type": test_type,
             "priority": "critical" if spec.domain in {"observations", "medications", "handover"} else "high",
-            "expected_outcomes": [spec.statement, "No Phase 2 integration is simulated"],
+            "expected_outcomes": [spec.statement, "No internal substitute or fallback success is accepted"],
             "preconditions": {"database": "durable governed synthetic SQLite", "authenticated": test_type != "Negative"},
             "test_data": {"patient_id": "pat-001", "endpoint": spec.endpoint},
             "validation_rules": [f"{requirement_id} direct evidence passes", "tenant, facility, ward, and role scope remain enforced"],
-            "dependencies": ["nursing-station FastAPI application"],
+            "dependencies": ["nursing-station FastAPI application"] + (["BulletTrain and authoritative seeded sibling"] if spec.domain in {"integrations", "reporting"} else []),
             "tags": [spec.domain, test_type, requirement_id],
             "estimated_duration": "2s",
             "automation_status": "automated",
-            "notes": "Phase 1 direct service evidence; integration implementation remains out of scope",
+            "notes": "Phase 2 evidence boundary; generated rows require the linked direct executable evidence",
         })
     return full, reduced
 
@@ -155,8 +183,8 @@ def main() -> None:
         })
 
     outputs = {
-        ROOT / "tests/harness/json_matrices/nursing_station_phase1_canonical.json": full_doc,
-        ROOT / "tests/harness/reduced_json_matrices/nursing_station_phase1_canonical.14col.json": reduced_doc,
+        ROOT / "tests/harness/json_matrices/nursing_station_phase2_canonical.json": full_doc,
+        ROOT / "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json": reduced_doc,
         ROOT / "tests/harness/requirements_matrix.json": {
             "schema_version": "BT_REQUIREMENTS_TRACEABILITY_V1",
             "canonical_matrix_schema": "BT_CANONICAL_MATRIX_V2_18COL",

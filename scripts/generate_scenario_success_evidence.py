@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MATRIX_REL = "tests/harness/reduced_json_matrices/nursing_station_phase1_canonical.14col.json"
+MATRIX_REL = "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json"
 MATRIX = ROOT / MATRIX_REL
 OUTPUT = ROOT / "tests/harness/scenario_success_evidence.json"
 

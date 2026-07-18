@@ -1,0 +1,137 @@
+{
+  "status": "passed",
+  "event": {
+    "result_id": "c5ce43cc-a01a-4177-abb6-2a3162afbe46",
+    "event_id": "evt-lis-nursing-c5ce43cc-a01a-4177-abb6-2a3162afbe46"
+  },
+  "live_assertion": {
+    "passed": true,
+    "assertion_type": "textContains",
+    "message": "\"[data-testid='clinical-alert-evt-lis-nursing-c5ce43cc-a01a-4177-abb6-2a3162afbe46']\" contains \"Critical Potassium result\"",
+    "actual": "Critical Potassium result\nAva Patel / MRN-104401 / Bed A-18\n6.8 mmol/L; critical_high / observed 18/07/2026, 17:18:35 / source lis / correlation evt-lis-nursing-c5ce43cc-a01a-4177-abb6-2a3162afbe46\nAc",
+    "expected": "Critical Potassium result"
+  },
+  "nurse_before": {
+    "scenario": {
+      "ok": true,
+      "evidence_id": "7a8405ca-69dc-4e52-aa65-643d12ea2532",
+      "manifest_path": "C:\\Users\\hgeec\\github\\nursing-station\\evidence\\signalbox-phase2\\scenario-evidence\\7a8405ca-69dc-4e52-aa65-643d12ea2532.manifest.json",
+      "scenario_status": "pass",
+      "ledger_seq": 1095,
+      "entry_hash": "bc15487968560ab53933a4b46581c065b0ab1648fc007ba72fa357336ee64f70",
+      "error": null,
+      "result_summary": {
+        "total_steps": 17,
+        "passed_steps": 17,
+        "failed_steps": 0,
+        "skipped_steps": 0,
+        "duration_ms": 28094.0
+      }
+    },
+    "verification": {
+      "ok": true,
+      "signature_valid": true,
+      "anchor_valid": true,
+      "schema_valid": true,
+      "headed_valid": true,
+      "result_valid": true,
+      "screenshot_valid": true,
+      "steps_valid": true,
+      "error": null,
+      "evidence_id": "7a8405ca-69dc-4e52-aa65-643d12ea2532",
+      "checks": [
+        "schema_type_version_ok",
+        "manifest_parsed_ok",
+        "signature_present",
+        "signature_valid",
+        "headed_ok",
+        "result_ok",
+        "steps_ok",
+        "screenshot_not_blank",
+        "anchor_ok"
+      ]
+    }
+  },
+  "nurse_live": {
+    "scenario": {
+      "ok": true,
+      "evidence_id": "9424e94f-f02f-4727-a9f9-3bc925b493a0",
+      "manifest_path": "C:\\Users\\hgeec\\github\\nursing-station\\evidence\\signalbox-phase2\\scenario-evidence\\9424e94f-f02f-4727-a9f9-3bc925b493a0.manifest.json",
+      "scenario_status": "pass",
+      "ledger_seq": 1096,
+      "entry_hash": "05186065dd9bdc72b3a989df5f3253b6f12683d6ad349d2ff247dbc1e7976b0d",
+      "error": null,
+      "result_summary": {
+        "total_steps": 4,
+        "passed_steps": 4,
+        "failed_steps": 0,
+        "skipped_steps": 0,
+        "duration_ms": 140.0
+      }
+    },
+    "verification": {
+      "ok": true,
+      "signature_valid": true,
+      "anchor_valid": true,
+      "schema_valid": true,
+      "headed_valid": true,
+      "result_valid": true,
+      "screenshot_valid": true,
+      "steps_valid": true,
+      "error": null,
+      "evidence_id": "9424e94f-f02f-4727-a9f9-3bc925b493a0",
+      "checks": [
+        "schema_type_version_ok",
+        "manifest_parsed_ok",
+        "signature_present",
+        "signature_valid",
+        "headed_ok",
+        "result_ok",
+        "steps_ok",
+        "screenshot_not_blank",
+        "anchor_ok"
+      ]
+    }
+  },
+  "nurse_superpersona": {
+    "scenario": {
+      "ok": true,
+      "evidence_id": "f97be553-e35e-4a36-84e5-8c4bd3ab7552",
+      "manifest_path": "C:\\Users\\hgeec\\github\\nursing-station\\evidence\\signalbox-phase2\\scenario-evidence\\f97be553-e35e-4a36-84e5-8c4bd3ab7552.manifest.json",
+      "scenario_status": "pass",
+      "ledger_seq": 1097,
+      "entry_hash": "0b9938720805db0b3a82a1edc975e5989b5df012f92f2ca4209e3a5f22c7c5d6",
+      "error": null,
+      "result_summary": {
+        "total_steps": 20,
+        "passed_steps": 20,
+        "failed_steps": 0,
+        "skipped_steps": 0,
+        "duration_ms": 33671.0
+      }
+    },
+    "verification": {
+      "ok": true,
+      "signature_valid": true,
+      "anchor_valid": true,
+      "schema_valid": true,
+      "headed_valid": true,
+      "result_valid": true,
+      "screenshot_valid": true,
+      "steps_valid": true,
+      "error": null,
+      "evidence_id": "f97be553-e35e-4a36-84e5-8c4bd3ab7552",
+      "checks": [
+        "schema_type_version_ok",
+        "manifest_parsed_ok",
+        "signature_present",
+        "signature_valid",
+        "headed_ok",
+        "result_ok",
+        "steps_ok",
+        "screenshot_not_blank",
+        "anchor_ok"
+      ]
+    }
+  }
+}

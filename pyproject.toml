@@ -10,13 +10,14 @@ requires-python = ">=3.12"
 dependencies = [
   "bcrypt>=4.2",
   "fastapi>=0.115",
+  "httpx>=0.28",
   "PyJWT>=2.10",
   "pydantic>=2.10",
   "uvicorn>=0.34",
 ]
 
 [project.optional-dependencies]
-dev = ["httpx>=0.28", "pytest>=8.3", "ruff>=0.9"]
+dev = ["pytest>=8.3", "ruff>=0.9"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["backend/nursing_station"]

@@ -25,7 +25,7 @@ def test_phase1_governance_artifacts_exist_and_are_substantive() -> None:
 
 def test_every_requirement_maps_to_its_declared_semantic_domain() -> None:
     matrix = json.loads(
-        (ROOT / "tests/harness/json_matrices/nursing_station_phase1_canonical.json").read_text(
+        (ROOT / "tests/harness/json_matrices/nursing_station_phase2_canonical.json").read_text(
             encoding="utf-8"
         )
     )

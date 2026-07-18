@@ -144,6 +144,8 @@ export type Patient = {
   accountable_nurse_name?: string | null
   data_class: string
   seed_manifest_id: string
+  external_nhs_number: string | null
+  source_patient_id: string | null
   latest_score: number | null
   observation_time: string | null
   open_tasks: number
@@ -153,6 +155,71 @@ export type Patient = {
   medications?: Medication[]
   assessments?: Assessment[]
   care_plans?: CarePlan[]
+}
+
+export type IntegrationAttempt = {
+  correlation_id: string
+  attempted_at: string
+  completed_at: string | null
+  status: string
+  error_code: string | null
+  error_detail: string | null
+  hub_audit_event_id: string | null
+}
+
+export type IntegrationSnapshot = {
+  source_system: string
+  resource_type: string
+  content_hash: string
+  source_updated_at: string | null
+  fetched_at: string
+  status: string
+  reconciliation_status: string
+  correlation_id: string
+  version: number
+  data: Record<string, unknown>
+}
+
+export type IntegrationSource = {
+  source_system: string
+  resource_type: string
+  semantics: string[]
+  state: string
+  last_attempt: IntegrationAttempt | null
+  snapshot: IntegrationSnapshot | null
+}
+
+export type PatientIntegrations = {
+  patient_id: string
+  linked: boolean
+  identity: { external_nhs_number: string | null; source_patient_id: string | null }
+  sources: IntegrationSource[]
+}
+
+export type ClinicalAlert = {
+  id: string
+  patient_id: string
+  patient_name: string
+  bed: string
+  mrn: string
+  event_id: string
+  source_system: string
+  source_resource_id: string
+  alert_type: string
+  severity: string
+  title: string
+  summary: string
+  observed_at: string
+  received_at: string
+  status: string
+  correlation_id: string
+  version: number
+}
+
+export type ClinicalAlertFeed = {
+  alerts: ClinicalAlert[]
+  generated_at: string
+  refresh_seconds: number
 }
 
 export type WardBoard = {

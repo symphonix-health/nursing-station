@@ -1,20 +1,21 @@
 {
   "project_name": "nursing-station",
   "platform": "fullstack",
-  "phase": 1,
+  "phase": 2,
   "clinical_safety": true,
   "prompt": "PROMPT.md",
   "requirements": "docs/REQUIREMENTS.md",
   "safety": {
     "hazard_log": "safety/HAZARD_LOG.md",
-    "clinical_safety_case": "safety/CLINICAL_SAFETY_CASE_REPORT.md"
+    "clinical_safety_case": "safety/CLINICAL_SAFETY_CASE_REPORT.md",
+    "phase2_integration_hazards": "safety/PHASE_2_INTEGRATION_HAZARDS.md"
   },
   "applicable_patterns": [
     "service", "database", "auth", "api", "frontend", "testing",
     "observability", "fsm", "security", "accessibility", "monitoring",
     "resilience", "code_quality", "python", "typescript"
   ],
-  "evidence_boundary": "Phase 1 standalone only; Phase 2 integrations are contracts, not implemented evidence",
+  "evidence_boundary": "Phase 2 implements hub-mediated seeded context for PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, de-identified HMIS measures, and a signed LIS critical-result alert with explicit nurse acknowledgement. Clinical release remains gated by human safety, privacy, security, and deployment approvals.",
   "prohibited": [
     "internal mocks",
     "in-memory clinical storage",
@@ -36,11 +37,11 @@
       "../BulletTrain/docs/architecture/interface-catalogue-network.svg",
       "../BulletTrain/docs/architecture/interface-catalogue-network.html"
     ],
-    "phase_boundary": "Register service existence and topology metadata in Phase 1. Do not create governed interface rows until Phase 2 implements and proves those interfaces.",
+    "phase_boundary": "Phase 2 interface rows must match implemented BulletTrain manifests, direct source tests, the real seeded journey, and generated topology. Future CAID work must reuse these allocations and may not create alternate listeners.",
     "required_gates": [
       "python ../workspace-tooling/check_workspace_ports.py --workspace .. --strict --source",
       "python -m scripts.ci.validate_ports",
-      "python -m pytest tests/unit/test_service_catalogue_schema.py tests/unit/test_interface_catalogue_network_diagram.py -q"
+      "python -m pytest tests/unit/connectors/test_symphonix_sibling_connector.py tests/unit/test_interface_catalogue_network_diagram.py -q"
     ]
   }
 }

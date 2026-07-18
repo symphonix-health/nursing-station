@@ -1,0 +1,47 @@
+seed_manifest_id: seed.uk.nursing_station.phase2_v1
+seeder_name: symphonix-nursing-station-deterministic-seeder
+seeder_version: "2.0.0"
+seeder_repository: nursing-station
+seeder_commit_sha: phase2-source-revision
+generation_run_id: nursing-station-phase2-bootstrap
+generation_started_at: "2026-07-18T00:00:00Z"
+generation_completed_at: "2026-07-18T00:00:00Z"
+target_system: Symphonix-Health Nursing Station
+target_environment: local_phase2
+metadata_pack_id: uk.0.1.fabricated
+metadata_pack_version: "0.1"
+scenario_pack_id: inpatient-nursing-phase2.v1
+seed_config_hash: nursing-station-phase2-seed-v1
+random_seed_policy: deterministic_fabricated_fixture
+synthetic_population_size: 6
+domains_seeded:
+  - inpatient_nursing
+  - observations
+  - medication_administration
+  - care_planning
+  - cross_system_identity_alignment
+record_counts_expected:
+  wards: 2
+  users: 4
+  patients: 6
+  tasks: 3
+  medication_orders: 3
+  observations: 3
+  care_plans: 2
+contains_real_patient_data: false
+contains_real_person_data: false
+contains_pseudonymised_real_data: false
+contains_synthetic_subject_level_records: true
+contains_seeded_synthetic_records: true
+source_is_symphonix_assurance: false
+approved_synthetic_seeder: true
+source_is_live_clinical_system: false
+approved_for_use_case:
+  - Phase 2 local development
+  - automated testing
+  - headed clinical workflow review
+  - real seeded sibling integration verification
+limitations:
+  - Fabricated records are not clinical truth or epidemiological evidence.
+  - The seed is not authorised for clinical decision-making or production use.
+  - The two linked personas are deterministic synthetic alignment records, not master-registry proof.

@@ -92,6 +92,16 @@ h1 { font-size: 25px; letter-spacing: -.025em; margin: 4px 0; } h2 { font-size: 
 .badge { display: inline-flex; gap: 5px; align-items: center; padding: 3px 7px; border-radius: 6px; font-family: var(--f-mono); font-size: 9px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; border: 1px solid currentColor; }
 .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }.danger { color: var(--ns-critical); background: var(--ns-critical-bg); }.caution { color: var(--ns-caution); background: var(--ns-caution-bg); }.normal { color: var(--ns-normal); background: var(--ns-normal-bg); }.info { color: var(--sg-info-text); background: color-mix(in srgb, var(--sg-info) 12%, transparent); }
 .patient-banner { position: sticky; top: 68px; z-index: 10; display: grid; grid-template-columns: 56px 1.3fr 1fr 1fr 1fr; gap: 14px; align-items: center; padding: 13px 16px; background: var(--ns-panel); border: 1px solid var(--ns-border); border-top: 3px solid var(--ns-focus); border-radius: 0 0 12px 12px; box-shadow: 0 8px 20px rgba(0,0,0,.08); margin: -22px -24px 20px; }
+.integration-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin-top:16px; }
+.clinical-alert-stack { display:grid; gap:8px; margin-bottom:14px; }
+.clinical-alert { display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; color:var(--ns-critical); background:var(--ns-critical-bg); border:2px solid var(--ns-critical); border-radius:10px; padding:12px 14px; }
+.clinical-alert .sub { color:inherit; }
+.integration-card { border:1px solid var(--ns-border); border-radius:10px; padding:16px; background:var(--ns-panel); min-width:0; }
+.integration-card h3 { margin:0; text-transform:capitalize; }
+.provenance-list { display:grid; gap:7px; margin:14px 0 0; }
+.provenance-list div { display:grid; grid-template-columns:110px minmax(0,1fr); gap:10px; border-top:1px solid var(--ns-border); padding-top:7px; }
+.provenance-list dt { color:var(--ns-muted); font-size:12px; font-weight:700; }
+.provenance-list dd { margin:0; overflow-wrap:anywhere; }
 .monogram { width: 48px; height: 48px; border-radius: 50%; background: var(--ns-panel-2); border: 1px solid var(--ns-border); display: grid; place-items: center; font-weight: 800; }.banner-value { font-weight: 750; }.allergy { color: var(--ns-critical); font-weight: 800; }.banner-label { font-family: var(--f-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--ns-muted); }
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--ns-border); margin-bottom: 14px; overflow-x: auto; }.tabs button { background: transparent; border: 0; color: var(--ns-muted); padding: 10px 12px; border-bottom: 3px solid transparent; white-space: nowrap; }.tabs button.active { color: var(--sg-primary-text); border-color: var(--ns-focus); font-weight: 700; }
 .table { width: 100%; border-collapse: collapse; }.table th { background: var(--ns-panel-2); color: var(--ns-muted); font-family: var(--f-mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; text-align: left; }.table th,.table td { border-bottom: 1px solid var(--ns-border); padding: 10px; }.table td { font-size: 13px; }

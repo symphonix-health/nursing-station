@@ -35,7 +35,7 @@
     },
     {
       "proposed_id": "L-385",
-      "proposed_title": "UX-01 frontend\\src\\styles\\design-system.css:112 -- Button class .btn has :hover but no :visited; disguised-as-disabled o",
+      "proposed_title": "UX-01 frontend\\src\\styles\\design-system.css:122 -- Button class .btn has :hover but no :visited; disguised-as-disabled o",
       "severity": "MEDIUM",
       "category": "ux",
       "tags": [

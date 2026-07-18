@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import hashlib
+import hmac
+import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -17,25 +21,103 @@ def test_health_reports_durable_phase_boundary(client):
     assert response.json() == {
         "status": "ok",
         "service": "nursing-station",
-        "phase": 1,
+        "phase": 2,
         "database": "durable-sqlite",
         "audit_chain_valid": True,
         "audit_events": 0,
-        "integrations": "not-implemented-phase-2",
+        "integrations": "not-configured-fail-closed",
         "warning_profile": "NS-NEWS2-PHASE1-v1",
+        "alert_refresh_seconds": 5,
         "synthetic_seed": {
-            "seed_manifest_id": "seed.uk.nursing_station.phase1_v1",
+            "seed_manifest_id": "seed.uk.nursing_station.phase2_v1",
             "data_class": "seeded_synthetic",
         },
     }
+
+
+def _critical_alert(event_id: str = "lis-critical-001") -> dict:
+    return {
+        "event_id": event_id,
+        "source_system": "lis",
+        "source_patient_id": "9991000003",
+        "result_id": "lab-ava-k-001",
+        "test_name": "Potassium",
+        "result_value": "6.8",
+        "unit": "mmol/L",
+        "interpretation": "critically high",
+        "observed_at": "2026-07-18T12:00:00Z",
+        "severity": "critical",
+    }
+
+
+def _signed_alert_headers(payload: dict, secret: str = "test-inbound-secret") -> tuple[bytes, dict]:
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    digest = hmac.new(secret.encode(), raw, hashlib.sha256).hexdigest()
+    return raw, {
+        "Content-Type": "application/json",
+        "X-Signature": f"sha256={digest}",
+        "X-Event-Id": payload["event_id"],
+        "X-Event-Kind": "critical-result",
+        "X-Correlation-Id": f"corr-{payload['event_id']}",
+    }
+
+
+def test_hub_critical_result_is_authenticated_idempotent_and_acknowledged(
+    client, headers, monkeypatch
+):
+    from nursing_station import main
+
+    monkeypatch.setattr(main, "settings", replace(main.settings, inbound_hmac_secret="test-inbound-secret"))
+    payload = _critical_alert()
+    raw, hub_headers = _signed_alert_headers(payload)
+
+    accepted = client.post("/api/integrations/lis/critical-result", content=raw, headers=hub_headers)
+    assert accepted.status_code == 202
+    assert accepted.json()["status"] == "accepted"
+    duplicate = client.post("/api/integrations/lis/critical-result", content=raw, headers=hub_headers)
+    assert duplicate.status_code == 202
+    assert duplicate.json()["status"] == "duplicate"
+
+    feed = client.get("/api/alerts", headers=headers)
+    assert feed.status_code == 200
+    assert feed.json()["refresh_seconds"] == 5
+    alert = feed.json()["alerts"][0]
+    assert alert["patient_id"] == "pat-005"
+    assert alert["patient_name"] == "Ava Patel"
+    assert alert["correlation_id"] == "corr-lis-critical-001"
+    assert alert["status"] == "open"
+
+    acknowledged = client.post(f"/api/alerts/{alert['id']}/acknowledge", headers=headers)
+    assert acknowledged.status_code == 200
+    assert acknowledged.json()["status"] == "acknowledged"
+    assert client.get("/api/alerts", headers=headers).json()["alerts"] == []
+    assert client.get("/health").json()["audit_chain_valid"] is True
+
+
+def test_hub_critical_result_fails_closed_and_rejects_unknown_identity(
+    client, monkeypatch
+):
+    from nursing_station import main
+
+    payload = _critical_alert("lis-critical-002")
+    raw, hub_headers = _signed_alert_headers(payload)
+    assert client.post("/api/integrations/lis/critical-result", content=raw, headers=hub_headers).status_code == 503
+
+    monkeypatch.setattr(main, "settings", replace(main.settings, inbound_hmac_secret="test-inbound-secret"))
+    invalid_headers = {**hub_headers, "X-Signature": "sha256=wrong"}
+    assert client.post("/api/integrations/lis/critical-result", content=raw, headers=invalid_headers).status_code == 401
+
+    payload["source_patient_id"] = "unknown"
+    raw, hub_headers = _signed_alert_headers(payload)
+    assert client.post("/api/integrations/lis/critical-result", content=raw, headers=hub_headers).status_code == 404
 
 
 def test_seed_governance_is_durable_explicit_and_non_live(client, headers):
     response = client.get("/api/governance/seed", headers=headers)
     assert response.status_code == 200
     body = response.json()
-    assert body["seed_manifest_id"] == "seed.uk.nursing_station.phase1_v1"
-    assert body["record_counts"]["patients"] == 4
+    assert body["seed_manifest_id"] == "seed.uk.nursing_station.phase2_v1"
+    assert body["record_counts"]["patients"] == 6
     assert body["record_counts"]["observations"] == 3
     declaration = body["declaration"]
     assert declaration["record_counts_landed"] == declaration["record_counts_expected"]
@@ -58,7 +140,9 @@ def test_ward_board_is_ward_scoped(client, headers):
     response = client.get("/api/ward-board", headers=headers)
     assert response.status_code == 200
     assert response.json()["ward"]["id"] == "ward-med-a"
-    assert {patient["id"] for patient in response.json()["patients"]} == {"pat-001", "pat-002", "pat-003"}
+    assert {patient["id"] for patient in response.json()["patients"]} == {
+        "pat-001", "pat-002", "pat-003", "pat-005", "pat-006"
+    }
     forbidden = client.get("/api/ward-board?ward_id=ward-surg-b", headers=headers)
     assert forbidden.status_code == 403
 
@@ -66,6 +150,29 @@ def test_ward_board_is_ward_scoped(client, headers):
 def test_patient_access_cannot_cross_ward(client, headers):
     assert client.get("/api/patients/pat-001", headers=headers).status_code == 200
     assert client.get("/api/patients/pat-004", headers=headers).status_code == 403
+
+
+def test_phase2_link_is_explicit_and_unconfigured_refresh_fails_closed(client, headers):
+    context = client.get("/api/patients/pat-005/integrations", headers=headers)
+    assert context.status_code == 200
+    assert context.json()["linked"] is True
+    assert context.json()["identity"] == {
+        "external_nhs_number": "9991000003",
+        "source_patient_id": "pat-ava",
+    }
+    assert {row["state"] for row in context.json()["sources"]} == {"not-refreshed"}
+
+    refresh = client.post("/api/patients/pat-005/integrations/refresh", headers=headers)
+    assert refresh.status_code == 503
+    assert refresh.json()["detail"]["code"] == "integration_not_configured"
+
+
+def test_unlinked_patient_cannot_claim_cross_system_success(client, headers):
+    context = client.get("/api/patients/pat-001/integrations", headers=headers)
+    assert context.status_code == 200
+    assert context.json()["linked"] is False
+    refresh = client.post("/api/patients/pat-001/integrations/refresh", headers=headers)
+    assert refresh.status_code == 409
 
 
 def test_observation_records_score_and_creates_escalation(client, headers):

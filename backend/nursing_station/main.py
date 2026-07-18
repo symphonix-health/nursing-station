@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
 import sqlite3
 import uuid
@@ -9,12 +11,13 @@ from typing import Annotated, Literal
 
 import bcrypt
 import jwt
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, model_validator
 
 from .config import get_settings
 from .database import Database
+from .integration import SOURCE_CONTRACTS, HubClient, IntegrationError
 from .port_registry import resolve_frontend_port
 
 settings = get_settings()
@@ -44,8 +47,8 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="Symphonix Health Nursing Station",
-    version="0.1.0",
-    description="Phase 1 standalone inpatient nursing workflow",
+    version="0.2.0",
+    description="Phase 2 hub-integrated inpatient nursing workflow",
     lifespan=lifespan,
 )
 frontend_port = resolve_frontend_port()
@@ -149,14 +152,432 @@ def health() -> dict:
     return {
         "status": "ok" if audit_ok else "degraded",
         "service": "nursing-station",
-        "phase": 1,
+        "phase": 2,
         "database": "durable-sqlite",
         "audit_chain_valid": audit_ok,
         "audit_events": audit_count,
-        "integrations": "not-implemented-phase-2",
+        "integrations": (
+            "configured-bullettrain-hub"
+            if settings.integration_hub_url and settings.integration_hub_token
+            else "not-configured-fail-closed"
+        ),
         "warning_profile": settings.warning_profile_version,
+        "alert_refresh_seconds": settings.alert_refresh_seconds,
         "synthetic_seed": seed,
     }
+
+
+class CriticalResultAlert(BaseModel):
+    event_id: str = Field(min_length=1, max_length=128)
+    source_system: Literal["lis"]
+    source_patient_id: str = Field(min_length=1, max_length=128)
+    result_id: str = Field(min_length=1, max_length=128)
+    test_name: str = Field(min_length=1, max_length=160)
+    result_value: str = Field(min_length=1, max_length=120)
+    unit: str = Field(min_length=1, max_length=40)
+    interpretation: str = Field(min_length=1, max_length=160)
+    observed_at: datetime
+    severity: Literal["critical"]
+
+
+def _verify_hub_signature(raw_body: bytes, signature: str | None) -> None:
+    if not settings.inbound_hmac_secret:
+        raise HTTPException(status_code=503, detail="Inbound hub authentication is not configured")
+    if not signature or not signature.startswith("sha256="):
+        raise HTTPException(status_code=401, detail="Valid hub signature required")
+    expected = hmac.new(
+        settings.inbound_hmac_secret.encode("utf-8"), raw_body, hashlib.sha256
+    ).hexdigest()
+    if not hmac.compare_digest(signature[7:], expected):
+        raise HTTPException(status_code=401, detail="Invalid hub signature")
+
+
+@app.post("/api/integrations/lis/critical-result", status_code=202)
+async def receive_critical_result(
+    request: Request,
+    x_signature: Annotated[str | None, Header()] = None,
+    x_event_id: Annotated[str | None, Header()] = None,
+    x_event_kind: Annotated[str | None, Header()] = None,
+    x_correlation_id: Annotated[str | None, Header()] = None,
+) -> dict:
+    raw_body = await request.body()
+    _verify_hub_signature(raw_body, x_signature)
+    if x_event_kind != "critical-result":
+        raise HTTPException(status_code=400, detail="Unexpected hub event kind")
+    try:
+        event = CriticalResultAlert.model_validate_json(raw_body)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="Invalid critical-result event") from exc
+    if x_event_id != event.event_id:
+        raise HTTPException(status_code=400, detail="Event identity mismatch")
+    patient = db.fetchone(
+        "SELECT * FROM patients WHERE external_nhs_number=?", (event.source_patient_id,)
+    )
+    if not patient:
+        raise HTTPException(status_code=404, detail="No governed patient identity link")
+    canonical = json.dumps(event.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+    content_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    correlation_id = x_correlation_id or event.event_id
+    existing = db.fetchone(
+        "SELECT * FROM clinical_alerts WHERE source_system=? AND event_id=?",
+        (event.source_system, event.event_id),
+    )
+    if existing:
+        if existing["content_hash"] != content_hash:
+            raise HTTPException(status_code=409, detail="Event identifier reused with different content")
+        return {"status": "duplicate", "alert_id": existing["id"], "event_id": event.event_id}
+    alert_id = new_id("alert")
+    received_at = now()
+    with db.connect() as conn:
+        conn.execute(
+            """INSERT INTO clinical_alerts
+            (id,tenant_id,ward_id,patient_id,event_id,source_system,source_resource_id,
+             alert_type,severity,title,summary,observed_at,received_at,status,
+             acknowledged_at,acknowledged_by,correlation_id,content_hash,version)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'open',NULL,NULL,?,?,1)""",
+            (
+                alert_id, patient["tenant_id"], patient["ward_id"], patient["id"],
+                event.event_id, event.source_system, event.result_id, "critical-result",
+                event.severity, f"Critical {event.test_name} result",
+                f"{event.result_value} {event.unit}; {event.interpretation}",
+                event.observed_at.isoformat(), received_at, correlation_id, content_hash,
+            ),
+        )
+        db.audit(
+            conn, event_id=new_id("audit"), tenant_id=patient["tenant_id"],
+            actor_id="bullettrain-hub", action="clinical_alert.received",
+            resource_type="CriticalResultAlert", resource_id=alert_id,
+            patient_id=patient["id"],
+            details={"event_id": event.event_id, "correlation_id": correlation_id,
+                     "source_system": event.source_system, "content_hash": content_hash},
+        )
+    return {"status": "accepted", "alert_id": alert_id, "event_id": event.event_id}
+
+
+@app.get("/api/alerts")
+def alerts(user: UserDep, alert_status: Literal["open", "acknowledged", "all"] = "open") -> dict:
+    require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+    clauses = ["a.tenant_id=?"]
+    params: list[object] = [user.tenant_id]
+    if user.ward_id:
+        clauses.append("a.ward_id=?")
+        params.append(user.ward_id)
+    if alert_status != "all":
+        clauses.append("a.status=?")
+        params.append(alert_status)
+    rows = db.fetchall(
+        f"""SELECT a.*,p.name AS patient_name,p.bed,p.mrn FROM clinical_alerts a
+        JOIN patients p ON p.id=a.patient_id WHERE {' AND '.join(clauses)}
+        ORDER BY a.received_at DESC""", tuple(params)
+    )
+    return {"alerts": rows, "generated_at": now(), "refresh_seconds": settings.alert_refresh_seconds}
+
+
+@app.post("/api/alerts/{alert_id}/acknowledge")
+def acknowledge_alert(alert_id: str, user: UserDep) -> dict:
+    require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+    alert = db.fetchone("SELECT * FROM clinical_alerts WHERE id=? AND tenant_id=?", (alert_id, user.tenant_id))
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    if user.ward_id and alert["ward_id"] != user.ward_id:
+        raise HTTPException(status_code=403, detail="Alert is outside assigned ward")
+    if alert["status"] == "acknowledged":
+        return alert
+    acknowledged_at = now()
+    with db.connect() as conn:
+        conn.execute(
+            """UPDATE clinical_alerts SET status='acknowledged',acknowledged_at=?,
+            acknowledged_by=?,version=version+1 WHERE id=?""",
+            (acknowledged_at, user.id, alert_id),
+        )
+        db.audit(
+            conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+            action="clinical_alert.acknowledged", resource_type="CriticalResultAlert",
+            resource_id=alert_id, patient_id=alert["patient_id"],
+            details={"event_id": alert["event_id"], "correlation_id": alert["correlation_id"]},
+        )
+    return db.fetchone("SELECT * FROM clinical_alerts WHERE id=?", (alert_id,))
+
+
+def _latest_source_timestamp(value: object) -> str | None:
+    candidates: list[str] = []
+
+    def visit(item: object) -> None:
+        if isinstance(item, dict):
+            for key, nested in item.items():
+                if key in {
+                    "updated_at", "source_updated_at", "verified_at", "tested_at",
+                    "last_update", "received_at", "created_at", "dispensed_at",
+                } and isinstance(nested, str):
+                    candidates.append(nested)
+                visit(nested)
+        elif isinstance(item, list):
+            for nested in item:
+                visit(nested)
+
+    visit(value)
+    return max(candidates) if candidates else None
+
+
+def _identity_status(patient: dict, source: str, body: dict) -> str:
+    if source in {"picis-system", "blood-transfusion"}:
+        source_patient = body.get("patient")
+        if not isinstance(source_patient, dict):
+            raise IntegrationError("identity_missing", f"{source} omitted patient identity")
+        external_number = source_patient.get("external_nhs_number")
+        source_name = source_patient.get("name") or source_patient.get("full_name")
+        source_dob = source_patient.get("date_of_birth") or source_patient.get("dob")
+        if external_number != patient["external_nhs_number"]:
+            raise IntegrationError("identity_mismatch", f"{source} returned a different NHS number")
+        if source_name and source_name.casefold() != patient["name"].casefold():
+            raise IntegrationError("identity_mismatch", f"{source} returned a different patient name")
+        if source_dob and str(source_dob)[:10] != patient["date_of_birth"]:
+            raise IntegrationError("identity_mismatch", f"{source} returned a different date of birth")
+        return "three-identifier-match" if source_name and source_dob else "nhs-number-match"
+    expected_patient_id = (
+        patient["external_nhs_number"] if source == "lis" else patient["source_patient_id"]
+    )
+    if body.get("patient_id") != expected_patient_id:
+        raise IntegrationError("identity_mismatch", f"{source} returned a different patient identifier")
+    return "source-patient-id-match"
+
+
+def _integration_payload(patient: dict, source: str) -> dict:
+    key = "external_nhs_number" if source in {"picis-system", "lis", "blood-transfusion"} else "patient_id"
+    value = patient["external_nhs_number"] if key == "external_nhs_number" else patient["source_patient_id"]
+    return {key: value}
+
+
+@app.get("/api/patients/{patient_id}/integrations")
+def patient_integrations(patient_id: str, user: UserDep) -> dict:
+    patient = scoped_patient(patient_id, user)
+    snapshots = {
+        row["source_system"]: row
+        for row in db.fetchall(
+            "SELECT * FROM integration_snapshots WHERE tenant_id=? AND patient_id=?",
+            (user.tenant_id, patient_id),
+        )
+    }
+    latest_attempts = {
+        row["source_system"]: row
+        for row in db.fetchall(
+            """SELECT a.* FROM integration_attempts a JOIN (
+            SELECT source_system,MAX(attempted_at) attempted_at FROM integration_attempts
+            WHERE tenant_id=? AND patient_id=? GROUP BY source_system
+            ) latest ON latest.source_system=a.source_system AND latest.attempted_at=a.attempted_at
+            WHERE a.tenant_id=? AND a.patient_id=?""",
+            (user.tenant_id, patient_id, user.tenant_id, patient_id),
+        )
+    }
+    sources = []
+    for source, contract in SOURCE_CONTRACTS.items():
+        snapshot = snapshots.get(source)
+        attempt = latest_attempts.get(source)
+        if snapshot:
+            snapshot["data"] = json.loads(snapshot.pop("data_json"))
+        sources.append({
+            "source_system": source,
+            "resource_type": contract.resource_type,
+            "semantics": contract.semantics,
+            "state": attempt["status"] if attempt else (snapshot["status"] if snapshot else "not-refreshed"),
+            "last_attempt": attempt,
+            "snapshot": snapshot,
+        })
+    with db.connect() as conn:
+        db.audit(
+            conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+            action="integration.context.viewed", resource_type="IntegrationSnapshot",
+            resource_id=patient_id, patient_id=patient_id,
+            details={"sources": list(SOURCE_CONTRACTS), "purpose_of_use": "treatment"},
+        )
+    return {
+        "patient_id": patient_id,
+        "linked": bool(patient["external_nhs_number"] and patient["source_patient_id"]),
+        "identity": {
+            "external_nhs_number": patient["external_nhs_number"],
+            "source_patient_id": patient["source_patient_id"],
+        },
+        "sources": sources,
+    }
+
+
+@app.post("/api/patients/{patient_id}/integrations/refresh")
+async def refresh_patient_integrations(patient_id: str, user: UserDep) -> dict:
+    patient = scoped_patient(patient_id, user)
+    if not patient["external_nhs_number"] or not patient["source_patient_id"]:
+        raise HTTPException(status_code=409, detail="Patient has no governed cross-system identity link")
+    try:
+        hub = HubClient(settings)
+    except IntegrationError as exc:
+        raise HTTPException(status_code=503, detail={"code": exc.code, "message": exc.detail}) from exc
+
+    results = []
+    for source, contract in SOURCE_CONTRACTS.items():
+        correlation_id = new_id(f"ns-{source}")
+        attempt_id = new_id("integration-attempt")
+        attempted_at = now()
+        with db.connect() as conn:
+            conn.execute(
+                """INSERT INTO integration_attempts
+                (id,tenant_id,patient_id,source_system,resource_type,correlation_id,attempted_at,status)
+                VALUES (?,?,?,?,?,?,?,?)""",
+                (attempt_id, user.tenant_id, patient_id, source, contract.resource_type, correlation_id, attempted_at, "in-progress"),
+            )
+        try:
+            exchanged = await hub.exchange(
+                connector=contract.connector, resource_type=contract.resource_type,
+                operation="read", payload=_integration_payload(patient, source),
+                tenant_id=user.tenant_id, actor_id=user.id, role=user.role,
+                correlation_id=correlation_id,
+            )
+            body = exchanged["body"]
+            reconciliation = _identity_status(patient, source, body)
+            canonical = json.dumps(body, sort_keys=True, separators=(",", ":"), default=str)
+            content_hash = hashlib.sha256(canonical.encode()).hexdigest()
+            source_updated_at = _latest_source_timestamp(body)
+            completed_at = now()
+            with db.connect() as conn:
+                existing = conn.execute(
+                    "SELECT id,version,content_hash,source_updated_at FROM integration_snapshots WHERE tenant_id=? AND patient_id=? AND source_system=?",
+                    (user.tenant_id, patient_id, source),
+                ).fetchone()
+                if existing and source_updated_at and existing["source_updated_at"] and source_updated_at < existing["source_updated_at"]:
+                    raise IntegrationError("stale_source", f"{source} returned an older source version")
+                if existing:
+                    if existing["content_hash"] == content_hash:
+                        conn.execute(
+                            """UPDATE integration_snapshots SET fetched_at=?,status='current',
+                            reconciliation_status=?,correlation_id=? WHERE id=?""",
+                            (completed_at, reconciliation, correlation_id, existing["id"]),
+                        )
+                    else:
+                        conn.execute(
+                            """UPDATE integration_snapshots SET resource_type=?,content_hash=?,source_updated_at=?,
+                            fetched_at=?,status='current',reconciliation_status=?,correlation_id=?,data_json=?,version=version+1
+                            WHERE id=?""",
+                            (contract.resource_type, content_hash, source_updated_at, completed_at,
+                             reconciliation, correlation_id, canonical, existing["id"]),
+                        )
+                    snapshot_id = existing["id"]
+                else:
+                    snapshot_id = new_id("integration-snapshot")
+                    conn.execute(
+                        """INSERT INTO integration_snapshots
+                        (id,tenant_id,patient_id,source_system,resource_type,content_hash,source_updated_at,
+                        fetched_at,status,reconciliation_status,correlation_id,data_json,version)
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1)""",
+                        (snapshot_id, user.tenant_id, patient_id, source, contract.resource_type,
+                         content_hash, source_updated_at, completed_at, "current",
+                         reconciliation, correlation_id, canonical),
+                    )
+                conn.execute(
+                    """UPDATE integration_attempts SET completed_at=?,status='success',content_hash=?,
+                    hub_audit_event_id=?,duration_ms=? WHERE id=?""",
+                    (completed_at, content_hash, exchanged.get("hub_audit_event_id"), exchanged.get("duration_ms"), attempt_id),
+                )
+                db.audit(
+                    conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+                    action="integration.context.refreshed", resource_type=contract.resource_type,
+                    resource_id=snapshot_id, patient_id=patient_id,
+                    details={"source_system": source, "correlation_id": correlation_id,
+                             "content_hash": content_hash, "reconciliation_status": reconciliation,
+                             "purpose_of_use": "treatment"},
+                )
+            results.append({"source_system": source, "status": "success", "correlation_id": correlation_id})
+        except IntegrationError as exc:
+            completed_at = now()
+            with db.connect() as conn:
+                conn.execute(
+                    """UPDATE integration_attempts SET completed_at=?,status='failed',error_code=?,
+                    error_detail=?,hub_audit_event_id=? WHERE id=?""",
+                    (completed_at, exc.code, exc.detail, exc.hub_audit_event_id, attempt_id),
+                )
+                conn.execute(
+                    """UPDATE integration_snapshots SET status='stale',version=version+1
+                    WHERE tenant_id=? AND patient_id=? AND source_system=?""",
+                    (user.tenant_id, patient_id, source),
+                )
+                db.audit(
+                    conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+                    action="integration.context.failed", resource_type=contract.resource_type,
+                    resource_id=attempt_id, patient_id=patient_id,
+                    details={"source_system": source, "correlation_id": correlation_id,
+                             "error_code": exc.code, "purpose_of_use": "treatment"},
+                )
+            results.append({"source_system": source, "status": "failed", "error_code": exc.code,
+                            "message": exc.detail, "correlation_id": correlation_id})
+    return {"patient_id": patient_id, "results": results, "all_succeeded": all(row["status"] == "success" for row in results)}
+
+
+@app.post("/api/wards/{ward_id}/hmis-measures")
+async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
+    require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+    ward = db.fetchone(
+        "SELECT * FROM wards WHERE id=? AND tenant_id=?", (ward_id, user.tenant_id)
+    )
+    if not ward:
+        raise HTTPException(status_code=404, detail="Ward not found")
+    if user.ward_id and user.ward_id != ward_id:
+        raise HTTPException(status_code=403, detail="Ward is outside assigned scope")
+    try:
+        hub = HubClient(settings)
+    except IntegrationError as exc:
+        raise HTTPException(status_code=503, detail={"code": exc.code, "message": exc.detail}) from exc
+    current = datetime.now(UTC)
+    start = current.replace(hour=0, minute=0, second=0, microsecond=0)
+    measures = db.fetchone(
+        """SELECT COUNT(*) occupied_beds,
+        SUM((SELECT COUNT(*) FROM tasks t WHERE t.patient_id=p.id AND t.status IN ('open','accepted'))) open_tasks,
+        SUM((SELECT COUNT(*) FROM tasks t WHERE t.patient_id=p.id AND t.status IN ('open','accepted') AND t.due_at<?)) overdue_tasks,
+        SUM(CASE WHEN COALESCE((SELECT score FROM observations o WHERE o.patient_id=p.id ORDER BY recorded_at DESC LIMIT 1),0)>=5 THEN 1 ELSE 0 END) high_warning_score_patients,
+        SUM(CASE WHEN p.isolation_status<>'None' THEN 1 ELSE 0 END) isolation_patients
+        FROM patients p WHERE p.tenant_id=? AND p.ward_id=?""",
+        (current.isoformat(), user.tenant_id, ward_id),
+    ) or {}
+    medication_count = db.fetchone(
+        "SELECT COUNT(*) count FROM medication_administrations WHERE tenant_id=? AND ward_id=? AND administered_at>=?",
+        (user.tenant_id, ward_id, start.isoformat()),
+    )
+    payload = {
+        "tenant_id": user.tenant_id,
+        "facility_id": ward["facility_id"],
+        "ward_id": ward_id,
+        "period_start": start.isoformat(),
+        "period_end": current.isoformat(),
+        "counts": {
+            "occupied_beds": int(measures.get("occupied_beds") or 0),
+            "open_tasks": int(measures.get("open_tasks") or 0),
+            "overdue_tasks": int(measures.get("overdue_tasks") or 0),
+            "high_warning_score_patients": int(measures.get("high_warning_score_patients") or 0),
+            "isolation_patients": int(measures.get("isolation_patients") or 0),
+            "medication_outcomes_recorded": int((medication_count or {}).get("count") or 0),
+        },
+    }
+    correlation_id = new_id("ns-hmis")
+    try:
+        exchanged = await hub.exchange(
+            connector="hmis", resource_type="NursingMeasureReport", operation="write",
+            payload=payload, tenant_id=user.tenant_id, actor_id=user.id, role=user.role,
+            correlation_id=correlation_id, purpose_of_use="operations",
+        )
+    except IntegrationError as exc:
+        with db.connect() as conn:
+            db.audit(
+                conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+                action="hmis.measure.failed", resource_type="MeasureReport",
+                resource_id=correlation_id, patient_id=None,
+                details={"ward_id": ward_id, "error_code": exc.code, "correlation_id": correlation_id},
+            )
+        raise HTTPException(status_code=502, detail={"code": exc.code, "message": exc.detail}) from exc
+    with db.connect() as conn:
+        db.audit(
+            conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
+            action="hmis.measure.submitted", resource_type="MeasureReport",
+            resource_id=correlation_id, patient_id=None,
+            details={"ward_id": ward_id, "correlation_id": correlation_id,
+                     "hub_audit_event_id": exchanged.get("hub_audit_event_id")},
+        )
+    return {"correlation_id": correlation_id, "measures": payload, "receipt": exchanged["body"]}
 
 
 @app.get("/api/governance/seed")

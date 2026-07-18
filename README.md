@@ -2,7 +2,7 @@
 
 The Nursing Station is the Symphonix Health inpatient ward workspace for registered nurses and nurses in charge. It gives a bedside and station view of patients, observations, deterioration warnings, nursing work, care plans, medication administration, safety assessments, and accountable handover.
 
-Phase 1 is implemented as a standalone clinical workflow over durable seeded SQLite data. It includes:
+Phase 2 retains the durable nursing workflow and adds governed sibling context. It includes:
 
 - ward and patient context with facility, ward, role, and care-relationship access controls;
 - shared-screen privacy mode across patient, task, and medication surfaces;
@@ -11,13 +11,17 @@ Phase 1 is implemented as a standalone clinical workflow over durable seeded SQL
 - structured SBAR handover with captured unresolved work, risk snapshot, version guard, and named acceptance;
 - medication-administration outcomes, two-identifier checking, and independent high-alert co-signing;
 - append-only hash-chained audit and durable synthetic-data lineage;
-- responsive React UI with keyboard navigation, WCAG checks, and 200% zoom reflow.
+- responsive React UI with keyboard navigation, WCAG checks, and 200% zoom reflow;
+- BulletTrain-mediated patient, laboratory, imaging, medication, and blood-product snapshots with identity reconciliation, source, freshness, content hash, and correlation evidence;
+- authenticated BulletTrain critical-result delivery from the real seeded LIS path, automatic ward-dashboard revalidation within five seconds, and explicit nurse acknowledgement;
+- allow-listed, de-identified ward measure submission to HMIS;
+- explicit unavailable, stale, mismatch, timeout, policy-denial, and invalid-response states without a fake or direct-sibling fallback.
 
-Phase 2 will connect the boundary contracts to their authoritative Symphonix sibling systems through BulletTrain. It must first extend the requirements, use cases, safety analysis, canonical matrices, and requirement-to-test traceability for every interface and failure mode. Phase 1 does not simulate those integrations and makes no integration-readiness claim.
+PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, and HMIS remain authoritative for their own records. Nursing Station stores read-only snapshots and never overwrites its observations, tasks, care plans, handovers, assessments, or medication administrations.
 
 ## Status and release boundary
 
-The Phase 1 implementation, API, browser workflows, semantic traceability, port-conflict guards, and CAID technical checks pass locally. This repository is not approved for clinical production use. CAID's clinical release gate remains blocked until the intended-use statement has human Clinical Safety Officer approval, release authority has accepted the safety case, the DPIA has DPO approval, and MHRA review is evidenced where required. Publishing source code does not satisfy or bypass those approvals.
+Phase 1 is complete. Phase 2 source contracts, connector manifests, API and UI implementation, direct service tests, and catalogue cascades are implemented. The evidence commands below determine the current local gate state. This repository is not approved for clinical production use. CAID's clinical release gate remains blocked until the intended-use statement has human Clinical Safety Officer approval, release authority has accepted the safety case, the DPIA has DPO approval, and MHRA review is evidenced where required. Publishing source code does not satisfy or bypass those approvals.
 
 ## Run
 
@@ -39,6 +43,15 @@ npm.cmd install
 npm.cmd run dev
 ```
 
+Phase 2 fails closed unless the hub is explicitly configured:
+
+```powershell
+$env:NURSING_STATION_HUB_URL='http://127.0.0.1:8000'
+$env:NURSING_STATION_HUB_TOKEN='<service-token>'
+$env:NURSING_STATION_HUB_TIMEOUT_SECONDS='10'
+$env:NURSING_STATION_INBOUND_HMAC_SECRET='<managed-shared-secret>'
+```
+
 Seeded credentials use password `Nursing2026!`:
 
 - `amina.okafor@nursing.test` - registered nurse, Medical Ward A
@@ -48,9 +61,9 @@ Seeded credentials use password `Nursing2026!`:
 
 ## Evidence boundary
 
-Repository tests prove Phase 1 standalone behaviour only. `docs/PHASE_2_INTEGRATION_CONTRACTS.md` lists the future governed ownership boundaries.
+Repository tests prove the Nursing Station-owned behavior and fail-closed integration boundary. A Phase 2 integration claim additionally requires real seeded sibling, BulletTrain, and headed GUI evidence.
 
-The runtime population is deterministic, fabricated, seeded synthetic data. Its declaration is `seed_manifests/uk/nursing_station_phase1.yaml`; `GET /api/governance/seed` exposes the durable landed manifest and observed counts. No real, pseudonymised, or live-system patient data is permitted.
+The runtime population is deterministic, fabricated, seeded synthetic data. Its Phase 2 declaration is `seed_manifests/uk/nursing_station_phase2.yaml`; `GET /api/governance/seed` exposes the durable landed manifest and observed counts. No real, pseudonymised, or live-system patient data is permitted.
 
 Run the focused gates from the repository root:
 
