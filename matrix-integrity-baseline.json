@@ -1,0 +1,252 @@
+{
+  "schema_version": "CAID_MATRIX_INTEGRITY_BASELINE_V1",
+  "detector_version": 3,
+  "repo": "nursing-station",
+  "recorded_at": "2026-07-30",
+  "recorded_by": "caid matrix-integrity --write-baseline",
+  "contract": "Per-file counts for the no-padding and requirement-binding invariants. `padded` and `undefined` are ALLOWANCES and may only ever go DOWN; a file absent from `files` is allowed ZERO, and once both totals reach 0 this repo is enforced at absolute zero automatically. Raising either is a gate failure -- see coverage-shrink-waivers.json (requirement_id 'baseline:<path>') if a raise is genuinely intended. `unbound` is VISIBILITY ONLY and is never a pass/fail lever: gating on it would reward a bulk script that attaches plausible requirement ids to untouched rows, turning an honest unbound count into dishonest traceability. Bindings added to a row whose executable substance did not change are rejected by the separate manufactured_binding check, which needs no baseline.",
+  "lever_metrics": [
+    "padded",
+    "undefined"
+  ],
+  "visibility_metrics": [
+    "unbound"
+  ],
+  "atom_contract": "`atoms` maps each requirement id to the canonical body hashes bound to it. A coverage ATOM is the PAIR (requirement_id, hash). Deleting duplicate rows that share an atom removes NO atom and is always permitted -- that is why padding deletion needs no waiver. Losing the LAST atom of an active requirement is blocked unless matrix-integrity-ledger.json carries a rekey, an enumerated equivalent-or-stronger replacement, or a tombstone with a fixed reason code. Every binding here is CANDIDATE, not VERIFIED: none has survived a mutation/negation test, because nothing in this corpus has ever executed.",
+  "totals": {
+    "files_scanned": 2,
+    "files_with_findings": 1,
+    "rows": 200,
+    "padded": 27,
+    "unbound": 100,
+    "undefined": 0,
+    "weak_assertions_advisory": 0,
+    "requirements_with_atoms": 58,
+    "atoms": 100
+  },
+  "files": {
+    "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json": {
+      "padded": 27,
+      "unbound": 100,
+      "undefined": 0
+    }
+  },
+  "atoms": {
+    "FR-NS-001": [
+      "51d41d90b29f7c0c38527430e8171f81",
+      "6be9730064aa71a6d64d3bc3572153a0"
+    ],
+    "FR-NS-002": [
+      "96e60caa02ab1dea7c61f32d3d2d7e18",
+      "b5d8230f9d92b8b151fe8103ec641804"
+    ],
+    "FR-NS-003": [
+      "66f27eb913ca4a4e364bbe912ad675e3",
+      "e893cdfa4c644f6fb49495f3d8f9094e"
+    ],
+    "FR-NS-004": [
+      "07895e7e3ee46cebbdaca1e47622d6e6",
+      "0f725a1e8786d67593b3d3442cdf66c6"
+    ],
+    "FR-NS-010": [
+      "6fb8290b515b2de3d213336a3add2f7a",
+      "c17780894c686c4e3306e05bf7e62843"
+    ],
+    "FR-NS-011": [
+      "79ce6de96cbe3f2c063b82fc10e85f12",
+      "f152438787b2e5653004c176a1a94880"
+    ],
+    "FR-NS-012": [
+      "4fd0b7be4dc2ba9523de75531168bd6b",
+      "90184b0434d1131a0659839c9a6b1bd1"
+    ],
+    "FR-NS-020": [
+      "98ed78a0aa4b9535d5638ae67be9cc4b",
+      "bb6ad106731f19d25075261667bbfd6d"
+    ],
+    "FR-NS-021": [
+      "66c58d6105321e68ea5df1c71fb853f2",
+      "e152485c03069e4fc3a697c21f5a97f1"
+    ],
+    "FR-NS-022": [
+      "5d59451f8b1db58cae42abc7ce543b4e",
+      "831093ae17db1220b74243241a844937"
+    ],
+    "FR-NS-030": [
+      "64720a822fb1bef31f009bc58285751a",
+      "a14fdeb4d3605b5e4f1958de4928ccfd"
+    ],
+    "FR-NS-031": [
+      "5cf9e48b434eb445e4466f7bdfef1d23",
+      "e1d01971db26d6519ef5f78c0ead1174"
+    ],
+    "FR-NS-040": [
+      "ec9d12357964ea72f057fd442b6c33d2",
+      "ffd5102d3cdafd956fae041b769a5fbc"
+    ],
+    "FR-NS-041": [
+      "810889baa05cf68c97bd92ab80440905",
+      "e011d7c258351230024ff7196e012b45"
+    ],
+    "FR-NS-042": [
+      "8596145aabaabb8531779eb8755b0be0",
+      "c7337e50ae874b0d5522ef5118e1cc82"
+    ],
+    "FR-NS-043": [
+      "34865e60b509f4711c16cf60c5973876",
+      "f29a23e63dd01ff6eb2e370179f4bf50"
+    ],
+    "FR-NS-050": [
+      "0eb4336b6d259ea98d0534fcffa54916",
+      "d2f6d12ed6d0c4fa3a8e0b80425db5f4"
+    ],
+    "FR-NS-051": [
+      "8b0c709fa3d44349e05769f561d6fa50",
+      "a8f5a100e5b36408b5e8244aedc2b887"
+    ],
+    "FR-NS-060": [
+      "3fa3711f3f5ea7feb9992cfbb48c2100",
+      "e98103c5935c44cc3f74cdf207786c23"
+    ],
+    "FR-NS-070": [
+      "5432f25f86ea2cfb891b2fa7a074a8e6",
+      "59a9c0cce40e3bf733bdf58c0ae64844"
+    ],
+    "FR-NS-071": [
+      "0428c2b774ceb4ce023579bbe6fed5c5",
+      "c90c89d3dd6d5b7e26de0276fe7eef22"
+    ],
+    "FR-NS-072": [
+      "4ed6c0b171a31048e109caa059d1ba29",
+      "8003f053cfaf1815794ff899256492fe"
+    ],
+    "FR-NS-073": [
+      "25a2111e394789dcc3383e916f2d5985",
+      "dc8e992d47bdfc5573fb6bd5ac92264b"
+    ],
+    "FR-NS-074": [
+      "51c3929a5f85b73d149084f769acd8ed",
+      "862cab4c9db75f4fa40795ff36cb81dd"
+    ],
+    "FR-NS-075": [
+      "73537b4c3f330fc0eb83a784987402d6",
+      "f77d59d2f8a036fd4bf00b2eecde41b3"
+    ],
+    "FR-NS-076": [
+      "5f4b45c7cff217ab2b7f5588a78a7a6a",
+      "61d6583dc3f99e2a12ec66e405ebf60f"
+    ],
+    "FR-NS-077": [
+      "64d7ec2ca8b1649cdee4ff6ce6f3c164",
+      "7e928538a87314b2ad5d617ba0cebcc6"
+    ],
+    "FR-NS-078": [
+      "0224a5eec675a8c43545d8fe739eef25",
+      "9761d2058c707cd34456a8204c69a288"
+    ],
+    "FR-NS-079": [
+      "5a78e2ae46b211f2b56ea8b24d6c8e28",
+      "90da77851d9b8a2ff1007d4831d4ec5f"
+    ],
+    "FR-NS-080": [
+      "6d1eb7865fb9188c909bcb5fc4b04feb",
+      "ef66137f2546f88a30b665d1d3bafc94"
+    ],
+    "FR-NS-081": [
+      "db4c382d7df3ec8744f17abdcf63bbcf",
+      "f2fc605cdb6a3efa47f721301bf6c8ac"
+    ],
+    "FR-NS-082": [
+      "f61772e8df90ae90db048875ad910f22"
+    ],
+    "NFR-NS-001": [
+      "034664c6450a2fd7b4ee03e92f4c518b",
+      "e83dc4514865985c46bd3bee6666ea8d"
+    ],
+    "NFR-NS-002": [
+      "445ddeabaf9dc3a7517a232ae9024fc5",
+      "acb9a6088156457abe3ed1f8e77f37c6"
+    ],
+    "NFR-NS-003": [
+      "4bc9a3cfa5331ca4e1424da75fc2e7eb",
+      "8f987cbd55f3094ed239fb51c7d8d682"
+    ],
+    "NFR-NS-004": [
+      "41aba928f150f1616e8b4adefef78459",
+      "c4e5f0217cba6f75608c3ea76b0b6175"
+    ],
+    "NFR-NS-005": [
+      "a0985561a416ed7efc2b2055a71fc7cc",
+      "b2484c07892f84a494e95fdb0f45e712"
+    ],
+    "NFR-NS-006": [
+      "634e87ba325a818844d219a7fa113647",
+      "be7d30dab692373fcdb82221231e1797"
+    ],
+    "NFR-NS-007": [
+      "3aea3fb04ba95ebc1a151f80a971c22f",
+      "83a740c9128633a4f0012eb4e4fe1361"
+    ],
+    "NFR-NS-008": [
+      "007e9c68531c210a05e15f5744b881e9",
+      "41c763b8beb86cca006e838c5e2513c1"
+    ],
+    "NFR-NS-009": [
+      "10d319adf76260985a4fe26980bc9c11",
+      "2614b90bd4f3856f30a282d891de9f68"
+    ],
+    "NFR-NS-010": [
+      "5344b1355cd7f6da5f52390a1a15088d",
+      "dd6608bc0c25c2e6ca24aefd62211f03"
+    ],
+    "NFR-NS-011": [
+      "ab52ce3587d5346bd409be00464d8d85",
+      "d350eaca3951ce4fb7e092fa884f0290"
+    ],
+    "NFR-NS-012": [
+      "6ffbb8b747427b7416350cd68fa7201f"
+    ],
+    "NFR-NS-013": [
+      "dac9af22baaa61516efef95f8b8c555f"
+    ],
+    "NFR-NS-014": [
+      "2e6dcdef6dd67767946d4b5a4d983819"
+    ],
+    "NFR-NS-015": [
+      "ebb2e124e7ea6f94df705f6bc297e7be"
+    ],
+    "NFR-NS-016": [
+      "f1f44105580dbfee330266ac1596b2e0"
+    ],
+    "NFR-NS-017": [
+      "1af522916c6f590fbabc0bd4b340605c"
+    ],
+    "NFR-NS-018": [
+      "73476bc4fbfda79d62f632abd1e74092"
+    ],
+    "NFR-NS-019": [
+      "a4201f6586f2b30a84ebb176f9f697f3"
+    ],
+    "NFR-NS-020": [
+      "7880fd95fa872bfc3766d2e77e5a5643"
+    ],
+    "NFR-NS-021": [
+      "c4ced0efa7902668287841ab19e68a31"
+    ],
+    "NFR-NS-022": [
+      "628ec8f3715cee39e278a355a788a8b7"
+    ],
+    "NFR-NS-023": [
+      "ad4924e3a53d95e0a8a0a93a32778755"
+    ],
+    "NFR-NS-024": [
+      "218395d43c8db674a3ef05da328ba123"
+    ],
+    "NFR-NS-025": [
+      "e6c262d7b12adde6904a9d3c96538d5e"
+    ],
+    "NFR-NS-026": [
+      "6f07c33f3c49a5135f13b4f973e410d3"
+    ]
+  }
+}
