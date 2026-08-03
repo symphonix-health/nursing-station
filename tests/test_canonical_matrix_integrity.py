@@ -15,22 +15,15 @@ import caid.matrices._integrity_tests as _suite  # noqa: E402
 _suite._REPO_ROOT = REPO_ROOT
 _suite._reset_cache()
 
-# Delegate the Phase 1 functional-matrix contract to CAID. NFR derivation is a
-# separate CAID deliverable and is not imported as an optional/skipped suite.
-test_canonical_schema_present = _suite.test_canonical_schema_present
-test_each_matrix_has_exactly_100_scenarios = _suite.test_each_matrix_has_exactly_100_scenarios
-test_each_matrix_distribution_is_85_10_5 = _suite.test_each_matrix_distribution_is_85_10_5
-test_every_scenario_has_canonical_columns = _suite.test_every_scenario_has_canonical_columns
-test_every_scenario_has_unique_use_case_id = _suite.test_every_scenario_has_unique_use_case_id
-test_every_scenario_traces_to_at_least_one_requirement = (
-    _suite.test_every_scenario_traces_to_at_least_one_requirement
-)
-test_requirements_matrix_canonical_schema = _suite.test_requirements_matrix_canonical_schema
-test_every_requirement_is_covered = _suite.test_every_requirement_is_covered
-test_no_scenario_references_unknown_requirement = _suite.test_no_scenario_references_unknown_requirement
-test_no_l202_truncated_requirement_ids = _suite.test_no_l202_truncated_requirement_ids
-test_requirements_count_matches_superset = _suite.test_requirements_count_matches_superset
-test_every_superset_requirement_has_scenario_coverage = (
-    _suite.test_every_superset_requirement_has_scenario_coverage
-)
-test_use_case_workflows_have_scenario_coverage = _suite.test_use_case_workflows_have_scenario_coverage
+# Delegate the full shared suite to CAID via import * so this file tracks
+# caid.matrices._integrity_tests.__all__ automatically -- see that module's
+# own docstring for the canonical vendoring pattern (also used verbatim by
+# pharmacy-system's tests/test_canonical_matrix_integrity.py). Do not hand-list
+# test names here: an explicit per-name binding list silently stops tracking
+# new/renamed tests upstream and breaks collection outright when a test is
+# removed (e.g. test_each_matrix_has_exactly_100_scenarios was superseded by
+# test_each_matrix_meets_the_minimum_scenario_floor + the 85/10/5 ratio check).
+# NFR-derivation tests are included too: each one skips cleanly via
+# pytest.skip when its optional artifact (derived_nfrs.json /
+# nfr_canonical_matrices/) is not yet present in this repo.
+from caid.matrices._integrity_tests import *  # noqa: F401, F403, E402
