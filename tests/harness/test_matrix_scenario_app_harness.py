@@ -9,8 +9,15 @@ from fastapi.testclient import TestClient
 from nursing_station import main
 from nursing_station.database import Database
 
-MATRIX = Path(__file__).parent / "json_matrices" / "nursing_station_phase2_canonical.json"
-ALL_SCENARIOS = json.loads(MATRIX.read_text(encoding="utf-8"))["scenarios"]
+MATRIX_DIR = Path(__file__).parent / "json_matrices"
+# Every canonical matrix in the directory, not a named one: a new matrix file
+# that the harness does not execute produces scenario rows with no success
+# evidence, which the CAID test-agent reports as a traceability failure.
+ALL_SCENARIOS = [
+    row
+    for path in sorted(MATRIX_DIR.glob("*_canonical.json"))
+    for row in json.loads(path.read_text(encoding="utf-8"))["scenarios"]
+]
 SHARD_TOTAL = max(1, int(os.getenv("BT_MATRIX_APP_HARNESS_SHARD_TOTAL", "1")))
 SHARD_INDEX = int(os.getenv("BT_MATRIX_APP_HARNESS_SHARD_INDEX", "0"))
 SCENARIOS = [row for index, row in enumerate(ALL_SCENARIOS) if index % SHARD_TOTAL == SHARD_INDEX]
@@ -116,6 +123,42 @@ def _request(client, domain: str, headers: dict[str, str], category: str):
         return client.get("/api/alerts", headers={} if unauthenticated else headers)
     if domain == "governance":
         return client.get("/api/governance/seed", headers=active_headers)
+    # ---- national capability domains --------------------------------
+    if domain == "work-orchestration":
+        suffix = "?ward_id=ward-surg-b" if edge else ""
+        return client.get(f"/api/ward-board/work-queue{suffix}", headers=active_headers)
+    if domain == "deterioration":
+        ward = "ward-surg-b" if edge else "ward-med-a"
+        return client.get(f"/api/wards/{ward}/escalations", headers=active_headers)
+    if domain == "emar":
+        patient_id = "pat-004" if edge else "pat-005"
+        return client.get(f"/api/patients/{patient_id}/medications", headers=active_headers)
+    if domain == "staffing":
+        ward = "ward-surg-b" if edge else "ward-med-a"
+        return client.get(f"/api/wards/{ward}/staffing-position", headers=active_headers)
+    if domain == "harm":
+        ward = "ward-surg-b" if edge else "ward-med-a"
+        return client.get(f"/api/wards/{ward}/harm-incidents", headers=active_headers)
+    if domain == "discharge":
+        if edge:
+            return client.get("/api/patients/pat-004/discharge-readiness", headers=headers)
+        if not unauthenticated:
+            # Idempotent setup: a second open record is refused with 409, which
+            # is exactly the state the positive read below needs.
+            client.post("/api/patients/pat-002/discharge-readiness", headers=headers, json={})
+        return client.get("/api/patients/pat-002/discharge-readiness", headers=active_headers)
+    if domain == "quality":
+        charge_headers = {} if unauthenticated else _login(client, "grace.mensah@nursing.test")
+        if edge:
+            charge_headers = headers
+        return client.get("/api/wards/ward-med-a/quality-measures", headers=charge_headers)
+    if domain == "country-pack":
+        return client.get("/api/country-pack", headers=active_headers)
+    if domain == "publications":
+        queue_headers = {} if unauthenticated else _login(client, "grace.mensah@nursing.test")
+        if edge:
+            queue_headers = headers
+        return client.get("/api/publications", headers=queue_headers)
     raise AssertionError(f"Unhandled matrix domain: {domain}")
 
 
@@ -126,10 +169,16 @@ def test_matrix_scenario(client, scenario):
     domain = next(tag for tag in scenario["tags"] if tag in {
         "ward-board", "observations", "tasks", "care-plans", "handover",
         "medications", "safety", "audit", "integrations", "reporting", "alerts",
-        "governance",
+        "governance", "work-orchestration", "deterioration", "emar", "staffing",
+        "harm", "discharge", "quality", "country-pack", "publications",
     })
     response = _request(client, domain, headers, category)
-    expected = 503 if domain == "reporting" else 200 if domain in {"ward-board", "audit", "tasks", "integrations", "alerts", "governance"} else 201
+    read_domains = {
+        "ward-board", "audit", "tasks", "integrations", "alerts", "governance",
+        "work-orchestration", "deterioration", "emar", "staffing", "harm",
+        "discharge", "quality", "country-pack", "publications",
+    }
+    expected = 503 if domain == "reporting" else 200 if domain in read_domains else 201
     if category == "positive":
         assert response.status_code == expected
     elif category == "negative":

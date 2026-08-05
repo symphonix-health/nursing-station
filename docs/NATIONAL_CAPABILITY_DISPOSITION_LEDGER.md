@@ -260,10 +260,20 @@ same pack. Validation refuses a dangling citation.
    relied on column order (`INSERT INTO tasks VALUES (?,...16)`). Adding a
    column would have silently mis-assigned clinical fields. All converted to
    explicit column lists.
-5. **FastAPI dependency shape.** `Annotated[Any, Depends(...)]` resolves as a
-   query parameter, which returned 422 from every new route. Caught by the first
-   run of the new suite, fixed to the default-value form, and recorded in a
-   comment at `national_routes.py:143` so it is not reintroduced.
+5. **FastAPI dependency shape.** Under this module's postponed annotations a
+   factory-local `Annotated[..., Depends(ctx.current_user)]` never resolves, so
+   FastAPI degraded every new route to a query parameter and returned 422.
+   Fixed to the default-value form and recorded at the call site.
+6. **Hardcoded single-file scan in the scenario harness and its evidence
+   generator.** `tests/harness/test_matrix_scenario_app_harness.py` and
+   `scripts/generate_scenario_success_evidence.py` both named
+   `nursing_station_phase2_canonical` literally, so the forty new canonical
+   scenarios had no executable coverage and no success evidence. `caid
+   test-agent` caught it as
+   `traceability_failure :: scenario success evidence does not cover every
+   matrix scenario`. Both now discover every matrix in their directory, the
+   harness executes all nine new domains against the real application, and the
+   gate passes with 140 of 140 scenarios covered.
 
 ## 5. Observations recorded, not fixed
 

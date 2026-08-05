@@ -4,6 +4,366 @@
   "harness": "tests/harness/test_matrix_scenario_app_harness.py",
   "evidence": [
     {
+      "use_case_id": "NS-NAT-WORKQ-RANK-0001",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#0:NS-NAT-WORKQ-RANK-0001",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-WORKQ-RANK-0001]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board/work-queue"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-WORKQ-EXPLAIN-0002",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#1:NS-NAT-WORKQ-EXPLAIN-0002",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-WORKQ-EXPLAIN-0002]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board/work-queue"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-COMP-ASSIGN-0003",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#2:NS-NAT-COMP-ASSIGN-0003",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-COMP-ASSIGN-0003]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/tasks"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-COMP-VIEW-0004",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#3:NS-NAT-COMP-VIEW-0004",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-COMP-VIEW-0004]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/ward-board/work-queue"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-INTR-RECORD-0005",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#4:NS-NAT-INTR-RECORD-0005",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-INTR-RECORD-0005]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/tasks/task-002/interruptions"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-INTR-RESUME-0006",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#5:NS-NAT-INTR-RESUME-0006",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-INTR-RESUME-0006]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/task-interruptions/{interruption_id}/resume"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ESC-RESPOND-0007",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#6:NS-NAT-ESC-RESPOND-0007",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-ESC-RESPOND-0007]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/observations/{observation_id}/escalation-response"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ESC-FEED-0008",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#7:NS-NAT-ESC-FEED-0008",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-ESC-FEED-0008]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/escalations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EWS-SCALE1-0009",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#8:NS-NAT-EWS-SCALE1-0009",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EWS-SCALE1-0009]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/observations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EWS-SCALE2-0010",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#9:NS-NAT-EWS-SCALE2-0010",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EWS-SCALE2-0010]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-007/observations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-INGEST-0011",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#10:NS-NAT-EMAR-INGEST-0011",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EMAR-INGEST-0011]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-005/integrations/refresh"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-PROTECT-0012",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#11:NS-NAT-EMAR-PROTECT-0012",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EMAR-PROTECT-0012]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-005/integrations/refresh"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-QUEUE-0013",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#12:NS-NAT-EMAR-QUEUE-0013",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EMAR-QUEUE-0013]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/medication-orders/{order_id}/administrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-NOOBLIG-0014",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#13:NS-NAT-EMAR-NOOBLIG-0014",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EMAR-NOOBLIG-0014]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/medication-orders/med-001/administrations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HAND-ACTIONS-0015",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#14:NS-NAT-HAND-ACTIONS-0015",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-HAND-ACTIONS-0015]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/handovers/{handover_id}/accept"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HAND-DECLINE-0016",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#15:NS-NAT-HAND-DECLINE-0016",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-HAND-DECLINE-0016]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/handovers/{handover_id}/accept"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ROSTER-CONTRACT-0017",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#16:NS-NAT-ROSTER-CONTRACT-0017",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-ROSTER-CONTRACT-0017]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-roster/refresh"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ROSTER-CONSUME-0018",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#17:NS-NAT-ROSTER-CONSUME-0018",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-ROSTER-CONSUME-0018]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-position"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-POS-REQUIRE-0019",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#18:NS-NAT-POS-REQUIRE-0019",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-POS-REQUIRE-0019]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-position"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-POS-TRIGGERS-0020",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#19:NS-NAT-POS-TRIGGERS-0020",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-POS-TRIGGERS-0020]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-position"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DECL-EMIT-0021",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#20:NS-NAT-DECL-EMIT-0021",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-DECL-EMIT-0021]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-declarations"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DECL-REVOKE-0022",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#21:NS-NAT-DECL-REVOKE-0022",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-DECL-REVOKE-0022]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/staffing-declarations/{declaration_id}/revoke"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HARM-FALL-0023",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#22:NS-NAT-HARM-FALL-0023",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-HARM-FALL-0023]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/harm-incidents"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HARM-POA-0024",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#23:NS-NAT-HARM-POA-0024",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-HARM-POA-0024]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-001/harm-incidents"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-REVIEW-LEARN-0025",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#24:NS-NAT-REVIEW-LEARN-0025",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-REVIEW-LEARN-0025]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/harm-incidents/{incident_id}/review"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-REVIEW-SEPARATION-0026",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#25:NS-NAT-REVIEW-SEPARATION-0026",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-REVIEW-SEPARATION-0026]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/harm-incidents/{incident_id}/review"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-OPEN-0027",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#26:NS-NAT-DISCH-OPEN-0027",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-DISCH-OPEN-0027]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/patients/pat-002/discharge-readiness"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-OWNED-0028",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#27:NS-NAT-DISCH-OWNED-0028",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-DISCH-OWNED-0028]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/discharge-readiness/{readiness_id}/criteria/patient-and-carer-education/confirm"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-RECEIPT-0029",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#28:NS-NAT-DISCH-RECEIPT-0029",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-DISCH-RECEIPT-0029]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/discharge-readiness/{readiness_id}/coordinate"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-DEFS-0030",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#29:NS-NAT-QUAL-DEFS-0030",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-QUAL-DEFS-0030]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/quality-measures"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-COMPUTE-0031",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#30:NS-NAT-QUAL-COMPUTE-0031",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-QUAL-COMPUTE-0031]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/quality-measures"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-PUBLISH-0032",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#31:NS-NAT-QUAL-PUBLISH-0032",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-QUAL-PUBLISH-0032]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/hmis-measures"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-PACK-SERVE-0033",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#32:NS-NAT-PACK-SERVE-0033",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-PACK-SERVE-0033]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/country-pack"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-PACK-FOURCOUNTRY-0034",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#33:NS-NAT-PACK-FOURCOUNTRY-0034",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-PACK-FOURCOUNTRY-0034]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/country-pack"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-ESC-ROLE-0035",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#34:NS-NAT-NEG-ESC-ROLE-0035",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-NEG-ESC-ROLE-0035]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/observations/{observation_id}/escalation-response"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-ROSTER-CLOSED-0036",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#35:NS-NAT-NEG-ROSTER-CLOSED-0036",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-NEG-ROSTER-CLOSED-0036]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/staffing-roster/refresh"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-DISCH-ASSERT-0037",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#36:NS-NAT-NEG-DISCH-ASSERT-0037",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-NEG-DISCH-ASSERT-0037]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/discharge-readiness/{readiness_id}/criteria/medicines-supply-and-education/confirm"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-PACK-VERSION-0038",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#37:NS-NAT-NEG-PACK-VERSION-0038",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-NEG-PACK-VERSION-0038]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/country-pack/adoptions"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EDGE-GAPS-0039",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#38:NS-NAT-EDGE-GAPS-0039",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EDGE-GAPS-0039]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/publications"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EDGE-NODENOM-0040",
+      "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_national_capability_canonical.14col.json#39:NS-NAT-EDGE-NODENOM-0040",
+      "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-NAT-EDGE-NODENOM-0040]",
+      "expected_status": "passed",
+      "app_paths_exercised": [
+        "/api/wards/ward-med-a/quality-measures"
+      ]
+    },
+    {
       "use_case_id": "NS-WARDBOARD-0001",
       "matrix_row_key": "tests/harness/reduced_json_matrices/nursing_station_phase2_canonical.14col.json#0:NS-WARDBOARD-0001",
       "pytest_node_id": "tests/harness/test_matrix_scenario_app_harness.py::test_matrix_scenario[NS-WARDBOARD-0001]",
