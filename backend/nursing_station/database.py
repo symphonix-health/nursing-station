@@ -146,9 +146,12 @@ CREATE TABLE IF NOT EXISTS medication_orders (
  source_system TEXT NOT NULL DEFAULT 'nursing-station', source_order_id TEXT,
  FOREIGN KEY(patient_id) REFERENCES patients(id)
 );
-CREATE UNIQUE INDEX IF NOT EXISTS one_order_per_source_reference
- ON medication_orders(tenant_id, source_system, source_order_id)
- WHERE source_order_id IS NOT NULL;
+-- NOTE: one_order_per_source_reference is created in _migrate, NOT here.
+-- CREATE TABLE IF NOT EXISTS is a no-op against an already-existing
+-- medication_orders, so on an upgraded database this script would reach a
+-- CREATE INDEX naming a column that _migrate has not added yet and abort the
+-- whole initialise() with "no such column: source_order_id". Every index that
+-- names a column added by a migration belongs after that migration.
 CREATE TABLE IF NOT EXISTS medication_administrations (
  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, patient_id TEXT NOT NULL,
  order_id TEXT NOT NULL, outcome TEXT NOT NULL, reason TEXT,
@@ -436,9 +439,21 @@ class Database:
             *_NATIONAL_PATIENT_ROWS(tenant, timestamp),
         ]
         conn.executemany(f"INSERT OR IGNORE INTO patients {_PATIENT_INSERT}", rows)
+        # A competency belongs to a practitioner, so only seed it for a
+        # practitioner this database actually has. INSERT OR IGNORE resolves a
+        # uniqueness conflict but NOT a foreign-key violation, so an upgraded
+        # database whose user set differs from the seed would abort the whole
+        # initialise() here -- see tests/test_database_migration.py.
+        known_users = {
+            row[0] for row in conn.execute("SELECT id FROM users WHERE active=1")
+        }
         conn.executemany(
             f"INSERT OR IGNORE INTO nurse_competencies {_COMPETENCY_INSERT}",
-            _NATIONAL_COMPETENCY_ROWS(tenant, timestamp.isoformat()),
+            [
+                row
+                for row in _NATIONAL_COMPETENCY_ROWS(tenant, timestamp.isoformat())
+                if row[2] in known_users
+            ],
         )
 
     def fetchall(self, sql: str, params: tuple[Any, ...] = ()) -> list[dict[str, Any]]:

@@ -274,6 +274,26 @@ same pack. Validation refuses a dangling citation.
    matrix scenario`. Both now discover every matrix in their directory, the
    harness executes all nine new domains against the real application, and the
    gate passes with 140 of 140 scenarios covered.
+7. **The upgrade path was broken for every existing database.** `SCHEMA`
+   carried `CREATE UNIQUE INDEX ... one_order_per_source_reference` naming
+   `medication_orders.source_order_id`. `CREATE TABLE IF NOT EXISTS` is a no-op
+   against an already-existing table, so on an upgraded database the index was
+   reached before `_migrate` added the column and `initialise()` aborted with
+   `no such column: source_order_id`. The whole test suite missed it because
+   every test starts from an empty file and therefore only ever exercised the
+   create-from-scratch path. Index moved after the migration.
+8. **`INSERT OR IGNORE` does not ignore a foreign-key violation.** The
+   competency seed inserted rows for practitioners a given database might not
+   have, aborting `initialise()` on any deployment whose user set differs from
+   the seed. Now filtered to practitioners that exist.
+
+   Both were found by running `initialise()` against a copy of the real
+   committed `data/nursing_station.db` — a check the suite did not contain.
+   `tests/test_database_migration.py` now builds a pre-wave schema explicitly
+   and asserts the upgrade lands every new column and table, preserves the
+   pre-existing clinical rows, creates the index, is repeatable, and produces a
+   database shape identical to a freshly created one. Both fixes were reverted
+   in turn to prove the test bites.
 
 ## 5. Observations recorded, not fixed
 
