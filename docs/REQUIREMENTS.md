@@ -47,6 +47,32 @@ records.
 - `FR-NS-081`: The ward dashboard SHALL surface each open critical-result alert within five seconds of successful hub acceptance without page navigation. It SHALL show patient context, source, result, observed time, and correlation identifier using non-colour critical status.
 - `FR-NS-082`: An authorised ward nurse SHALL explicitly acknowledge a critical-result alert. Receipt or display of an alert SHALL NOT record a diagnosis, treatment decision, task completion, or clinical acknowledgement automatically.
 
+### National capability requirements
+
+Landed 2026-08-05 from the national-capability completeness audit
+(`docs/national-capability-audit.md`). Dispositions, evidence and the mapping
+from the audit's provisional intake aliases to these native identifiers are in
+`docs/NATIONAL_CAPABILITY_DISPOSITION_LEDGER.md`.
+
+- `FR-NS-090`: Present ward work ranked by clinical risk, due time, priority and suspended work, and publish the factor breakdown that produced each rank. Ranking SHALL order work only; it SHALL NOT complete, reassign or close it.
+- `FR-NS-091`: Require the assignee's verified competency before nursing work is delegated, and again before that work is accepted or completed. A refusal SHALL name the missing competency.
+- `FR-NS-092`: Record an interruption of nursing work with its reason and reason category, and keep the interrupted work raised in the work queue until it is explicitly resumed.
+- `FR-NS-100`: Attach a required response interval and a minimum responder seniority to every deterioration escalation, and close it only through a named responder's recorded clinical response. Recording a response SHALL NOT complete the escalation task.
+- `FR-NS-101`: Take the early-warning profile identity, its oxygen-saturation band tables including the prescribed Scale 2 target range, its thresholds and its response intervals from the active jurisdiction's country pack. The patient's prescribed oxygen target scale SHALL select the band table; an absent or unknown scale SHALL fall back to Scale 1 rather than be guessed.
+- `FR-NS-110`: Reconcile hub-sourced pharmacy medication requests into the eMAR idempotently by source order reference. An order carrying an administration record SHALL NOT be overwritten, and a request missing a dose unit SHALL be reported unmappable rather than defaulted.
+- `FR-NS-111`: Queue the administration outcome of a hub-sourced order durably for its owning system with a correlation identifier. The outcome SHALL remain pending until a receipt arrives and SHALL NOT be reported as delivered. A locally authored order SHALL create no external obligation.
+- `FR-NS-120`: Transfer every unresolved action to the receiving nurse when a handover is accepted, or record a reasoned decline that leaves the action with the sender. An action the receiver is not competent to perform SHALL be declined automatically with the missing competency named, never silently transferred.
+- `FR-NS-130`: Consume the shift roster through BulletTrain against a declared contract covering ward, shift, assignment identity, role, registration status and hours. A malformed, empty or unpublished roster SHALL be reported absent and SHALL NOT be inferred.
+- `FR-NS-131`: Compute the ward staffing position from repo-owned occupancy and acuity against the country pack's staffing norm, and report `insufficient-policy` where the jurisdiction sets no numeric norm rather than asserting compliance.
+- `FR-NS-132`: Allow only a nurse in charge to declare a staffing shortage, emit exactly BulletTrain's governed staffing-declaration field set, and assert no policy tier, severity or approval of its own. A declaration SHALL be revocable with a recorded reason.
+- `FR-NS-140`: Record falls, pressure injuries and healthcare-associated infections as incidents with occurrence and discovery times, classification, body site, present-on-admission status, harm level and named reporter. External reportability SHALL be decided by the country pack, and a present-on-admission pressure injury SHALL NOT count as hospital-acquired harm.
+- `FR-NS-141`: Require a harm incident to be reviewed by someone other than its reporter, record avoidability, contributory factors and conclusion, and create owned, due learning actions.
+- `FR-NS-150`: Open discharge readiness from the active jurisdiction's criteria set with each criterion's owner role, evidence source and mandatory status, and refuse completion while any mandatory criterion is outstanding.
+- `FR-NS-151`: Meet a criterion owned by another system only from that system's own receipt through the hub. A dispatch, an empty successful response or a missing hub route SHALL leave the criterion pending with a typed reason.
+- `FR-NS-160`: Carry nursing quality measure definitions as versioned country-pack data with numerator, denominator, exclusions, unit and a dated citation.
+- `FR-NS-161`: Compute the nursing quality dataset from ward records, distinguish an unavailable source from a zero and from an absent denominator, and publish it de-identified as an additive block on the proven HMIS measure envelope without changing that envelope's required keys.
+- `FR-NS-170`: Ship country policy as a versioned pack per jurisdiction covering the early-warning profile, safe-staffing norms and declaration triggers, harm-incident classification and reporting owner, discharge criteria and quality measures, with publisher, title and effective date for every clinically meaningful entry.
+
 ## Non-functional and safety requirements
 
 - `NFR-NS-001`: Enforce tenant, facility, ward, role, practitioner, and care-relationship scope.
@@ -75,6 +101,10 @@ records.
 - `NFR-NS-024`: A governed `clinical-safety-officer-superpersona` SHALL execute the clinical-safety assurance procedure, review metadata and de-identified evidence only, and produce a scope-bound recommendation. The agent SHALL NOT claim professional registration, statutory office, independent approval authority, or a legal signature.
 - `NFR-NS-025`: Deployment approval SHALL require two independent keys: a passing agent Clinical Safety Officer evidence battery and an explicit human decision for the identical scope. A missing check, missing human decision, or scope mismatch SHALL fail closed.
 - `NFR-NS-026`: Synthetic clinical-simulation approval SHALL remain distinguishable from live-patient release. Any live-patient deployment SHALL require a new controller, jurisdiction, privacy, regulatory, operational, and named accountable-human assessment and SHALL NOT inherit the synthetic approval.
+- `NFR-NS-027`: A country pack SHALL ship as a candidate. Nursing Station SHALL treat a pack as locally adopted only after a recorded organisational decision pinned to the exact reviewed pack version, and SHALL report the candidate and adopted states separately. Publishing a new pack version SHALL NOT inherit a previous version's adoption.
+- `NFR-NS-028`: Nursing Station SHALL consume roster, registration and skill-mix state and SHALL NOT become its author. It SHALL expose no route that writes a roster, and an unavailable roster SHALL degrade the staffing position rather than produce one.
+- `NFR-NS-029`: Every outbound national publication SHALL be durable, idempotent by correlation identifier, and written before any transport is attempted. It SHALL remain pending until a receipt arrives, and a publication whose BulletTrain-side route does not exist SHALL be surfaced as a named gap rather than reported as delivered.
+- `NFR-NS-030`: Every national safety decision SHALL record the named human who made it. Escalation response, incident review, staffing declaration and revocation, discharge-criterion confirmation, discharge completion and country-pack adoption SHALL NOT resolve automatically, and no automated ranking, computation or import SHALL substitute for that decision.
 
 ## Standards basis and local adoption boundary
 

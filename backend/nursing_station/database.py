@@ -15,6 +15,71 @@ from .synthetic_seed import DATA_CLASS, SEED_MANIFEST_ID, manifest
 
 SEED_PASSWORD_HASH = bcrypt.hashpw(b"Nursing2026!", bcrypt.gensalt(rounds=12))
 
+PATIENT_COLUMNS = (
+    "id", "tenant_id", "ward_id", "mrn", "national_id_last4", "name", "date_of_birth",
+    "sex", "bed", "admission_reason", "admitted_at", "allergies_json", "code_status",
+    "isolation_status", "flags_json", "photo_status", "accountable_nurse_id", "version",
+    "data_class", "seed_manifest_id", "external_nhs_number", "source_patient_id",
+    "oxygen_target_scale", "acuity_dependency",
+)
+_PATIENT_INSERT = (
+    f"({','.join(PATIENT_COLUMNS)}) VALUES ({','.join('?' * len(PATIENT_COLUMNS))})"
+)
+COMPETENCY_COLUMNS = (
+    "id", "tenant_id", "user_id", "competency", "verified_at", "verified_by",
+)
+_COMPETENCY_INSERT = (
+    f"({','.join(COMPETENCY_COLUMNS)}) VALUES ({','.join('?' * len(COMPETENCY_COLUMNS))})"
+)
+
+
+def _NATIONAL_PATIENT_ROWS(tenant: str, timestamp: datetime) -> list[tuple[Any, ...]]:
+    """Patients added by the national-capability wave.
+
+    ``pat-007`` exists so the Scale 2 oxygen target range is exercised by a
+    clinically coherent subject rather than by flipping a flag on a patient
+    whose diagnosis does not support a prescribed 88-92% target.
+    """
+    return [
+        (
+            "pat-007", tenant, "ward-med-a", "MRN-104415", "6621", "Deirdre Kavanagh",
+            "1949-03-05", "female", "A-22",
+            "Infective exacerbation of COPD with hypercapnic respiratory failure",
+            (timestamp - timedelta(days=1)).isoformat(),
+            json.dumps([{"substance": "Aspirin", "reaction": "Bronchospasm", "severity": "severe"}]),
+            "Full escalation", "None",
+            json.dumps(["Prescribed oxygen target 88-92%", "Falls risk", "Pressure injury risk"]),
+            "unavailable", "usr-grace", 1, DATA_CLASS, SEED_MANIFEST_ID, None, None,
+            "2", "level-3",
+        ),
+    ]
+
+
+def _NATIONAL_COMPETENCY_ROWS(tenant: str, verified_at: str) -> list[tuple[Any, ...]]:
+    """Verified nursing competencies backing skill-gated delegation (FR-NS-091).
+
+    Samuel deliberately holds a narrower set than Amina and Grace: a competency
+    model with no ineligible nurse in it cannot demonstrate that the gate bites.
+    """
+    grants = {
+        "usr-amina": (
+            "high-alert-medication-cosign", "intravenous-therapy",
+            "pressure-injury-assessment", "venepuncture",
+        ),
+        "usr-grace": (
+            "high-alert-medication-cosign", "intravenous-therapy",
+            "pressure-injury-assessment", "venepuncture",
+            "deteriorating-patient-response", "discharge-coordination",
+        ),
+        "usr-samuel": ("intravenous-therapy", "venepuncture"),
+    }
+    return [
+        (f"comp-{user_id.removeprefix('usr-')}-{competency}", tenant, user_id, competency,
+         verified_at, "usr-cso")
+        for user_id, competencies in grants.items()
+        for competency in competencies
+    ]
+
 SCHEMA = """
 PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS wards (
@@ -38,6 +103,8 @@ CREATE TABLE IF NOT EXISTS patients (
  version INTEGER NOT NULL DEFAULT 1, data_class TEXT NOT NULL DEFAULT 'seeded_synthetic',
  seed_manifest_id TEXT NOT NULL DEFAULT 'seed.uk.nursing_station.phase2_v1',
  external_nhs_number TEXT, source_patient_id TEXT,
+ oxygen_target_scale TEXT NOT NULL DEFAULT '1',
+ acuity_dependency TEXT NOT NULL DEFAULT 'level-1',
  UNIQUE(tenant_id, mrn), FOREIGN KEY(ward_id) REFERENCES wards(id),
  FOREIGN KEY(accountable_nurse_id) REFERENCES users(id)
 );
@@ -49,6 +116,8 @@ CREATE TABLE IF NOT EXISTS observations (
  supplemental_oxygen INTEGER NOT NULL, systolic_bp REAL NOT NULL,
  pulse REAL NOT NULL, temperature REAL NOT NULL, consciousness TEXT NOT NULL,
  score INTEGER NOT NULL, escalation_level TEXT NOT NULL,
+ oxygen_scale TEXT NOT NULL DEFAULT '1', jurisdiction TEXT NOT NULL DEFAULT 'IE',
+ pack_version TEXT NOT NULL DEFAULT 'unset', response_due_at TEXT,
  FOREIGN KEY(patient_id) REFERENCES patients(id), FOREIGN KEY(recorded_by) REFERENCES users(id)
 );
 CREATE TABLE IF NOT EXISTS tasks (
@@ -57,6 +126,7 @@ CREATE TABLE IF NOT EXISTS tasks (
  status TEXT NOT NULL, due_at TEXT NOT NULL, assigned_to TEXT,
  created_by TEXT NOT NULL, created_at TEXT NOT NULL, completed_by TEXT,
  completed_at TEXT, completion_note TEXT, version INTEGER NOT NULL DEFAULT 1,
+ required_competency TEXT, origin_kind TEXT, origin_id TEXT,
  FOREIGN KEY(patient_id) REFERENCES patients(id), FOREIGN KEY(assigned_to) REFERENCES users(id)
 );
 CREATE TABLE IF NOT EXISTS handovers (
@@ -73,13 +143,17 @@ CREATE TABLE IF NOT EXISTS medication_orders (
  medication_name TEXT NOT NULL, dose_value REAL NOT NULL, dose_unit TEXT NOT NULL,
  route TEXT NOT NULL, schedule TEXT NOT NULL, due_at TEXT NOT NULL,
  high_alert INTEGER NOT NULL, status TEXT NOT NULL, source TEXT NOT NULL,
+ source_system TEXT NOT NULL DEFAULT 'nursing-station', source_order_id TEXT,
  FOREIGN KEY(patient_id) REFERENCES patients(id)
 );
+CREATE UNIQUE INDEX IF NOT EXISTS one_order_per_source_reference
+ ON medication_orders(tenant_id, source_system, source_order_id)
+ WHERE source_order_id IS NOT NULL;
 CREATE TABLE IF NOT EXISTS medication_administrations (
  id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, patient_id TEXT NOT NULL,
  order_id TEXT NOT NULL, outcome TEXT NOT NULL, reason TEXT,
  administered_by TEXT NOT NULL, cosigned_by TEXT, administered_at TEXT NOT NULL,
- mrn_verified TEXT NOT NULL, dob_verified TEXT NOT NULL,
+ mrn_verified TEXT NOT NULL, dob_verified TEXT NOT NULL, publication_id TEXT,
  FOREIGN KEY(order_id) REFERENCES medication_orders(id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS one_terminal_administration_per_order
@@ -139,6 +213,106 @@ CREATE TABLE IF NOT EXISTS clinical_alerts (
  UNIQUE(source_system, event_id), FOREIGN KEY(patient_id) REFERENCES patients(id),
  FOREIGN KEY(acknowledged_by) REFERENCES users(id)
 );
+CREATE TABLE IF NOT EXISTS nurse_competencies (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, user_id TEXT NOT NULL,
+ competency TEXT NOT NULL, verified_at TEXT NOT NULL, verified_by TEXT NOT NULL,
+ UNIQUE(user_id, competency), FOREIGN KEY(user_id) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS task_interruptions (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, task_id TEXT NOT NULL,
+ interrupted_at TEXT NOT NULL, reason TEXT NOT NULL, reason_category TEXT NOT NULL,
+ recorded_by TEXT NOT NULL, resumed_at TEXT, resumed_by TEXT,
+ FOREIGN KEY(task_id) REFERENCES tasks(id), FOREIGN KEY(recorded_by) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS escalation_responses (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, patient_id TEXT NOT NULL,
+ observation_id TEXT NOT NULL, task_id TEXT, escalation_level TEXT NOT NULL,
+ warning_score INTEGER NOT NULL, profile_id TEXT NOT NULL, pack_version TEXT NOT NULL,
+ responder_id TEXT NOT NULL, responder_role TEXT NOT NULL, responded_at TEXT NOT NULL,
+ required_by TEXT NOT NULL, within_required_interval INTEGER NOT NULL,
+ clinical_response TEXT NOT NULL, outcome TEXT NOT NULL,
+ UNIQUE(observation_id), FOREIGN KEY(observation_id) REFERENCES observations(id),
+ FOREIGN KEY(responder_id) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS outbound_publications (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, kind TEXT NOT NULL, connector TEXT NOT NULL,
+ resource_type TEXT NOT NULL, operation TEXT NOT NULL, resource_id TEXT NOT NULL,
+ correlation_id TEXT NOT NULL, content_hash TEXT NOT NULL, payload_json TEXT NOT NULL,
+ status TEXT NOT NULL, error_code TEXT, error_detail TEXT, receipt_json TEXT,
+ hub_audit_event_id TEXT, attempts INTEGER NOT NULL DEFAULT 0,
+ created_by TEXT NOT NULL, created_at TEXT NOT NULL, completed_at TEXT,
+ UNIQUE(kind, correlation_id)
+);
+CREATE TABLE IF NOT EXISTS staffing_snapshots (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL,
+ shift_date TEXT NOT NULL, shift TEXT NOT NULL, source_system TEXT NOT NULL,
+ content_hash TEXT NOT NULL, correlation_id TEXT NOT NULL, fetched_at TEXT NOT NULL,
+ source_updated_at TEXT, status TEXT NOT NULL, data_json TEXT NOT NULL,
+ version INTEGER NOT NULL DEFAULT 1,
+ UNIQUE(tenant_id, ward_id, shift_date, shift), FOREIGN KEY(ward_id) REFERENCES wards(id)
+);
+CREATE TABLE IF NOT EXISTS staffing_declarations (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL,
+ declaration_id TEXT NOT NULL, scope_unit TEXT NOT NULL, declared_by TEXT NOT NULL,
+ reason TEXT NOT NULL, starts_at TEXT NOT NULL, expires_at TEXT NOT NULL,
+ revoked INTEGER NOT NULL DEFAULT 0, revoked_by TEXT, revoked_at TEXT,
+ jurisdiction TEXT NOT NULL, pack_version TEXT NOT NULL, triggers_json TEXT NOT NULL,
+ position_json TEXT NOT NULL, publication_id TEXT, created_at TEXT NOT NULL,
+ UNIQUE(declaration_id), FOREIGN KEY(ward_id) REFERENCES wards(id),
+ FOREIGN KEY(declared_by) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS harm_incidents (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, patient_id TEXT NOT NULL,
+ incident_type TEXT NOT NULL, occurred_at TEXT NOT NULL, discovered_at TEXT NOT NULL,
+ reported_by TEXT NOT NULL, reported_at TEXT NOT NULL, classification TEXT,
+ body_site TEXT, present_on_admission INTEGER NOT NULL DEFAULT 0,
+ harm_level TEXT NOT NULL, description TEXT NOT NULL, linked_assessment_id TEXT,
+ externally_reportable INTEGER NOT NULL DEFAULT 0, review_required INTEGER NOT NULL DEFAULT 0,
+ status TEXT NOT NULL DEFAULT 'open', jurisdiction TEXT NOT NULL, pack_version TEXT NOT NULL,
+ publication_id TEXT, version INTEGER NOT NULL DEFAULT 1,
+ FOREIGN KEY(patient_id) REFERENCES patients(id), FOREIGN KEY(reported_by) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS incident_reviews (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, incident_id TEXT NOT NULL,
+ reviewed_by TEXT NOT NULL, reviewed_at TEXT NOT NULL, avoidability TEXT NOT NULL,
+ contributory_factors_json TEXT NOT NULL, learning_actions_json TEXT NOT NULL,
+ conclusion TEXT NOT NULL, generated_task_ids_json TEXT NOT NULL,
+ UNIQUE(incident_id), FOREIGN KEY(incident_id) REFERENCES harm_incidents(id),
+ FOREIGN KEY(reviewed_by) REFERENCES users(id)
+);
+CREATE TABLE IF NOT EXISTS discharge_readiness (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL, patient_id TEXT NOT NULL,
+ status TEXT NOT NULL, jurisdiction TEXT NOT NULL, pack_version TEXT NOT NULL,
+ target_date TEXT, created_by TEXT NOT NULL, created_at TEXT NOT NULL,
+ updated_at TEXT NOT NULL, completed_by TEXT, completed_at TEXT,
+ version INTEGER NOT NULL DEFAULT 1,
+ FOREIGN KEY(patient_id) REFERENCES patients(id), FOREIGN KEY(created_by) REFERENCES users(id)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS one_open_discharge_readiness_per_patient
+ ON discharge_readiness(patient_id) WHERE status = 'in-progress';
+CREATE TABLE IF NOT EXISTS discharge_criteria (
+ id TEXT PRIMARY KEY, readiness_id TEXT NOT NULL, criterion_id TEXT NOT NULL,
+ title TEXT NOT NULL, owner_role TEXT NOT NULL, evidence_source TEXT NOT NULL,
+ mandatory INTEGER NOT NULL, status TEXT NOT NULL, evidence_reference TEXT,
+ evidence_hash TEXT, correlation_id TEXT, confirmed_by TEXT, confirmed_at TEXT, note TEXT,
+ UNIQUE(readiness_id, criterion_id),
+ FOREIGN KEY(readiness_id) REFERENCES discharge_readiness(id)
+);
+CREATE TABLE IF NOT EXISTS quality_measure_results (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, ward_id TEXT NOT NULL,
+ period_start TEXT NOT NULL, period_end TEXT NOT NULL, measure_id TEXT NOT NULL,
+ measure_type TEXT NOT NULL, numerator REAL, denominator REAL, value REAL,
+ unit TEXT NOT NULL, status TEXT NOT NULL, source_id TEXT NOT NULL,
+ jurisdiction TEXT NOT NULL, pack_version TEXT NOT NULL, computed_at TEXT NOT NULL,
+ publication_id TEXT,
+ UNIQUE(tenant_id, ward_id, period_start, period_end, measure_id)
+);
+CREATE TABLE IF NOT EXISTS country_pack_adoptions (
+ id TEXT PRIMARY KEY, tenant_id TEXT NOT NULL, jurisdiction TEXT NOT NULL,
+ pack_version TEXT NOT NULL, decision TEXT NOT NULL, scope TEXT NOT NULL,
+ adopted_by TEXT NOT NULL, adopted_at TEXT NOT NULL, note TEXT NOT NULL,
+ UNIQUE(tenant_id, jurisdiction, pack_version), FOREIGN KEY(adopted_by) REFERENCES users(id)
+);
 CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit_events
 BEGIN SELECT RAISE(ABORT, 'audit events are append-only'); END;
 CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit_events
@@ -185,6 +359,14 @@ class Database:
             conn.execute("ALTER TABLE observations ADD COLUMN units_json TEXT NOT NULL DEFAULT '{}' ")
         if "warning_profile_version" not in observation_columns:
             conn.execute("ALTER TABLE observations ADD COLUMN warning_profile_version TEXT NOT NULL DEFAULT 'legacy' ")
+        if "oxygen_scale" not in observation_columns:
+            conn.execute("ALTER TABLE observations ADD COLUMN oxygen_scale TEXT NOT NULL DEFAULT '1'")
+        if "jurisdiction" not in observation_columns:
+            conn.execute("ALTER TABLE observations ADD COLUMN jurisdiction TEXT NOT NULL DEFAULT 'IE'")
+        if "pack_version" not in observation_columns:
+            conn.execute("ALTER TABLE observations ADD COLUMN pack_version TEXT NOT NULL DEFAULT 'unset'")
+        if "response_due_at" not in observation_columns:
+            conn.execute("ALTER TABLE observations ADD COLUMN response_due_at TEXT")
         handover_columns = {row[1] for row in conn.execute("PRAGMA table_info(handovers)")}
         if "current_risks_json" not in handover_columns:
             conn.execute("ALTER TABLE handovers ADD COLUMN current_risks_json TEXT NOT NULL DEFAULT '[]' ")
@@ -205,18 +387,58 @@ class Database:
             conn.execute("ALTER TABLE patients ADD COLUMN external_nhs_number TEXT")
         if "source_patient_id" not in patient_columns:
             conn.execute("ALTER TABLE patients ADD COLUMN source_patient_id TEXT")
+        # National-capability wave: columns added to pre-existing tables. New
+        # TABLES arrive through CREATE TABLE IF NOT EXISTS above; only column
+        # additions need an explicit migration on an already-seeded database.
+        if "oxygen_target_scale" not in patient_columns:
+            conn.execute(
+                "ALTER TABLE patients ADD COLUMN oxygen_target_scale TEXT NOT NULL DEFAULT '1'"
+            )
+        if "acuity_dependency" not in patient_columns:
+            conn.execute(
+                "ALTER TABLE patients ADD COLUMN acuity_dependency TEXT NOT NULL DEFAULT 'level-1'"
+            )
+        task_columns = {row[1] for row in conn.execute("PRAGMA table_info(tasks)")}
+        if "required_competency" not in task_columns:
+            conn.execute("ALTER TABLE tasks ADD COLUMN required_competency TEXT")
+        if "origin_kind" not in task_columns:
+            conn.execute("ALTER TABLE tasks ADD COLUMN origin_kind TEXT")
+        if "origin_id" not in task_columns:
+            conn.execute("ALTER TABLE tasks ADD COLUMN origin_id TEXT")
+        order_columns = {row[1] for row in conn.execute("PRAGMA table_info(medication_orders)")}
+        if "source_system" not in order_columns:
+            conn.execute(
+                "ALTER TABLE medication_orders ADD COLUMN source_system TEXT NOT NULL "
+                "DEFAULT 'nursing-station'"
+            )
+        if "source_order_id" not in order_columns:
+            conn.execute("ALTER TABLE medication_orders ADD COLUMN source_order_id TEXT")
+        conn.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS one_order_per_source_reference "
+            "ON medication_orders(tenant_id,source_system,source_order_id) "
+            "WHERE source_order_id IS NOT NULL"
+        )
+        administration_columns = {
+            row[1] for row in conn.execute("PRAGMA table_info(medication_administrations)")
+        }
+        if "publication_id" not in administration_columns:
+            conn.execute(
+                "ALTER TABLE medication_administrations ADD COLUMN publication_id TEXT"
+            )
 
     @staticmethod
     def _ensure_phase2_seed(conn: sqlite3.Connection) -> None:
         tenant = "tenant-st-brigids"
         timestamp = datetime.now(UTC)
         rows = [
-            ("pat-005", tenant, "ward-med-a", "MRN-104401", "0003", "Ava Patel", "1964-12-30", "female", "A-18", "Critical care step-down after renal support", (timestamp-timedelta(hours=10)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Renal replacement therapy", "Atrial fibrillation"]), "unavailable", "usr-grace", 1, DATA_CLASS, SEED_MANIFEST_ID, "9991000003", "pat-ava"),
-            ("pat-006", tenant, "ward-med-a", "MRN-104402", "0042", "Finn Jackson", "2001-06-08", "male", "A-20", "Monitored recovery after overdose", (timestamp-timedelta(hours=5)).isoformat(), json.dumps([{"substance":"Codeine","reaction":"Nausea","severity":"moderate"}]), "Full escalation", "None", json.dumps(["Mental health review pending"]), "unavailable", "usr-amina", 1, DATA_CLASS, SEED_MANIFEST_ID, "9990000042", "pat-finn"),
+            ("pat-005", tenant, "ward-med-a", "MRN-104401", "0003", "Ava Patel", "1964-12-30", "female", "A-18", "Critical care step-down after renal support", (timestamp-timedelta(hours=10)).isoformat(), json.dumps([]), "Full escalation", "None", json.dumps(["Renal replacement therapy", "Atrial fibrillation"]), "unavailable", "usr-grace", 1, DATA_CLASS, SEED_MANIFEST_ID, "9991000003", "pat-ava", "1", "level-3"),
+            ("pat-006", tenant, "ward-med-a", "MRN-104402", "0042", "Finn Jackson", "2001-06-08", "male", "A-20", "Monitored recovery after overdose", (timestamp-timedelta(hours=5)).isoformat(), json.dumps([{"substance":"Codeine","reaction":"Nausea","severity":"moderate"}]), "Full escalation", "None", json.dumps(["Mental health review pending"]), "unavailable", "usr-amina", 1, DATA_CLASS, SEED_MANIFEST_ID, "9990000042", "pat-finn", "1", "level-2"),
+            *_NATIONAL_PATIENT_ROWS(tenant, timestamp),
         ]
+        conn.executemany(f"INSERT OR IGNORE INTO patients {_PATIENT_INSERT}", rows)
         conn.executemany(
-            "INSERT OR IGNORE INTO patients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            rows,
+            f"INSERT OR IGNORE INTO nurse_competencies {_COMPETENCY_INSERT}",
+            _NATIONAL_COMPETENCY_ROWS(tenant, timestamp.isoformat()),
         )
 
     def fetchall(self, sql: str, params: tuple[Any, ...] = ()) -> list[dict[str, Any]]:
@@ -327,32 +549,43 @@ class Database:
             "pat-005": ("9991000003", "pat-ava"),
             "pat-006": ("9990000042", "pat-finn"),
         }
+        acuity = {"pat-001": "level-3", "pat-003": "level-2", "pat-005": "level-3", "pat-006": "level-2"}
         patients = [
-            row + (DATA_CLASS, SEED_MANIFEST_ID, *external_identity.get(row[0], (None, None)))
+            row
+            + (DATA_CLASS, SEED_MANIFEST_ID, *external_identity.get(row[0], (None, None)))
+            + ("1", acuity.get(row[0], "level-1"))
             for row in patients
-        ]
+        ] + _NATIONAL_PATIENT_ROWS(tenant, now)
+        conn.executemany(f"INSERT INTO patients {_PATIENT_INSERT}", patients)
         conn.executemany(
-            "INSERT INTO patients VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            patients,
+            f"INSERT INTO nurse_competencies {_COMPETENCY_INSERT}",
+            _NATIONAL_COMPETENCY_ROWS(tenant, now.isoformat()),
         )
         tasks = [
-            ("task-001",tenant,"ward-med-a","pat-001","Repeat observations","NEWS2 reassessment after oxygen titration","stat","open",(now-timedelta(minutes=12)).isoformat(),"usr-amina","usr-grace",now.isoformat(),None,None,None,1),
-            ("task-002",tenant,"ward-med-a","pat-002","Daily weight","Record weight before breakfast","normal","open",(now+timedelta(minutes=35)).isoformat(),"usr-grace","usr-grace",now.isoformat(),None,None,None,1),
-            ("task-003",tenant,"ward-med-a","pat-003","Pressure-area care","Reposition and inspect heels","high","open",(now+timedelta(minutes=10)).isoformat(),"usr-amina","usr-grace",now.isoformat(),None,None,None,1),
+            ("task-001",tenant,"ward-med-a","pat-001","Repeat observations","NEWS2 reassessment after oxygen titration","stat","open",(now-timedelta(minutes=12)).isoformat(),"usr-amina","usr-grace",now.isoformat(),None,None,None,1,None,None,None),
+            ("task-002",tenant,"ward-med-a","pat-002","Daily weight","Record weight before breakfast","normal","open",(now+timedelta(minutes=35)).isoformat(),"usr-grace","usr-grace",now.isoformat(),None,None,None,1,None,None,None),
+            ("task-003",tenant,"ward-med-a","pat-003","Pressure-area care","Reposition and inspect heels","high","open",(now+timedelta(minutes=10)).isoformat(),"usr-amina","usr-grace",now.isoformat(),None,None,None,1,"pressure-injury-assessment",None,None),
+            ("task-004",tenant,"ward-med-a","pat-007","Nebulised bronchodilator review","Reassess work of breathing against the prescribed 88-92% target","high","open",(now+timedelta(minutes=20)).isoformat(),"usr-grace","usr-grace",now.isoformat(),None,None,None,1,"deteriorating-patient-response",None,None),
         ]
-        conn.executemany("INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tasks)
+        conn.executemany("INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", tasks)
         meds = [
-            ("med-001",tenant,"ward-med-a","pat-001","Ceftriaxone",2,"g","IV","once daily",(now+timedelta(minutes=20)).isoformat(),0,"active","Phase 1 seeded order"),
-            ("med-002",tenant,"ward-med-a","pat-003","Insulin aspart",4,"units","subcutaneous","with meals",(now+timedelta(minutes=5)).isoformat(),1,"active","Phase 1 seeded order"),
-            ("med-003",tenant,"ward-med-a","pat-002","Furosemide",40,"mg","oral","twice daily",(now-timedelta(minutes=25)).isoformat(),0,"active","Phase 1 seeded order"),
+            ("med-001",tenant,"ward-med-a","pat-001","Ceftriaxone",2,"g","IV","once daily",(now+timedelta(minutes=20)).isoformat(),0,"active","Phase 1 seeded order","nursing-station",None),
+            ("med-002",tenant,"ward-med-a","pat-003","Insulin aspart",4,"units","subcutaneous","with meals",(now+timedelta(minutes=5)).isoformat(),1,"active","Phase 1 seeded order","nursing-station",None),
+            ("med-003",tenant,"ward-med-a","pat-002","Furosemide",40,"mg","oral","twice daily",(now-timedelta(minutes=25)).isoformat(),0,"active","Phase 1 seeded order","nursing-station",None),
         ]
-        conn.executemany("INSERT INTO medication_orders VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", meds)
+        conn.executemany("INSERT INTO medication_orders VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", meds)
         observations = [
             ("obs-seed-001",tenant,"ward-med-a","pat-001","usr-amina",(now-timedelta(minutes=18)).isoformat(),"seeded bedside observation",json.dumps({"respiratory_rate":"/min","oxygen_saturation":"%","systolic_bp":"mmHg","pulse":"/min","temperature":"Cel"}),"NS-NEWS2-PHASE1-v1",22,94,1,112,96,38.2,"alert",5,"urgent"),
             ("obs-seed-002",tenant,"ward-med-a","pat-002","usr-grace",(now-timedelta(minutes=42)).isoformat(),"seeded bedside observation",json.dumps({"respiratory_rate":"/min","oxygen_saturation":"%","systolic_bp":"mmHg","pulse":"/min","temperature":"Cel"}),"NS-NEWS2-PHASE1-v1",18,97,0,118,84,36.7,"alert",0,"routine"),
             ("obs-seed-003",tenant,"ward-med-a","pat-003","usr-amina",(now-timedelta(minutes=25)).isoformat(),"seeded bedside observation",json.dumps({"respiratory_rate":"/min","oxygen_saturation":"%","systolic_bp":"mmHg","pulse":"/min","temperature":"Cel"}),"NS-NEWS2-PHASE1-v1",19,98,0,126,88,37.1,"alert",0,"routine"),
         ]
-        conn.executemany("INSERT INTO observations VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", observations)
+        conn.executemany(
+            "INSERT INTO observations (id,tenant_id,ward_id,patient_id,recorded_by,recorded_at,"
+            "source,units_json,warning_profile_version,respiratory_rate,oxygen_saturation,"
+            "supplemental_oxygen,systolic_bp,pulse,temperature,consciousness,score,escalation_level)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            observations,
+        )
         care_plans = [
             ("care-001",tenant,"ward-med-a","pat-001","Impaired gas exchange","Maintain oxygen saturation within prescribed target and reduce work of breathing",json.dumps(["Monitor respiratory observations at prescribed frequency","Position upright and support prescribed oxygen therapy"]),"active","usr-amina","usr-grace",now.isoformat(),now.isoformat(),None,1),
             ("care-002",tenant,"ward-med-a","pat-003","Risk of pressure injury","Skin remains intact during admission",json.dumps(["Reposition to assessed schedule","Inspect pressure areas each shift"]),"active","usr-amina","usr-grace",now.isoformat(),now.isoformat(),None,1),
@@ -370,6 +603,7 @@ class Database:
             "medication_orders",
             "observations",
             "care_plans",
+            "nurse_competencies",
         )
         counts = {
             table: int(conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])

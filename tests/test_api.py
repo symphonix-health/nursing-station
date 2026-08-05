@@ -26,7 +26,13 @@ def test_health_reports_durable_phase_boundary(client):
         "audit_chain_valid": True,
         "audit_events": 0,
         "integrations": "not-configured-fail-closed",
-        "warning_profile": "NS-NEWS2-PHASE1-v1",
+        # The warning profile is now supplied by the jurisdiction's country
+        # pack rather than a service constant, so the health surface reports
+        # which pack version produced it.
+        "warning_profile": "IE-INEWS-CANDIDATE-v1",
+        "jurisdiction": "IE",
+        "country_pack_version": "2026.08.0",
+        "country_pack_adoption_status": "candidate",
         "alert_refresh_seconds": 5,
         "synthetic_seed": {
             "seed_manifest_id": "seed.uk.nursing_station.phase2_v1",
@@ -117,8 +123,9 @@ def test_seed_governance_is_durable_explicit_and_non_live(client, headers):
     assert response.status_code == 200
     body = response.json()
     assert body["seed_manifest_id"] == "seed.uk.nursing_station.phase2_v1"
-    assert body["record_counts"]["patients"] == 6
+    assert body["record_counts"]["patients"] == 7
     assert body["record_counts"]["observations"] == 3
+    assert body["record_counts"]["nurse_competencies"] == 12
     declaration = body["declaration"]
     assert declaration["record_counts_landed"] == declaration["record_counts_expected"]
     assert declaration["contains_real_patient_data"] is False
@@ -141,7 +148,7 @@ def test_ward_board_is_ward_scoped(client, headers):
     assert response.status_code == 200
     assert response.json()["ward"]["id"] == "ward-med-a"
     assert {patient["id"] for patient in response.json()["patients"]} == {
-        "pat-001", "pat-002", "pat-003", "pat-005", "pat-006"
+        "pat-001", "pat-002", "pat-003", "pat-005", "pat-006", "pat-007"
     }
     forbidden = client.get("/api/ward-board?ward_id=ward-surg-b", headers=headers)
     assert forbidden.status_code == 403
@@ -199,7 +206,9 @@ def test_observation_records_score_and_creates_escalation(client, headers):
     assert detail["observations"][0]["score"] == body["score"]
     assert detail["observations"][0]["units_json"]["temperature"] == "Cel"
     assert detail["observations"][0]["recorded_by_name"] == "Amina Okafor"
-    assert detail["observations"][0]["warning_profile_version"] == "NS-NEWS2-PHASE1-v1"
+    assert detail["observations"][0]["warning_profile_version"] == "IE-INEWS-CANDIDATE-v1"
+    assert detail["observations"][0]["oxygen_scale"] == "1"
+    assert detail["observations"][0]["jurisdiction"] == "IE"
     assert any(task["title"] == "Critical deterioration review" for task in detail["tasks"])
 
 

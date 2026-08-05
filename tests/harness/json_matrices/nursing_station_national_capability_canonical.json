@@ -1,0 +1,2174 @@
+{
+  "schema_version": "BT_CANONICAL_MATRIX_V2_18COL",
+  "columns": [
+    "use_case_id",
+    "subsystem",
+    "requirement_ids",
+    "scenario_category",
+    "title",
+    "description",
+    "preconditions",
+    "trigger",
+    "input_payload",
+    "expected_connector_calls",
+    "expected_events",
+    "expected_outputs",
+    "fault_profile",
+    "security_profile",
+    "priority",
+    "automation_status",
+    "estimated_duration_seconds",
+    "tags"
+  ],
+  "metadata": {
+    "subsystem": "nursing-station",
+    "scenario_count": 40,
+    "distribution": {
+      "Positive": 34,
+      "Negative": 4,
+      "Edge": 2
+    },
+    "requirement_ids": [
+      "FR-NS-090",
+      "FR-NS-091",
+      "FR-NS-092",
+      "FR-NS-100",
+      "FR-NS-101",
+      "FR-NS-110",
+      "FR-NS-111",
+      "FR-NS-120",
+      "FR-NS-130",
+      "FR-NS-131",
+      "FR-NS-132",
+      "FR-NS-140",
+      "FR-NS-141",
+      "FR-NS-150",
+      "FR-NS-151",
+      "FR-NS-160",
+      "FR-NS-161",
+      "FR-NS-170",
+      "NFR-NS-027",
+      "NFR-NS-028",
+      "NFR-NS-029",
+      "NFR-NS-030"
+    ],
+    "mapping_policy": "authored one-flow-per-row national capability scenarios"
+  },
+  "scenarios": [
+    {
+      "use_case_id": "NS-NAT-WORKQ-RANK-0001",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-090"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-090-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-090 Risk-ranked ward work, competency and interruption: A deteriorating patient's work outranks routine ward work in the ranked queue",
+      "description": "A deteriorating patient's work outranks routine ward work in the ranked queue",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board/work-queue"
+      },
+      "input_payload": {
+        "ward_id": "ward-med-a",
+        "precondition_observation": {
+          "patient": "pat-001",
+          "score": ">=7"
+        }
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "top_entry_patient_id": "pat-001",
+        "ordering": "rank_score descending"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-090"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-WORKQ-EXPLAIN-0002",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-090"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-090-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-090 Risk-ranked ward work, competency and interruption: Each queue entry publishes the factor breakdown that produced its rank",
+      "description": "Each queue entry publishes the factor breakdown that produced its rank",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board/work-queue"
+      },
+      "input_payload": {
+        "ward_id": "ward-med-a",
+        "inspect": "rank_factors"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "factors": [
+          "priority",
+          "escalation_level",
+          "assessment_risk",
+          "overdue",
+          "due_soon",
+          "interrupted"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-090"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-COMP-ASSIGN-0003",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-091"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-091-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-091 Risk-ranked ward work, competency and interruption: Work requiring discharge-coordination is assignable to the nurse who holds that verified competency",
+      "description": "Work requiring discharge-coordination is assignable to the nurse who holds that verified competency",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/tasks"
+      },
+      "input_payload": {
+        "assigned_to": "usr-grace",
+        "required_competency": "discharge-coordination",
+        "priority": "high"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status": "open",
+        "required_competency": "discharge-coordination"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-091"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-COMP-VIEW-0004",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-091"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-091-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-091 Risk-ranked ward work, competency and interruption: The queue names the missing competency instead of hiding work the viewer cannot do",
+      "description": "The queue names the missing competency instead of hiding work the viewer cannot do",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/ward-board/work-queue"
+      },
+      "input_payload": {
+        "viewer": "usr-amina",
+        "task": "task-004"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "delegable": false,
+        "missing_competency": "deteriorating-patient-response"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-091"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-INTR-RECORD-0005",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-092"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-092-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-092 Risk-ranked ward work, competency and interruption: A clinical-emergency interruption of ward work is recorded with its reason category",
+      "description": "A clinical-emergency interruption of ward work is recorded with its reason category",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/tasks/task-002/interruptions"
+      },
+      "input_payload": {
+        "reason": "Called to a deteriorating patient in bay 3",
+        "reason_category": "clinical-emergency"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "unresumed_interruptions": 1,
+        "queue_rank_increases": true
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-092"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-INTR-RESUME-0006",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-092"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-092-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-092 Risk-ranked ward work, competency and interruption: Resuming interrupted work returns its rank to the pre-interruption baseline",
+      "description": "Resuming interrupted work returns its rank to the pre-interruption baseline",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/task-interruptions/{interruption_id}/resume"
+      },
+      "input_payload": {
+        "task_id": "task-002"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "unresumed_interruptions": 0,
+        "rank_score": "baseline"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "work-orchestration",
+        "Positive",
+        "FR-NS-092"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ESC-RESPOND-0007",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-100"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-100-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-100 Jurisdiction-configured deterioration scoring and response: A nurse in charge closes a critical escalation inside the jurisdiction's response interval",
+      "description": "A nurse in charge closes a critical escalation inside the jurisdiction's response interval",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/observations/{observation_id}/escalation-response"
+      },
+      "input_payload": {
+        "responder": "usr-grace",
+        "outcome": "escalated-to-medical-team",
+        "clinical_response": "Reviewed at the bedside; oxygen titrated and medical team called"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [
+        "nursing-station.deterioration.answered"
+      ],
+      "expected_outputs": {
+        "within_required_interval": true,
+        "responder_role": "nurse_in_charge",
+        "escalation_task_status_after": "open"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "deterioration",
+        "Positive",
+        "FR-NS-100"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ESC-FEED-0008",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-100"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-100-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-100 Jurisdiction-configured deterioration scoring and response: The ward escalation feed separates answered escalations from those still overdue",
+      "description": "The ward escalation feed separates answered escalations from those still overdue",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/escalations"
+      },
+      "input_payload": {
+        "ward_id": "ward-med-a",
+        "threshold_source": "country pack thresholds.escalate"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "answered": true,
+        "profile_id": "IE-INEWS-CANDIDATE-v1"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "deterioration",
+        "Positive",
+        "FR-NS-100"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EWS-SCALE1-0009",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-101"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-101-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-101 Jurisdiction-configured deterioration scoring and response: Saturation of 90 percent on the default target range scores 3 for oxygen saturation",
+      "description": "Saturation of 90 percent on the default target range scores 3 for oxygen saturation",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/observations"
+      },
+      "input_payload": {
+        "oxygen_saturation": 90,
+        "supplemental_oxygen": false,
+        "oxygen_target_scale": "1"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "oxygen_scale": "1",
+        "parameter_scores.oxygen_saturation": 3
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "deterioration",
+        "Positive",
+        "FR-NS-101"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EWS-SCALE2-0010",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-101"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-101-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-101 Jurisdiction-configured deterioration scoring and response: The same 90 percent saturation scores 0 for a patient prescribed the 88-92 percent target range",
+      "description": "The same 90 percent saturation scores 0 for a patient prescribed the 88-92 percent target range",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-007/observations"
+      },
+      "input_payload": {
+        "oxygen_saturation": 90,
+        "supplemental_oxygen": false,
+        "oxygen_target_scale": "2"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "oxygen_scale": "2",
+        "parameter_scores.oxygen_saturation": 0,
+        "score_delta_vs_scale_1": -3
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "deterioration",
+        "Positive",
+        "FR-NS-101"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-INGEST-0011",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-110"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-110-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-110 Closed-loop medication administration: A hub-sourced pharmacy medication request becomes an eMAR order carrying its source reference",
+      "description": "A hub-sourced pharmacy medication request becomes an eMAR order carrying its source reference",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-005/integrations/refresh"
+      },
+      "input_payload": {
+        "source_system": "pharmacy-system",
+        "request": "rx-ava-0001",
+        "dose_unit": "mg"
+      },
+      "expected_connector_calls": [
+        "pharmacy_system"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "source_system": "pharmacy-system",
+        "source_order_id": "rx-ava-0001",
+        "created": 1
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "emar",
+        "Positive",
+        "FR-NS-110"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-PROTECT-0012",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-110"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-110-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-110 Closed-loop medication administration: A later pharmacy snapshot leaves an order that already has an administration record untouched",
+      "description": "A later pharmacy snapshot leaves an order that already has an administration record untouched",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-005/integrations/refresh"
+      },
+      "input_payload": {
+        "source_system": "pharmacy-system",
+        "order_state": "already administered"
+      },
+      "expected_connector_calls": [
+        "pharmacy_system"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "protected": 1,
+        "created": 0,
+        "updated": 0
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "emar",
+        "Positive",
+        "FR-NS-110"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-QUEUE-0013",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-111"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-111-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-111 Closed-loop medication administration: An omission recorded against a hub-sourced order is queued for pharmacy with its correlation id",
+      "description": "An omission recorded against a hub-sourced order is queued for pharmacy with its correlation id",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/{order_id}/administrations"
+      },
+      "input_payload": {
+        "outcome": "omitted",
+        "reason": "Dose unavailable before the occurrence closed"
+      },
+      "expected_connector_calls": [
+        "pharmacy_system"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "publication_status": "pending-publication",
+        "connector": "pharmacy_system"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "emar",
+        "Positive",
+        "FR-NS-111"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EMAR-NOOBLIG-0014",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-111"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-111-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-111 Closed-loop medication administration: A locally authored order creates no external publication obligation when administered",
+      "description": "A locally authored order creates no external publication obligation when administered",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/medication-orders/med-001/administrations"
+      },
+      "input_payload": {
+        "outcome": "administered",
+        "source_order_id": null
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "publication_id": null,
+        "publication_status": "not-applicable"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "emar",
+        "Positive",
+        "FR-NS-111"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HAND-ACTIONS-0015",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-120"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-120-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-120 Structured SBAR accountability transfer: Accepting a handover reassigns every unresolved action to the receiving nurse",
+      "description": "Accepting a handover reassigns every unresolved action to the receiving nurse",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/handovers/{handover_id}/accept"
+      },
+      "input_payload": {
+        "receiver": "usr-grace",
+        "action_decisions": []
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "accepted_actions": [
+          "task-001"
+        ],
+        "declined_actions": []
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "handover",
+        "Positive",
+        "FR-NS-120"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HAND-DECLINE-0016",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-120"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-120-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-120 Structured SBAR accountability transfer: A reasoned decline leaves the unresolved action with the sending nurse rather than unowned",
+      "description": "A reasoned decline leaves the unresolved action with the sending nurse rather than unowned",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/handovers/{handover_id}/accept"
+      },
+      "input_payload": {
+        "action_decisions": [
+          {
+            "task_id": "task-001",
+            "decision": "decline",
+            "reason": "Assigned to the twilight nurse already on the bay"
+          }
+        ]
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "declined_actions": [
+          "task-001"
+        ],
+        "retained_by": "usr-amina"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "handover",
+        "Positive",
+        "FR-NS-120"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ROSTER-CONTRACT-0017",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-130"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-130-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-130 Consumed roster, staffing position and governed declaration: A published roster is accepted only when it matches the declared ward, shift and assignment shape",
+      "description": "A published roster is accepted only when it matches the declared ward, shift and assignment shape",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/wards/ward-med-a/staffing-roster/refresh"
+      },
+      "input_payload": {
+        "resource_type": "NursingRosterContext",
+        "shift": "day",
+        "assignments": [
+          {
+            "staff_id": "s1",
+            "registered": true,
+            "hours": 12
+          }
+        ]
+      },
+      "expected_connector_calls": [
+        "workforce"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "roster_state": "current",
+        "source_system": "workforce"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-130"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-ROSTER-CONSUME-0018",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-130"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-130-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-130 Consumed roster, staffing position and governed declaration: Consumed roster hours and registration status feed the position without being authored locally",
+      "description": "Consumed roster hours and registration status feed the position without being authored locally",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/staffing-position"
+      },
+      "input_payload": {
+        "roster_source": "workforce",
+        "registered_hours": 12,
+        "unregistered_hours": 24
+      },
+      "expected_connector_calls": [
+        "workforce"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "actual_skill_mix_percent": 33.3,
+        "roster_contract_owner": "unassigned"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-130"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-POS-REQUIRE-0019",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-131"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-131-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-131 Consumed roster, staffing position and governed declaration: The required nursing hours for the shift are derived from the pack norm and the occupied beds",
+      "description": "The required nursing hours for the shift are derived from the pack norm and the occupied beds",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/staffing-position"
+      },
+      "input_payload": {
+        "occupied_beds": 6,
+        "nursing_hours_per_patient_day": 4.4,
+        "shift_hours": 12
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "required_nursing_hours": 13.2,
+        "required_registered_hours": 10.56,
+        "policy_status": "sufficient"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-131"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-POS-TRIGGERS-0020",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-131"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-131-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-131 Consumed roster, staffing position and governed declaration: Every declaration trigger the pack declares is evaluated against the consumed roster",
+      "description": "Every declaration trigger the pack declares is evaluated against the consumed roster",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/staffing-position"
+      },
+      "input_payload": {
+        "occupied_beds": 10,
+        "registered_headcount": 1,
+        "skill_mix_percent": 33.3
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "triggers_fired": [
+          "registered-hours-below-norm",
+          "skill-mix-below-minimum",
+          "patients-per-registered-nurse-exceeded"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-131"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DECL-EMIT-0021",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-132"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-132-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-132 Consumed roster, staffing position and governed declaration: A declaration emits the six governed fields and no locally invented severity or tier",
+      "description": "A declaration emits the six governed fields and no locally invented severity or tier",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/wards/ward-med-a/staffing-declarations"
+      },
+      "input_payload": {
+        "declared_by": "usr-grace",
+        "window_minutes": null,
+        "reason": "Two registered nurses absent at short notice; escalation cover unfilled"
+      },
+      "expected_connector_calls": [
+        "global_agent_registry"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "governed_fields": [
+          "declaration_id",
+          "scope_unit",
+          "declared_by",
+          "reason",
+          "starts_at",
+          "expires_at"
+        ],
+        "effective_tier": null
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-132"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DECL-REVOKE-0022",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-132"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-132-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-132 Consumed roster, staffing position and governed declaration: A declaration is revocable by the nurse in charge and stops being active immediately",
+      "description": "A declaration is revocable by the nurse in charge and stops being active immediately",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/staffing-declarations/{declaration_id}/revoke"
+      },
+      "input_payload": {
+        "reason": "Bank nurse arrived and cover is restored"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "revoked": true,
+        "active_after_revoke": false
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Positive",
+        "FR-NS-132"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HARM-FALL-0023",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-140"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-140-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-140 Harm incident, review and external reporting: A fall with severe harm is classified externally reportable from the pack's reportable-type list",
+      "description": "A fall with severe harm is classified externally reportable from the pack's reportable-type list",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/harm-incidents"
+      },
+      "input_payload": {
+        "incident_type": "fall",
+        "harm_level": "severe",
+        "description": "Unwitnessed fall from the bedside chair; no loss of consciousness"
+      },
+      "expected_connector_calls": [
+        "hmis"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "externally_reportable": true,
+        "review_required": true,
+        "external_report_state": "pending-publication"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "harm",
+        "Positive",
+        "FR-NS-140"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-HARM-POA-0024",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-140"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-140-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-140 Harm incident, review and external reporting: A category-3 pressure injury present on admission is excluded from this ward's acquired harm",
+      "description": "A category-3 pressure injury present on admission is excluded from this ward's acquired harm",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-001/harm-incidents"
+      },
+      "input_payload": {
+        "incident_type": "pressure-injury",
+        "classification": "category-3",
+        "body_site": "left heel",
+        "present_on_admission": true
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "externally_reportable": false,
+        "publication_id": null
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "harm",
+        "Positive",
+        "FR-NS-140"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-REVIEW-LEARN-0025",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-141"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-141-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-141 Harm incident, review and external reporting: An incident review records avoidability and contributory factors and creates owned learning work",
+      "description": "An incident review records avoidability and contributory factors and creates owned learning work",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/harm-incidents/{incident_id}/review"
+      },
+      "input_payload": {
+        "avoidability": "avoidable",
+        "contributory_factors": [
+          "Call bell out of reach",
+          "Sedating medication not reviewed"
+        ],
+        "learning_actions": [
+          "Re-audit call-bell placement on every bay"
+        ]
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "generated_task_ids": 1,
+        "incident_status": "reviewed"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "harm",
+        "Positive",
+        "FR-NS-141"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-REVIEW-SEPARATION-0026",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-141"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-141-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-141 Harm incident, review and external reporting: The reviewer must be someone other than the nurse who reported the incident",
+      "description": "The reviewer must be someone other than the nurse who reported the incident",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/harm-incidents/{incident_id}/review"
+      },
+      "input_payload": {
+        "reporter": "usr-grace",
+        "reviewer": "usr-grace"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 422,
+        "reason": "reviewer and reporter are the same person"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "harm",
+        "Positive",
+        "FR-NS-141"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-OPEN-0027",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-150"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-150-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-150 Discharge readiness and receipt-driven coordination: Discharge readiness opens with exactly the jurisdiction's criteria set and its mandatory subset",
+      "description": "Discharge readiness opens with exactly the jurisdiction's criteria set and its mandatory subset",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/patients/pat-002/discharge-readiness"
+      },
+      "input_payload": {
+        "jurisdiction": "IE",
+        "criteria_source": "country pack discharge.criteria"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "criteria": 6,
+        "outstanding_mandatory": [
+          "medicines-supply-and-education",
+          "equipment-and-aids",
+          "community-nursing-referral",
+          "patient-and-carer-education"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "discharge",
+        "Positive",
+        "FR-NS-150"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-OWNED-0028",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-150"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-150-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-150 Discharge readiness and receipt-driven coordination: A repo-owned criterion is met by a named nurse recording what was explained",
+      "description": "A repo-owned criterion is met by a named nurse recording what was explained",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/discharge-readiness/{readiness_id}/criteria/patient-and-carer-education/confirm"
+      },
+      "input_payload": {
+        "note": "Warning signs and escalation route explained; teach-back done"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status": "met",
+        "confirmed_by": "usr-amina"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "discharge",
+        "Positive",
+        "FR-NS-150"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-DISCH-RECEIPT-0029",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-151"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-151-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-151 Discharge readiness and receipt-driven coordination: A sibling-owned criterion stays pending with a typed reason until that sibling's receipt carries the evidence",
+      "description": "A sibling-owned criterion stays pending with a typed reason until that sibling's receipt carries the evidence",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/discharge-readiness/{readiness_id}/coordinate"
+      },
+      "input_payload": {
+        "criterion": "community-nursing-referral",
+        "hub_route": "unregistered"
+      },
+      "expected_connector_calls": [
+        "pharmacy_system"
+      ],
+      "expected_events": [],
+      "expected_outputs": {
+        "status": "pending",
+        "error_code": "hub_route_unregistered"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "discharge",
+        "Positive",
+        "FR-NS-151"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-DEFS-0030",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-160"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-160-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-160 Nursing quality measure definition and dataset: Every quality measure is served with its numerator, denominator, exclusions, unit and dated citation",
+      "description": "Every quality measure is served with its numerator, denominator, exclusions, unit and dated citation",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/quality-measures"
+      },
+      "input_payload": {
+        "jurisdiction": "IE",
+        "measure_ids": [
+          "NSQ-STAFF-01",
+          "NSQ-STAFF-02",
+          "NSQ-CARE-01",
+          "NSQ-SAFE-01",
+          "NSQ-SAFE-02",
+          "NSQ-DETER-01",
+          "NSQ-MED-01"
+        ]
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "definitions_source": "country pack",
+        "every_measure_has_source_id": true
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "quality",
+        "Positive",
+        "FR-NS-160"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-COMPUTE-0031",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-161"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-161-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-161 Nursing quality measure definition and dataset: Harm and missed-care measures are computed from this ward's own records",
+      "description": "Harm and missed-care measures are computed from this ward's own records",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/quality-measures"
+      },
+      "input_payload": {
+        "falls_with_harm": 1,
+        "hospital_acquired_pressure_injuries": 1
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "NSQ-SAFE-01.numerator": 1,
+        "NSQ-SAFE-02.numerator": 1,
+        "NSQ-CARE-01.status": "computed"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "quality",
+        "Positive",
+        "FR-NS-161"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-QUAL-PUBLISH-0032",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-161"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-161-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-161 Nursing quality measure definition and dataset: The dataset publishes de-identified on the proven HMIS NursingMeasureReport envelope",
+      "description": "The dataset publishes de-identified on the proven HMIS NursingMeasureReport envelope",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/wards/ward-med-a/hmis-measures"
+      },
+      "input_payload": {
+        "envelope_keys": [
+          "tenant_id",
+          "facility_id",
+          "ward_id",
+          "period_start",
+          "period_end",
+          "counts"
+        ],
+        "additive_block": "measures"
+      },
+      "expected_connector_calls": [
+        "hmis"
+      ],
+      "expected_events": [
+        "nursing-station.quality.published"
+      ],
+      "expected_outputs": {
+        "receipt_required": true,
+        "persisted_to": "quality_measure_results"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "quality",
+        "Positive",
+        "FR-NS-161"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-PACK-SERVE-0033",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-170"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-170-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-170 Versioned country policy and adoption governance: The active jurisdiction pack is served with its version, effective date and full source list",
+      "description": "The active jurisdiction pack is served with its version, effective date and full source list",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/country-pack"
+      },
+      "input_payload": {
+        "jurisdiction": "IE"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "pack_version": "2026.08.0",
+        "adoption_status": "candidate",
+        "available_jurisdictions": [
+          "GB",
+          "IE",
+          "KE",
+          "US"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "country-pack",
+        "Positive",
+        "FR-NS-170"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-PACK-FOURCOUNTRY-0034",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-170"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-170-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "FR-NS-170 Versioned country policy and adoption governance: All four jurisdiction packs validate and resolve every source they cite",
+      "description": "All four jurisdiction packs validate and resolve every source they cite",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/country-pack"
+      },
+      "input_payload": {
+        "packs": [
+          "ie.json",
+          "gb.json",
+          "ke.json",
+          "us.json"
+        ]
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "validated": 4,
+        "dangling_sources": 0
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "country-pack",
+        "Positive",
+        "FR-NS-170"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-ESC-ROLE-0035",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-030"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-030-AC01"
+      ],
+      "scenario_category": "Negative",
+      "title": "NFR-NS-030 Agent Clinical Safety Officer and human two-key approval: A registered nurse cannot close a critical escalation the jurisdiction reserves to a nurse in charge",
+      "description": "A registered nurse cannot close a critical escalation the jurisdiction reserves to a nurse in charge",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/observations/{observation_id}/escalation-response"
+      },
+      "input_payload": {
+        "responder": "usr-amina",
+        "responder_role": "registered_nurse",
+        "escalation_level": "critical"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 403,
+        "detail_contains": "nurse_in_charge"
+      },
+      "fault_profile": {
+        "kind": "insufficient-seniority"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "governance",
+        "Negative",
+        "NFR-NS-030"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-ROSTER-CLOSED-0036",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-028"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-028-AC01"
+      ],
+      "scenario_category": "Negative",
+      "title": "NFR-NS-028 Consumed roster, staffing position and governed declaration: Roster refresh with no configured hub fails closed instead of producing a roster",
+      "description": "Roster refresh with no configured hub fails closed instead of producing a roster",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/wards/ward-med-a/staffing-roster/refresh"
+      },
+      "input_payload": {
+        "hub_url": null,
+        "hub_token": null
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 503,
+        "code": "integration_not_configured"
+      },
+      "fault_profile": {
+        "kind": "dependency-unconfigured"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "staffing",
+        "Negative",
+        "NFR-NS-028"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-DISCH-ASSERT-0037",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-151"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-151-AC02"
+      ],
+      "scenario_category": "Negative",
+      "title": "FR-NS-151 Discharge readiness and receipt-driven coordination: A pharmacy-owned discharge criterion cannot be marked met by a local assertion",
+      "description": "A pharmacy-owned discharge criterion cannot be marked met by a local assertion",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/discharge-readiness/{readiness_id}/criteria/medicines-supply-and-education/confirm"
+      },
+      "input_payload": {
+        "note": "Pharmacy said it was fine on the phone"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 409,
+        "detail_contains": "pharmacy-system"
+      },
+      "fault_profile": {
+        "kind": "ownership-violation"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": true
+      },
+      "priority": "critical",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "discharge",
+        "Negative",
+        "FR-NS-151"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-NEG-PACK-VERSION-0038",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-027"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-027-AC01"
+      ],
+      "scenario_category": "Negative",
+      "title": "NFR-NS-027 Versioned country policy and adoption governance: An adoption decision naming a pack version that is not the version on disk is refused",
+      "description": "An adoption decision naming a pack version that is not the version on disk is refused",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "POST",
+        "path": "/api/country-pack/adoptions"
+      },
+      "input_payload": {
+        "jurisdiction": "IE",
+        "pack_version": "2025.01.0",
+        "decision": "adopted"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 409,
+        "detail_contains": "2026.08.0"
+      },
+      "fault_profile": {
+        "kind": "stale-policy-version"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "country-pack",
+        "Negative",
+        "NFR-NS-027"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EDGE-GAPS-0039",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-029"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-029-AC01"
+      ],
+      "scenario_category": "Edge",
+      "title": "NFR-NS-029 Durable outbound national publication queue: Three of the four publication contracts have no BulletTrain route and each names its own gap",
+      "description": "Three of the four publication contracts have no BulletTrain route and each names its own gap",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/publications"
+      },
+      "input_payload": {
+        "deliverable_kinds": 1,
+        "undeliverable_kinds": 3
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "registered": [
+          "nursing.quality.dataset"
+        ],
+        "unregistered": [
+          "medication.administration.outcome",
+          "staffing.shortage.declaration",
+          "harm.incident.reported"
+        ]
+      },
+      "fault_profile": {
+        "kind": "boundary-no-receiver"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "publications",
+        "Edge",
+        "NFR-NS-029"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-EDGE-NODENOM-0040",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "FR-NS-160"
+      ],
+      "acceptance_criteria_ids": [
+        "FR-NS-160-AC02"
+      ],
+      "scenario_category": "Edge",
+      "title": "FR-NS-160 Nursing quality measure definition and dataset: A period with no medication outcomes reports no-denominator rather than a perfect omission rate",
+      "description": "A period with no medication outcomes reports no-denominator rather than a perfect omission rate",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/wards/ward-med-a/quality-measures"
+      },
+      "input_payload": {
+        "medication_outcomes": 0,
+        "medication_omissions": 0
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "NSQ-MED-01.status": "no-denominator",
+        "NSQ-MED-01.value": null
+      },
+      "fault_profile": {
+        "kind": "boundary-empty-denominator"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "quality",
+        "Edge",
+        "FR-NS-160"
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "schema_version": "BT_REQUIREMENTS_SUPERSET_V1",
   "metadata": {
     "subsystem": "nursing-station",
-    "requirement_count": 58
+    "requirement_count": 80
   },
   "requirements": [
     {
@@ -1510,6 +1510,588 @@
       "direct_evidence": [
         "safety/CLINICAL_DEPLOYMENT_GATE.json",
         "tests/test_governance_artifacts.py"
+      ],
+      "domain": "governance"
+    },
+    {
+      "requirement_id": "FR-NS-090",
+      "title": "Ward work is ranked by clinical risk, due time, and suspended work, and every rank explains its own factors",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Ward work is ranked by clinical risk, due time, and suspended work, and every rank explains its own factors",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-090-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-090-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-WORKQ-RANK-0001",
+        "NS-NAT-WORKQ-EXPLAIN-0002"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_work_queue_ranks_by_clinical_risk_and_explains_every_rank"
+      ],
+      "domain": "work-orchestration"
+    },
+    {
+      "requirement_id": "FR-NS-091",
+      "title": "Delegation of nursing work requires the assignee's verified competency at assignment and at transition",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Delegation of nursing work requires the assignee's verified competency at assignment and at transition",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-091-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-091-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-COMP-ASSIGN-0003",
+        "NS-NAT-COMP-VIEW-0004"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_delegation_requires_the_verified_competency",
+        "tests/test_national_capability.py::test_work_queue_marks_work_the_viewer_is_not_competent_to_perform"
+      ],
+      "domain": "work-orchestration"
+    },
+    {
+      "requirement_id": "FR-NS-092",
+      "title": "Interrupted nursing work is recorded with its reason and resurfaces in the queue until it is resumed",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Interrupted nursing work is recorded with its reason and resurfaces in the queue until it is resumed",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-092-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-092-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-INTR-RECORD-0005",
+        "NS-NAT-INTR-RESUME-0006"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_interrupted_work_resurfaces_until_it_is_resumed"
+      ],
+      "domain": "work-orchestration"
+    },
+    {
+      "requirement_id": "FR-NS-100",
+      "title": "Each deterioration escalation carries a required response interval and is closed only by a named responder of the required seniority",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Each deterioration escalation carries a required response interval and is closed only by a named responder of the required seniority",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-100-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-100-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-ESC-RESPOND-0007",
+        "NS-NAT-ESC-FEED-0008"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_escalation_response_names_a_human_and_never_self_resolves"
+      ],
+      "domain": "deterioration"
+    },
+    {
+      "requirement_id": "FR-NS-101",
+      "title": "The early-warning profile, its oxygen band tables including the prescribed Scale 2 target range, and its thresholds come from the jurisdiction's country pack",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "The early-warning profile, its oxygen band tables including the prescribed Scale 2 target range, and its thresholds come from the jurisdiction's country pack",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-101-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-101-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-EWS-SCALE1-0009",
+        "NS-NAT-EWS-SCALE2-0010"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_prescribed_oxygen_target_scale_changes_the_warning_score"
+      ],
+      "domain": "deterioration"
+    },
+    {
+      "requirement_id": "FR-NS-110",
+      "title": "Hub-sourced pharmacy medication requests reconcile into the eMAR idempotently, never overwrite an administered record, and never infer a missing dose unit",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Hub-sourced pharmacy medication requests reconcile into the eMAR idempotently, never overwrite an administered record, and never infer a missing dose unit",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-110-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-110-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-EMAR-INGEST-0011",
+        "NS-NAT-EMAR-PROTECT-0012"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_hub_sourced_requests_reconcile_into_the_emar_and_refuse_incomplete_ones",
+        "tests/test_national_capability.py::test_an_administered_order_is_never_overwritten_by_a_later_snapshot"
+      ],
+      "domain": "emar"
+    },
+    {
+      "requirement_id": "FR-NS-111",
+      "title": "An administration outcome for a hub-sourced order is queued durably for its owning system and never reported as delivered without a receipt",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "An administration outcome for a hub-sourced order is queued durably for its owning system and never reported as delivered without a receipt",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-111-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-111-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-EMAR-QUEUE-0013",
+        "NS-NAT-EMAR-NOOBLIG-0014"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_a_hub_sourced_outcome_is_queued_and_never_reported_as_delivered"
+      ],
+      "domain": "emar"
+    },
+    {
+      "requirement_id": "FR-NS-120",
+      "title": "Handover acceptance transfers every unresolved action to the receiver, or records a reasoned decline that leaves it with the sender",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Handover acceptance transfers every unresolved action to the receiver, or records a reasoned decline that leaves it with the sender",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-120-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-120-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-HAND-ACTIONS-0015",
+        "NS-NAT-HAND-DECLINE-0016"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_accepting_a_handover_moves_the_unresolved_actions_with_the_patient",
+        "tests/test_national_capability.py::test_a_declined_action_stays_with_the_sender_and_needs_a_reason"
+      ],
+      "domain": "handover"
+    },
+    {
+      "requirement_id": "FR-NS-130",
+      "title": "The shift roster is consumed through BulletTrain against a declared contract and an unpublished or malformed roster is reported absent, never inferred",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "The shift roster is consumed through BulletTrain against a declared contract and an unpublished or malformed roster is reported absent, never inferred",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-130-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-130-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-ROSTER-CONTRACT-0017",
+        "NS-NAT-ROSTER-CONSUME-0018"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_an_empty_roster_is_rejected_rather_than_read_as_nobody_on_duty",
+        "tests/test_national_capability.py::test_roster_refresh_fails_closed_without_a_configured_hub"
+      ],
+      "domain": "staffing"
+    },
+    {
+      "requirement_id": "FR-NS-131",
+      "title": "The ward staffing position compares repo-owned acuity against the country pack's staffing norm and reports insufficient-policy rather than a false compliance verdict",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "The ward staffing position compares repo-owned acuity against the country pack's staffing norm and reports insufficient-policy rather than a false compliance verdict",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-131-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-131-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-POS-REQUIRE-0019",
+        "NS-NAT-POS-TRIGGERS-0020"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_staffing_position_computes_the_requirement_and_reports_the_missing_roster",
+        "tests/test_national_capability.py::test_position_computation_reads_a_published_roster_and_fires_pack_triggers"
+      ],
+      "domain": "staffing"
+    },
+    {
+      "requirement_id": "FR-NS-132",
+      "title": "A staffing shortage declaration is a named nurse-in-charge act that emits exactly BulletTrain's governed declaration field set and asserts no policy tier of its own",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "A staffing shortage declaration is a named nurse-in-charge act that emits exactly BulletTrain's governed declaration field set and asserts no policy tier of its own",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-132-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-132-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-DECL-EMIT-0021",
+        "NS-NAT-DECL-REVOKE-0022"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_a_shortage_declaration_emits_exactly_the_governed_field_set",
+        "tests/test_national_capability.py::test_the_declaration_builder_refuses_to_extend_the_governed_contract"
+      ],
+      "domain": "staffing"
+    },
+    {
+      "requirement_id": "FR-NS-140",
+      "title": "Falls, pressure injuries and healthcare-associated infections are recorded as incidents whose external reportability is decided by the country pack and by present-on-admission status",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Falls, pressure injuries and healthcare-associated infections are recorded as incidents whose external reportability is decided by the country pack and by present-on-admission status",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-140-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-140-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-HARM-FALL-0023",
+        "NS-NAT-HARM-POA-0024"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_reportability_comes_from_the_country_pack_not_from_code",
+        "tests/test_national_capability.py::test_a_pressure_injury_present_on_admission_is_not_this_wards_harm"
+      ],
+      "domain": "harm"
+    },
+    {
+      "requirement_id": "FR-NS-141",
+      "title": "A harm incident is reviewed by someone other than its reporter, records avoidability and contributory factors, and produces owned learning actions",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "A harm incident is reviewed by someone other than its reporter, records avoidability and contributory factors, and produces owned learning actions",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-141-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-141-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-REVIEW-LEARN-0025",
+        "NS-NAT-REVIEW-SEPARATION-0026"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_incident_review_needs_a_second_person_and_produces_owned_learning"
+      ],
+      "domain": "harm"
+    },
+    {
+      "requirement_id": "FR-NS-150",
+      "title": "Discharge readiness is opened from the jurisdiction's criteria set and cannot be completed while a mandatory criterion is outstanding",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Discharge readiness is opened from the jurisdiction's criteria set and cannot be completed while a mandatory criterion is outstanding",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-150-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-150-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-DISCH-OPEN-0027",
+        "NS-NAT-DISCH-OWNED-0028"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_readiness_opens_from_the_pack_criteria_and_blocks_early_completion"
+      ],
+      "domain": "discharge"
+    },
+    {
+      "requirement_id": "FR-NS-151",
+      "title": "A discharge criterion owned by another system is met only by that system's receipt through the hub, never by local assertion or by a dispatch",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "A discharge criterion owned by another system is met only by that system's receipt through the hub, never by local assertion or by a dispatch",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-151-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-151-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-DISCH-RECEIPT-0029",
+        "NS-NAT-NEG-DISCH-ASSERT-0037"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_a_criterion_owned_by_a_sibling_cannot_be_met_by_local_assertion",
+        "tests/test_national_capability.py::test_discharge_coordination_fails_closed_without_a_configured_hub"
+      ],
+      "domain": "discharge"
+    },
+    {
+      "requirement_id": "FR-NS-160",
+      "title": "Nursing quality measure definitions are versioned country-pack data carrying numerator, denominator, exclusions, unit and a dated citation",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Nursing quality measure definitions are versioned country-pack data carrying numerator, denominator, exclusions, unit and a dated citation",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-160-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-160-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-QUAL-DEFS-0030",
+        "NS-NAT-EDGE-NODENOM-0040"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_quality_measures_apply_the_pack_definitions_to_this_wards_records"
+      ],
+      "domain": "quality"
+    },
+    {
+      "requirement_id": "FR-NS-161",
+      "title": "The nursing quality dataset is computed from ward records, distinguishes an unavailable source from a zero, and publishes de-identified on the proven HMIS envelope",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "The nursing quality dataset is computed from ward records, distinguishes an unavailable source from a zero, and publishes de-identified on the proven HMIS envelope",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-161-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-161-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-QUAL-COMPUTE-0031",
+        "NS-NAT-QUAL-PUBLISH-0032"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_quality_measures_apply_the_pack_definitions_to_this_wards_records",
+        "tests/test_national_capability.py::test_the_measure_payload_carries_no_patient_identifiers"
+      ],
+      "domain": "quality"
+    },
+    {
+      "requirement_id": "FR-NS-170",
+      "title": "Country policy ships as a versioned pack per jurisdiction with publisher, title and effective date for every clinically meaningful entry",
+      "category": "functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Country policy ships as a versioned pack per jurisdiction with publisher, title and effective date for every clinically meaningful entry",
+      "acceptance_criteria": [
+        {
+          "ac_id": "FR-NS-170-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "FR-NS-170-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-PACK-SERVE-0033",
+        "NS-NAT-PACK-FOURCOUNTRY-0034"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_country_pack_is_served_with_sources_and_is_not_adopted_by_default",
+        "tests/test_country_packs.py::test_every_pack_carries_a_complete_dated_citation_for_every_clinical_entry"
+      ],
+      "domain": "country-pack"
+    },
+    {
+      "requirement_id": "NFR-NS-027",
+      "title": "A country pack ships as a candidate and is treated as locally adopted only after a recorded organisational decision pinned to the exact reviewed pack version",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "A country pack ships as a candidate and is treated as locally adopted only after a recorded organisational decision pinned to the exact reviewed pack version",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-027-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-027-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-NEG-PACK-VERSION-0038"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_country_pack_adoption_is_role_gated_and_pinned_to_the_reviewed_version",
+        "tests/test_country_packs.py::test_a_pack_version_change_does_not_inherit_the_previous_adoption"
+      ],
+      "domain": "country-pack"
+    },
+    {
+      "requirement_id": "NFR-NS-028",
+      "title": "Nursing Station consumes roster and registration state and never becomes its author; an unavailable roster degrades the staffing position rather than producing one",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Nursing Station consumes roster and registration state and never becomes its author; an unavailable roster degrades the staffing position rather than producing one",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-028-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-028-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-NEG-ROSTER-CLOSED-0036"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_staffing_position_computes_the_requirement_and_reports_the_missing_roster",
+        "tests/test_bt_connector_seam.py::test_no_roster_exchange_route_exists_yet"
+      ],
+      "domain": "staffing"
+    },
+    {
+      "requirement_id": "NFR-NS-029",
+      "title": "Every outbound national publication is durable, idempotent by correlation identifier, and remains pending until a receipt arrives; an unregistered hub route is surfaced as a named gap",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Every outbound national publication is durable, idempotent by correlation identifier, and remains pending until a receipt arrives; an unregistered hub route is surfaced as a named gap",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-029-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-029-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-EDGE-GAPS-0039"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_the_publication_surface_names_every_open_bullettrain_gap",
+        "tests/test_bt_connector_seam.py::test_publication_contract_route_status_matches_bullettrain"
+      ],
+      "domain": "publications"
+    },
+    {
+      "requirement_id": "NFR-NS-030",
+      "title": "Every national safety decision records the named human who made it and nothing auto-resolves, auto-declares, auto-reviews or auto-adopts",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Every national safety decision records the named human who made it and nothing auto-resolves, auto-declares, auto-reviews or auto-adopts",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-030-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-030-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-NEG-ESC-ROLE-0035"
+      ],
+      "direct_evidence": [
+        "tests/test_national_capability.py::test_escalation_response_names_a_human_and_never_self_resolves",
+        "tests/test_national_capability.py::test_incident_review_needs_a_second_person_and_produces_owned_learning"
       ],
       "domain": "governance"
     }

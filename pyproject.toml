@@ -33,3 +33,12 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+# B008 exists to catch mutable defaults evaluated once at definition time.
+# FastAPI's dependency markers are DESIGNED to be evaluated exactly once at
+# definition time, so B008 is a false positive for them. This is the
+# configuration FastAPI itself documents -- it silences a wrong finding, not a
+# real one. See backend/nursing_station/national_routes.py for why the routes
+# there cannot use the Annotated form instead.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.Path"]

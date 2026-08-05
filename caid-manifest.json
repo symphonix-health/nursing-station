@@ -15,7 +15,15 @@
     "observability", "fsm", "security", "accessibility", "monitoring",
     "resilience", "code_quality", "python", "typescript"
   ],
-  "evidence_boundary": "Phase 2 implements hub-mediated seeded context for PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, de-identified HMIS measures, and a signed LIS critical-result alert with explicit nurse acknowledgement. Clinical release remains gated by human safety, privacy, security, and deployment approvals.",
+  "evidence_boundary": "Phase 2 implements hub-mediated seeded context for PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, de-identified HMIS measures, and a signed LIS critical-result alert with explicit nurse acknowledgement. The 2026-08-05 national-capability wave adds risk-ranked ward work with competency gating and interruption capture, a jurisdiction-configured deterioration profile and named escalation response, eMAR reconciliation and outcome queueing, unresolved-action transfer at handover, the ward staffing position and governed shortage declaration, harm incident and review, discharge readiness, and the nursing quality dataset. Safe staffing, discharge coordination and external harm reporting are implemented TO THE DURABLE QUEUE only: no BulletTrain-side route or receiver exists for them yet, so none is claimed closed-loop. No frontend surface exists for the national-capability workflows. Clinical release remains gated by human safety, privacy, security, and deployment approvals.",
+  "country_policy": {
+    "jurisdiction_env": "NURSING_STATION_JURISDICTION",
+    "default_jurisdiction": "IE",
+    "packs": "backend/nursing_station/country_packs/",
+    "adoption_policy": "Packs ship as candidates. NFR-NS-027 requires a recorded organisational decision pinned to the exact pack version before any entry is treated as locally adopted clinical policy.",
+    "disposition_ledger": "docs/NATIONAL_CAPABILITY_DISPOSITION_LEDGER.md",
+    "intake_artefact": "docs/national-capability-audit.md"
+  },
   "clinical_governance": {
     "agent_persona": "clinical-safety-officer-superpersona",
     "procedure": "safety/AGENT_CSO_HITL_PROCEDURE.md",

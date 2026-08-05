@@ -10,16 +10,23 @@ class Settings:
     database_path: Path
     jwt_secret: str
     token_minutes: int = 480
-    warning_profile_version: str = "NS-NEWS2-PHASE1-v1"
-    warning_review_threshold: int = 3
-    warning_escalation_threshold: int = 5
-    warning_critical_threshold: int = 7
+    # The early-warning profile id, its oxygen band tables, its review/escalate/
+    # critical thresholds and its response intervals now come from the country
+    # pack (see nursing_station.country_packs). The former
+    # NURSING_STATION_WARNING_PROFILE / _REVIEW / _ESCALATE / _CRITICAL settings
+    # were removed rather than left in place: a threshold environment variable
+    # that no longer reaches the scorer is worse than none, because an operator
+    # would believe they had changed an escalation trigger when they had not.
+    # Select a jurisdiction with NURSING_STATION_JURISDICTION instead.
     escalation_due_minutes: int = 5
     integration_hub_url: str | None = None
     integration_hub_token: str | None = None
     integration_timeout_seconds: float = 10.0
     inbound_hmac_secret: str | None = None
     alert_refresh_seconds: int = 5
+    # Jurisdiction selects the country pack. Ireland is the deployment
+    # jurisdiction; Dublin is a location inside it, never a pack of its own.
+    jurisdiction: str = "IE"
 
 
 def get_settings() -> Settings:
@@ -27,10 +34,6 @@ def get_settings() -> Settings:
     return Settings(
         database_path=Path(os.getenv("NURSING_STATION_DB", root / "data" / "nursing_station.db")),
         jwt_secret=os.getenv("NURSING_STATION_JWT_SECRET", "phase1-local-development-key-change-me"),
-        warning_profile_version=os.getenv("NURSING_STATION_WARNING_PROFILE", "NS-NEWS2-PHASE1-v1"),
-        warning_review_threshold=int(os.getenv("NURSING_STATION_WARNING_REVIEW", "3")),
-        warning_escalation_threshold=int(os.getenv("NURSING_STATION_WARNING_ESCALATE", "5")),
-        warning_critical_threshold=int(os.getenv("NURSING_STATION_WARNING_CRITICAL", "7")),
         escalation_due_minutes=int(os.getenv("NURSING_STATION_ESCALATION_DUE_MINUTES", "5")),
         integration_hub_url=os.getenv("NURSING_STATION_HUB_URL") or None,
         integration_hub_token=os.getenv("NURSING_STATION_HUB_TOKEN") or None,
@@ -39,4 +42,5 @@ def get_settings() -> Settings:
         ),
         inbound_hmac_secret=os.getenv("NURSING_STATION_INBOUND_HMAC_SECRET") or None,
         alert_refresh_seconds=int(os.getenv("NURSING_STATION_ALERT_REFRESH_SECONDS", "5")),
+        jurisdiction=(os.getenv("NURSING_STATION_JURISDICTION") or "IE").strip().upper(),
     )

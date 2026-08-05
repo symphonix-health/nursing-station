@@ -1,0 +1,176 @@
+{
+  "schema_version": "NS_COUNTRY_PACK_V1",
+  "jurisdiction": "IE",
+  "jurisdiction_name": "Ireland",
+  "pack_version": "2026.08.0",
+  "effective_from": "2026-08-01",
+  "adoption_status": "candidate",
+  "adoption_note": "Candidate configuration. No entry in this pack may be treated as locally adopted clinical policy until the deploying organisation records an explicit adoption decision for the identical pack version (FR-NS-170, NFR-NS-027).",
+  "languages": ["en-IE", "ga-IE"],
+  "sources": [
+    {
+      "source_id": "ie-ncec-inews",
+      "publisher": "National Clinical Effectiveness Committee, Department of Health (Ireland)",
+      "title": "National Clinical Guideline No. 1: Irish National Early Warning System (INEWS)",
+      "document_type": "national clinical guideline",
+      "url": "https://www.gov.ie/",
+      "effective_from": "2020-01-01",
+      "citation_scope": "publisher-cited; the deploying organisation must load the authoritative INEWS parameter table before clinical use"
+    },
+    {
+      "source_id": "ie-doh-safe-nurse-staffing",
+      "publisher": "Department of Health (Ireland)",
+      "title": "Framework for Safe Nurse Staffing and Skill Mix in General and Specialist Medical and Surgical Care Settings in Adult Hospitals in Ireland",
+      "document_type": "national policy framework",
+      "url": "https://www.gov.ie/",
+      "effective_from": "2018-04-01",
+      "citation_scope": "publisher-cited"
+    },
+    {
+      "source_id": "ie-nmbi-scope",
+      "publisher": "Nursing and Midwifery Board of Ireland (NMBI)",
+      "title": "Scope of Nursing and Midwifery Practice Framework",
+      "document_type": "professional regulation",
+      "url": "https://www.nmbi.ie/",
+      "effective_from": "2015-10-01",
+      "citation_scope": "publisher-cited"
+    },
+    {
+      "source_id": "ie-hiqa-standards",
+      "publisher": "Health Information and Quality Authority (HIQA)",
+      "title": "National Standards for Safer Better Healthcare",
+      "document_type": "national standards",
+      "url": "https://www.hiqa.ie/",
+      "effective_from": "2012-06-01",
+      "citation_scope": "publisher-cited"
+    },
+    {
+      "source_id": "ie-hse-healthlink",
+      "publisher": "Health Service Executive (HSE)",
+      "title": "Healthlink national messaging service",
+      "document_type": "national messaging rail",
+      "url": "https://healthservice.hse.ie/staff/information-healthcare-workers/healthlink/",
+      "effective_from": "2026-01-01",
+      "citation_scope": "publisher-cited"
+    }
+  ],
+  "early_warning": {
+    "profile_id": "IE-INEWS-CANDIDATE-v1",
+    "name": "INEWS-aligned aggregate early warning profile",
+    "algorithm": "news2",
+    "algorithm_note": "The scoring engine is data-driven. This candidate profile carries NEWS2 parameter bands as the transportable default; INEWS V2's own authoritative parameter table must replace them at organisational adoption. Nursing Station never claims INEWS conformance from a candidate pack.",
+    "source_id": "ie-ncec-inews",
+    "oxygen_scales": {
+      "1": {
+        "label": "Scale 1 - usual oxygen saturation target 94-98%",
+        "bands": [
+          {"max": 91, "score": 3},
+          {"min": 92, "max": 93, "score": 2},
+          {"min": 94, "max": 95, "score": 1},
+          {"min": 96, "score": 0}
+        ]
+      },
+      "2": {
+        "label": "Scale 2 - prescribed target range 88-92% in hypercapnic respiratory failure",
+        "requires_prescription": true,
+        "bands_on_air": [
+          {"max": 83, "score": 3},
+          {"min": 84, "max": 85, "score": 2},
+          {"min": 86, "max": 87, "score": 1},
+          {"min": 88, "score": 0}
+        ],
+        "bands_on_oxygen": [
+          {"max": 83, "score": 3},
+          {"min": 84, "max": 85, "score": 2},
+          {"min": 86, "max": 87, "score": 1},
+          {"min": 88, "max": 92, "score": 0},
+          {"min": 93, "max": 94, "score": 1},
+          {"min": 95, "max": 96, "score": 2},
+          {"min": 97, "score": 3}
+        ]
+      }
+    },
+    "thresholds": {"review": 3, "escalate": 5, "critical": 7},
+    "response_minutes": {"review": 60, "escalate": 30, "critical": 5},
+    "responder_minimum_role": {
+      "review": "registered_nurse",
+      "escalate": "nurse_in_charge",
+      "critical": "nurse_in_charge"
+    }
+  },
+  "safe_staffing": {
+    "framework_id": "IE-DOH-SNSSM-2018",
+    "source_id": "ie-doh-safe-nurse-staffing",
+    "method": "nursing-hours-per-patient-day",
+    "registered_nurse_skill_mix_minimum_percent": 80,
+    "roster_authority": "workforce",
+    "roster_authority_note": "Nursing Station consumes the roster through the BulletTrain hub and never authors it (NFR-NS-028).",
+    "ward_norms": [
+      {
+        "specialty": "adult-medical",
+        "nursing_hours_per_patient_day": 4.4,
+        "max_patients_per_registered_nurse": {"day": 6, "night": 8}
+      },
+      {
+        "specialty": "adult-surgical",
+        "nursing_hours_per_patient_day": 4.2,
+        "max_patients_per_registered_nurse": {"day": 6, "night": 8}
+      }
+    ],
+    "declaration_policy": {
+      "authority_role": "nurse_in_charge",
+      "authority_note": "A shortage declaration is a named human act. Nursing Station never declares automatically; it computes the position and presents it for decision (NFR-NS-030).",
+      "triggers": [
+        {"trigger_id": "registered-hours-below-norm", "rule": "registered_hours_per_patient_day < nursing_hours_per_patient_day"},
+        {"trigger_id": "skill-mix-below-minimum", "rule": "registered_skill_mix_percent < registered_nurse_skill_mix_minimum_percent"},
+        {"trigger_id": "patients-per-registered-nurse-exceeded", "rule": "patients_per_registered_nurse > max_patients_per_registered_nurse[shift]"}
+      ],
+      "declaration_contract": {
+        "owner": "bullettrain-gra",
+        "owner_artefact": "bullettrain/security/role_assumption.py::StaffingDeclaration",
+        "model": "binary",
+        "model_note": "The governed role-assumption model has no shortage severity, no role enum and no approval field. A declaration is active or it is not. Nursing Station emits exactly the governed field set and never derives a tier of its own; the effective tier is decided by BulletTrain policy evaluation.",
+        "required_fields": ["declaration_id", "scope_unit", "declared_by", "reason", "starts_at", "expires_at"],
+        "default_window_minutes": 480
+      }
+    }
+  },
+  "harm_incident": {
+    "pressure_injury_classification": "EPUAP/NPIAP category I-IV, unstageable, deep tissue injury",
+    "reportable_types": [
+      "fall-with-moderate-or-greater-harm",
+      "pressure-injury-category-3",
+      "pressure-injury-category-4",
+      "pressure-injury-unstageable",
+      "healthcare-associated-infection-outbreak"
+    ],
+    "external_reporting": {
+      "required": true,
+      "receiver": "national incident management system",
+      "receiver_authority": "Health Service Executive (HSE)",
+      "source_id": "ie-hiqa-standards",
+      "owner": "sibling",
+      "owner_note": "Nursing Station records and reviews the ward incident and publishes it through the hub. It is not the national incident registry."
+    },
+    "review_required_from_harm_level": "moderate"
+  },
+  "discharge": {
+    "criteria": [
+      {"criterion_id": "medicines-supply-and-education", "title": "Discharge medicines supplied and explained to the patient or carer", "owner_role": "registered_nurse", "evidence_source": "pharmacy-system", "mandatory": true},
+      {"criterion_id": "equipment-and-aids", "title": "Required equipment and mobility aids confirmed available at the discharge address", "owner_role": "registered_nurse", "evidence_source": "supply-chain-erp", "mandatory": true},
+      {"criterion_id": "community-nursing-referral", "title": "Community nursing referral accepted by the receiving service", "owner_role": "nurse_in_charge", "evidence_source": "community-nursing", "mandatory": true},
+      {"criterion_id": "patient-and-carer-education", "title": "Condition, warning signs and escalation route explained and understood", "owner_role": "registered_nurse", "evidence_source": "nursing-station", "mandatory": true},
+      {"criterion_id": "transport-arranged", "title": "Discharge transport arranged and confirmed", "owner_role": "registered_nurse", "evidence_source": "ambulance-ems", "mandatory": false},
+      {"criterion_id": "follow-up-appointment", "title": "Follow-up appointment issued to the patient", "owner_role": "registered_nurse", "evidence_source": "appointment-system", "mandatory": false}
+    ]
+  },
+  "quality_measures": [
+    {"measure_id": "NSQ-STAFF-01", "title": "Registered nursing hours per patient day", "measure_type": "structure", "numerator": "registered nursing hours worked on the ward in the reporting period", "denominator": "occupied bed days in the reporting period", "exclusions": ["non-clinical supernumerary hours"], "unit": "hours_per_patient_day", "source_id": "ie-doh-safe-nurse-staffing"},
+    {"measure_id": "NSQ-STAFF-02", "title": "Registered nurse skill mix", "measure_type": "structure", "numerator": "registered nurse whole-time equivalents on duty", "denominator": "total nursing whole-time equivalents on duty", "exclusions": [], "unit": "percent", "source_id": "ie-doh-safe-nurse-staffing"},
+    {"measure_id": "NSQ-CARE-01", "title": "Missed nursing care rate", "measure_type": "process", "numerator": "nursing tasks that reached their due time without completion or cancellation", "denominator": "nursing tasks due in the reporting period", "exclusions": ["tasks cancelled before their due time"], "unit": "percent", "source_id": "ie-hiqa-standards"},
+    {"measure_id": "NSQ-SAFE-01", "title": "Falls with harm per 1000 occupied bed days", "measure_type": "outcome", "numerator": "falls recorded with moderate or greater harm", "denominator": "occupied bed days in the reporting period", "exclusions": ["falls present on admission"], "unit": "per_1000_bed_days", "source_id": "ie-hiqa-standards"},
+    {"measure_id": "NSQ-SAFE-02", "title": "Hospital-acquired pressure injury rate (category 2 and above)", "measure_type": "outcome", "numerator": "pressure injuries of category 2 or above that were not present on admission", "denominator": "occupied bed days in the reporting period", "exclusions": ["injuries recorded as present on admission"], "unit": "per_1000_bed_days", "source_id": "ie-hiqa-standards"},
+    {"measure_id": "NSQ-DETER-01", "title": "Deterioration escalations answered within the required response interval", "measure_type": "process", "numerator": "escalations with a recorded clinical response inside the profile response interval", "denominator": "escalations raised in the reporting period", "exclusions": [], "unit": "percent", "source_id": "ie-ncec-inews"},
+    {"measure_id": "NSQ-MED-01", "title": "Medication administration omissions", "measure_type": "process", "numerator": "medication occurrences recorded as omitted", "denominator": "medication occurrences with a recorded outcome", "exclusions": ["occurrences recorded as delayed and later administered"], "unit": "percent", "source_id": "ie-hiqa-standards"}
+  ]
+}

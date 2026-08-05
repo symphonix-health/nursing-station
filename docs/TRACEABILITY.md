@@ -16,6 +16,33 @@ sibling endpoint tests, BulletTrain connector tests, the real seeded cross-syste
 journey, and signed headed SignalBox evidence for the nurse and nurse-superpersona.
 A unit test or generated matrix alone is not Phase 2 integration evidence.
 
+National capability requirements `FR-NS-090` through `FR-NS-170` and
+`NFR-NS-027` through `NFR-NS-030` are evidenced by
+`tests/test_national_capability.py` (direct service behaviour, authority,
+fail-closed and de-identification evidence), `tests/test_country_packs.py`
+(the country-pack migration test: structural validation, dated citations,
+version-pinned adoption, and the refusal to invent a shortage severity the
+governed model does not have), and `tests/test_bt_connector_seam.py` (a
+read-only pin on BulletTrain's connector manifests and canonical event registry
+that turns red the day a missing route is registered).
+
+Their canonical scenarios live in
+`tests/harness/json_matrices/nursing_station_national_capability_canonical.json`
+and its 14-column companion: forty authored rows, one requirement per row, with
+no rotated template and no padded body. `scripts/generate_canonical_matrices.py`
+is read-merge-write and is itself guarded by
+`tests/test_matrix_builder_brownfield.py`, which plants a foreign requirement
+and a foreign matrix row in a sandbox copy of `tests/harness/` and asserts both
+survive a rebuild. The legacy 100-row matrix is generated from a frozen
+requirement-id tuple so that growing the catalogue cannot reshuffle rows whose
+coverage atoms are recorded in `matrix-integrity-baseline.json`.
+
+`docs/NATIONAL_CAPABILITY_DISPOSITION_LEDGER.md` holds the per-family
+disposition with file:line evidence and is the only place the audit's
+provisional intake aliases appear; they are deliberately kept out of this
+document and out of `docs/REQUIREMENTS.md` so they cannot become phantom
+requirement obligations for any gate that scrapes them.
+
 `NFR-NS-024` through `NFR-NS-026` are evidenced by
 `safety/AGENT_CSO_HITL_PROCEDURE.md`, the machine-readable
 `safety/CLINICAL_DEPLOYMENT_GATE.json`,

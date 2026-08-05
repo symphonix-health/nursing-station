@@ -15,8 +15,11 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, sta
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, model_validator
 
+from . import national_routes, publications, quality, warning_scores
 from .config import get_settings
+from .country_packs import CountryPack, CountryPackError, load_pack
 from .database import Database
+from .identity import CurrentUser
 from .integration import SOURCE_CONTRACTS, HubClient, IntegrationError
 from .port_registry import resolve_frontend_port
 
@@ -33,6 +36,19 @@ OBSERVATION_UNITS = {
 
 def now() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def active_pack() -> CountryPack:
+    """The jurisdiction's country pack, or a 503 -- never a silent default.
+
+    A missing or malformed pack means the ward has no warning-score profile,
+    no staffing norm and no discharge criteria. Serving clinical routes from a
+    hard-coded fallback would hide that; failing closed does not.
+    """
+    try:
+        return load_pack(settings.jurisdiction)
+    except CountryPackError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 def new_id(prefix: str) -> str:
@@ -67,16 +83,6 @@ app.add_middleware(
 class Login(BaseModel):
     email: str
     password: str
-
-
-class CurrentUser(BaseModel):
-    id: str
-    tenant_id: str
-    email: str
-    name: str
-    role: str
-    ward_id: str | None
-    facility_id: str | None
 
 
 def issue_token(user: dict) -> str:
@@ -149,6 +155,7 @@ def decode(row: dict, *fields: str) -> dict:
 def health() -> dict:
     audit_ok, audit_count = db.verify_audit()
     seed = db.fetchone("SELECT seed_manifest_id,data_class FROM seed_runs LIMIT 1")
+    pack = active_pack()
     return {
         "status": "ok" if audit_ok else "degraded",
         "service": "nursing-station",
@@ -161,7 +168,10 @@ def health() -> dict:
             if settings.integration_hub_url and settings.integration_hub_token
             else "not-configured-fail-closed"
         ),
-        "warning_profile": settings.warning_profile_version,
+        "warning_profile": str(pack.early_warning["profile_id"]),
+        "jurisdiction": pack.jurisdiction,
+        "country_pack_version": pack.pack_version,
+        "country_pack_adoption_status": str(pack.payload["adoption_status"]),
         "alert_refresh_seconds": settings.alert_refresh_seconds,
         "synthetic_seed": seed,
     }
@@ -342,6 +352,107 @@ def _identity_status(patient: dict, source: str, body: dict) -> str:
     return "source-patient-id-match"
 
 
+MEDICATION_REQUEST_KEYS = ("medication_requests", "requests", "orders", "medications")
+
+
+def _medication_requests(body: dict) -> list[dict]:
+    for key in MEDICATION_REQUEST_KEYS:
+        entries = body.get(key)
+        if isinstance(entries, list):
+            return [entry for entry in entries if isinstance(entry, dict)]
+    return []
+
+
+def _map_medication_request(entry: dict) -> dict | None:
+    """Map a pharmacy MedicationRequest onto an eMAR order, or refuse.
+
+    Every field must be present in the source. A missing dose unit is not a
+    default -- FR-NS-043 forbids inferring one -- so an incomplete request is
+    returned as unmappable and never becomes an administrable order.
+    """
+    source_id = entry.get("id") or entry.get("request_id") or entry.get("order_id")
+    name = entry.get("medication_name") or entry.get("medication") or entry.get("name")
+    dose = entry.get("dose_value", entry.get("dose"))
+    unit = entry.get("dose_unit") or entry.get("unit")
+    route = entry.get("route")
+    schedule = entry.get("schedule") or entry.get("frequency")
+    due_at = entry.get("due_at") or entry.get("next_due_at")
+    if not all([source_id, name, unit, route, schedule, due_at]) or dose is None:
+        return None
+    try:
+        dose_value = float(dose)
+    except (TypeError, ValueError):
+        return None
+    return {
+        "source_order_id": str(source_id),
+        "medication_name": str(name),
+        "dose_value": dose_value,
+        "dose_unit": str(unit),
+        "route": str(route),
+        "schedule": str(schedule),
+        "due_at": str(due_at),
+        "high_alert": bool(entry.get("high_alert", False)),
+    }
+
+
+def reconcile_medication_orders(
+    conn: sqlite3.Connection, *, patient: dict, tenant_id: str, body: dict
+) -> dict:
+    """Bring hub-sourced medication requests into the local eMAR (FR-NS-110).
+
+    Idempotent by ``(tenant, source_system, source_order_id)``. An order that
+    already carries a terminal administration record is left completely alone:
+    an imported snapshot never overwrites a Nursing Station-owned record
+    (FR-NS-078), and receiving a dispense never implies an administration
+    (FR-NS-073).
+    """
+    created: list[str] = []
+    updated: list[str] = []
+    protected: list[str] = []
+    unmappable: list[str] = []
+    for entry in _medication_requests(body):
+        mapped = _map_medication_request(entry)
+        if mapped is None:
+            unmappable.append(str(entry.get("id") or entry.get("request_id") or "unidentified"))
+            continue
+        existing = conn.execute(
+            """SELECT id FROM medication_orders WHERE tenant_id=? AND source_system=?
+            AND source_order_id=?""",
+            (tenant_id, "pharmacy-system", mapped["source_order_id"]),
+        ).fetchone()
+        if existing:
+            administered = conn.execute(
+                "SELECT id FROM medication_administrations WHERE order_id=? AND outcome<>'delayed'",
+                (existing["id"],),
+            ).fetchone()
+            if administered:
+                protected.append(existing["id"])
+                continue
+            conn.execute(
+                """UPDATE medication_orders SET medication_name=?,dose_value=?,dose_unit=?,
+                route=?,schedule=?,due_at=?,high_alert=? WHERE id=?""",
+                (mapped["medication_name"], mapped["dose_value"], mapped["dose_unit"],
+                 mapped["route"], mapped["schedule"], mapped["due_at"],
+                 int(mapped["high_alert"]), existing["id"]),
+            )
+            updated.append(existing["id"])
+            continue
+        order_id = new_id("med")
+        conn.execute(
+            """INSERT INTO medication_orders
+            (id,tenant_id,ward_id,patient_id,medication_name,dose_value,dose_unit,route,
+             schedule,due_at,high_alert,status,source,source_system,source_order_id)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,'active',?,'pharmacy-system',?)""",
+            (order_id, tenant_id, patient["ward_id"], patient["id"], mapped["medication_name"],
+             mapped["dose_value"], mapped["dose_unit"], mapped["route"], mapped["schedule"],
+             mapped["due_at"], int(mapped["high_alert"]),
+             "Hub-sourced pharmacy medication request", mapped["source_order_id"]),
+        )
+        created.append(order_id)
+    return {"created": created, "updated": updated, "protected": protected,
+            "unmappable": unmappable}
+
+
 def _integration_payload(patient: dict, source: str) -> dict:
     key = "external_nhs_number" if source in {"picis-system", "lis", "blood-transfusion"} else "patient_id"
     value = patient["external_nhs_number"] if key == "external_nhs_number" else patient["source_patient_id"]
@@ -475,15 +586,23 @@ async def refresh_patient_integrations(patient_id: str, user: UserDep) -> dict:
                     hub_audit_event_id=?,duration_ms=? WHERE id=?""",
                     (completed_at, content_hash, exchanged.get("hub_audit_event_id"), exchanged.get("duration_ms"), attempt_id),
                 )
+                emar = None
+                if source == "pharmacy-system":
+                    emar = reconcile_medication_orders(
+                        conn, patient=patient, tenant_id=user.tenant_id, body=body
+                    )
                 db.audit(
                     conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
                     action="integration.context.refreshed", resource_type=contract.resource_type,
                     resource_id=snapshot_id, patient_id=patient_id,
                     details={"source_system": source, "correlation_id": correlation_id,
                              "content_hash": content_hash, "reconciliation_status": reconciliation,
-                             "purpose_of_use": "treatment"},
+                             "emar_reconciliation": emar, "purpose_of_use": "treatment"},
                 )
-            results.append({"source_system": source, "status": "success", "correlation_id": correlation_id})
+            row = {"source_system": source, "status": "success", "correlation_id": correlation_id}
+            if emar is not None:
+                row["emar_reconciliation"] = emar
+            results.append(row)
         except IntegrationError as exc:
             completed_at = now()
             with db.connect() as conn:
@@ -538,6 +657,10 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
         "SELECT COUNT(*) count FROM medication_administrations WHERE tenant_id=? AND ward_id=? AND administered_at>=?",
         (user.tenant_id, ward_id, start.isoformat()),
     )
+    pack = active_pack()
+    quality_results, _inputs, period = national_routes.compute_ward_measures(
+        db, ward=ward, tenant_id=user.tenant_id, pack=pack, days=1
+    )
     payload = {
         "tenant_id": user.tenant_id,
         "facility_id": ward["facility_id"],
@@ -551,6 +674,15 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
             "high_warning_score_patients": int(measures.get("high_warning_score_patients") or 0),
             "isolation_patients": int(measures.get("isolation_patients") or 0),
             "medication_outcomes_recorded": int((medication_count or {}).get("count") or 0),
+        },
+        # Additive block on the proven NursingMeasureReport envelope. The six
+        # required keys above are untouched, so an HMIS that does not yet
+        # understand `measures` still accepts the submission it always accepted.
+        "measures": quality.dataset_payload(quality_results),
+        "measure_definitions": {
+            "jurisdiction": pack.jurisdiction,
+            "pack_version": pack.pack_version,
+            "unavailable": quality.unavailable_measures(quality_results),
         },
     }
     correlation_id = new_id("ns-hmis")
@@ -569,12 +701,31 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
                 details={"ward_id": ward_id, "error_code": exc.code, "correlation_id": correlation_id},
             )
         raise HTTPException(status_code=502, detail={"code": exc.code, "message": exc.detail}) from exc
+    submitted_at = now()
     with db.connect() as conn:
+        for result in quality_results:
+            conn.execute(
+                """INSERT INTO quality_measure_results
+                (id,tenant_id,ward_id,period_start,period_end,measure_id,measure_type,
+                 numerator,denominator,value,unit,status,source_id,jurisdiction,pack_version,
+                 computed_at,publication_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(tenant_id,ward_id,period_start,period_end,measure_id) DO UPDATE SET
+                 numerator=excluded.numerator,denominator=excluded.denominator,
+                 value=excluded.value,status=excluded.status,computed_at=excluded.computed_at,
+                 publication_id=excluded.publication_id""",
+                (new_id("measure"), user.tenant_id, ward_id, period[0], period[1],
+                 result.measure_id, result.measure_type, result.numerator, result.denominator,
+                 result.value, result.unit, result.status, result.source_id,
+                 pack.jurisdiction, pack.pack_version, submitted_at, correlation_id),
+            )
         db.audit(
             conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
             action="hmis.measure.submitted", resource_type="MeasureReport",
             resource_id=correlation_id, patient_id=None,
             details={"ward_id": ward_id, "correlation_id": correlation_id,
+                     "jurisdiction": pack.jurisdiction, "pack_version": pack.pack_version,
+                     "measure_ids": [r.measure_id for r in quality_results],
                      "hub_audit_event_id": exchanged.get("hub_audit_event_id")},
         )
     return {"correlation_id": correlation_id, "measures": payload, "receipt": exchanged["body"]}
@@ -713,60 +864,82 @@ class ObservationCreate(BaseModel):
     source: str = Field(default="manual", min_length=2, max_length=80)
 
 
-def news_score(value: ObservationCreate) -> int:
-    score = 0
-    score += 3 if value.respiratory_rate <= 8 or value.respiratory_rate >= 25 else 1 if value.respiratory_rate <= 11 else 2 if value.respiratory_rate >= 21 else 0
-    score += 3 if value.oxygen_saturation <= 91 else 2 if value.oxygen_saturation <= 93 else 1 if value.oxygen_saturation <= 95 else 0
-    score += 2 if value.supplemental_oxygen else 0
-    score += 3 if value.systolic_bp <= 90 or value.systolic_bp >= 220 else 2 if value.systolic_bp <= 100 else 1 if value.systolic_bp <= 110 else 0
-    score += 3 if value.pulse <= 40 or value.pulse >= 131 else 1 if value.pulse <= 50 or 91 <= value.pulse <= 110 else 2 if 111 <= value.pulse <= 130 else 0
-    score += 3 if value.temperature <= 35 else 2 if value.temperature >= 39.1 else 1 if value.temperature <= 36 or value.temperature >= 38.1 else 0
-    score += 0 if value.consciousness == "alert" else 3
-    return int(score)
+def news_score(value: ObservationCreate, *, oxygen_scale: str = "1") -> int:
+    """Aggregate warning score under the active jurisdiction's profile.
+
+    Kept as a named function because the requirement catalogue and the hazard
+    log both cite it. It now delegates to the pack-driven engine so the oxygen
+    band table -- including the Scale 2 target range -- is data, not code.
+    """
+    return warning_scores.score_observation(
+        active_pack(), value, oxygen_scale=oxygen_scale
+    ).score
 
 
 @app.post("/api/patients/{patient_id}/observations", status_code=201)
 def add_observation(patient_id: str, body: ObservationCreate, user: UserDep) -> dict:
     require_roles(user, "registered_nurse", "nurse_in_charge")
     patient = scoped_patient(patient_id, user)
+    pack = active_pack()
     observation_id = new_id("obs")
-    score = news_score(body)
-    escalation = (
-        "critical" if score >= settings.warning_critical_threshold
-        else "urgent" if score >= settings.warning_escalation_threshold
-        else "review" if score >= settings.warning_review_threshold
-        else "routine"
+    result = warning_scores.score_observation(
+        pack, body, oxygen_scale=str(patient.get("oxygen_target_scale") or "1")
     )
+    score = result.score
+    escalation = result.escalation_level
     recorded_at = now()
+    response_due_at = (
+        (datetime.now(UTC) + timedelta(minutes=result.response_minutes)).isoformat()
+        if result.response_minutes is not None
+        else None
+    )
     with db.connect() as conn:
         conn.execute(
             """INSERT INTO observations
             (id,tenant_id,ward_id,patient_id,recorded_by,recorded_at,source,units_json,
              warning_profile_version,respiratory_rate,oxygen_saturation,supplemental_oxygen,
-             systolic_bp,pulse,temperature,consciousness,score,escalation_level)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+             systolic_bp,pulse,temperature,consciousness,score,escalation_level,
+             oxygen_scale,jurisdiction,pack_version,response_due_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (observation_id,user.tenant_id,patient["ward_id"],patient_id,user.id,recorded_at,body.source,
-             json.dumps(OBSERVATION_UNITS),settings.warning_profile_version,
+             json.dumps(OBSERVATION_UNITS),result.profile_id,
              body.respiratory_rate,body.oxygen_saturation,int(body.supplemental_oxygen),body.systolic_bp,
-             body.pulse,body.temperature,body.consciousness,score,escalation),
+             body.pulse,body.temperature,body.consciousness,score,escalation,
+             result.oxygen_scale,result.jurisdiction,result.pack_version,response_due_at),
         )
         escalation_task = None
-        if score >= settings.warning_escalation_threshold:
+        if warning_scores.requires_escalation(pack, score):
             escalation_task = new_id("task")
             conn.execute(
-                """INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                """INSERT INTO tasks
+                (id,tenant_id,ward_id,patient_id,title,description,priority,status,due_at,
+                 assigned_to,created_by,created_at,completed_by,completed_at,completion_note,
+                 version,required_competency,origin_kind,origin_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,1,?,'observation',?)""",
                 (escalation_task,user.tenant_id,patient["ward_id"],patient_id,
-                 f"{escalation.title()} deterioration review",f"Warning score {score}; assess and escalate per local policy",
-                  "stat" if score >= settings.warning_critical_threshold else "high","open",
-                  (datetime.now(UTC)+timedelta(minutes=settings.escalation_due_minutes)).isoformat(),
-                 patient["accountable_nurse_id"],user.id,recorded_at,None,None,None,1),
+                 f"{escalation.title()} deterioration review",
+                 f"Warning score {score} on oxygen scale {result.oxygen_scale}; "
+                 f"{result.responder_minimum_role} response required within "
+                 f"{result.response_minutes} minutes under {pack.jurisdiction} profile "
+                 f"{result.profile_id}",
+                 "stat" if escalation == warning_scores.ESCALATION_CRITICAL else "high","open",
+                 response_due_at or (datetime.now(UTC)+timedelta(minutes=settings.escalation_due_minutes)).isoformat(),
+                 patient["accountable_nurse_id"],user.id,recorded_at,
+                 "deteriorating-patient-response",observation_id),
             )
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="observation.recorded",resource_type="Observation",resource_id=observation_id,
                  patient_id=patient_id,details={"score":score,"escalation":escalation,"task_id":escalation_task,
-                 "warning_profile":settings.warning_profile_version,"units":OBSERVATION_UNITS})
+                 "warning_profile":result.profile_id,"oxygen_scale":result.oxygen_scale,
+                 "jurisdiction":result.jurisdiction,"pack_version":result.pack_version,
+                 "response_due_at":response_due_at,"units":OBSERVATION_UNITS})
     return {"id": observation_id, "score": score, "escalation_level": escalation,
-            "escalation_task_id": escalation_task, "warning_profile": settings.warning_profile_version,
+            "escalation_task_id": escalation_task, "warning_profile": result.profile_id,
+            "oxygen_scale": result.oxygen_scale, "jurisdiction": result.jurisdiction,
+            "pack_version": result.pack_version, "response_due_at": response_due_at,
+            "response_minutes": result.response_minutes,
+            "responder_minimum_role": result.responder_minimum_role,
+            "parameter_scores": result.parameter_scores,
             "units": OBSERVATION_UNITS}
 
 
@@ -776,6 +949,37 @@ class TaskCreate(BaseModel):
     priority: Literal["normal", "high", "stat"]
     due_at: datetime
     assigned_to: str | None = None
+    required_competency: str | None = Field(default=None, max_length=80)
+
+
+def held_competencies(user_id: str) -> set[str]:
+    return {
+        row["competency"]
+        for row in db.fetchall(
+            "SELECT competency FROM nurse_competencies WHERE user_id=?", (user_id,)
+        )
+    }
+
+
+def require_competency(user_id: str, competency: str | None, *, action: str) -> None:
+    """Block delegation of work the nurse has no verified competency for.
+
+    Verified competencies are recorded by the clinical safety officer. An
+    unverified nurse is not refused the ward -- only this specific piece of
+    work, and the response names the missing competency so the charge nurse can
+    reassign rather than guess.
+    """
+    if not competency:
+        return
+    if competency not in held_competencies(user_id):
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "code": "competency_not_verified",
+                "message": f"{action} requires the verified competency '{competency}'",
+                "required_competency": competency,
+            },
+        )
 
 
 @app.get("/api/tasks")
@@ -806,15 +1010,23 @@ def create_task(patient_id: str, body: TaskCreate, user: UserDep) -> dict:
         assignee = db.fetchone("SELECT * FROM users WHERE id=? AND tenant_id=?", (body.assigned_to, user.tenant_id))
         if not assignee or assignee["ward_id"] != patient["ward_id"]:
             raise HTTPException(status_code=422, detail="Assignee is not active in the patient's ward")
+        require_competency(body.assigned_to, body.required_competency, action="Assignment")
     task_id = new_id("task")
     with db.connect() as conn:
-        conn.execute("INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        conn.execute(
+            """INSERT INTO tasks
+            (id,tenant_id,ward_id,patient_id,title,description,priority,status,due_at,
+             assigned_to,created_by,created_at,completed_by,completed_at,completion_note,
+             version,required_competency,origin_kind,origin_id)
+            VALUES (?,?,?,?,?,?,?,'open',?,?,?,?,NULL,NULL,NULL,1,?,NULL,NULL)""",
             (task_id,user.tenant_id,patient["ward_id"],patient_id,body.title,body.description,
-             body.priority,"open",body.due_at.astimezone(UTC).isoformat(),body.assigned_to,user.id,now(),None,None,None,1))
+             body.priority,body.due_at.astimezone(UTC).isoformat(),body.assigned_to,user.id,now(),
+             body.required_competency))
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="task.created",resource_type="Task",resource_id=task_id,patient_id=patient_id,
-                 details={"priority":body.priority,"assigned_to":body.assigned_to})
-    return {"id": task_id, "status": "open"}
+                 details={"priority":body.priority,"assigned_to":body.assigned_to,
+                          "required_competency":body.required_competency})
+    return {"id": task_id, "status": "open", "required_competency": body.required_competency}
 
 
 class TaskTransition(BaseModel):
@@ -835,6 +1047,10 @@ def transition_task(task_id: str, body: TaskTransition, user: UserDep) -> dict:
         raise HTTPException(status_code=409, detail="Task changed; refresh before updating")
     allowed = {"accept": ("open", "accepted"), "complete": ("accepted", "completed"), "cancel": ("open", "cancelled")}
     required, target = allowed[body.action]
+    if body.action in {"accept", "complete"}:
+        require_competency(
+            user.id, task["required_competency"], action=f"Task {body.action}"
+        )
     if task["status"] != required:
         raise HTTPException(status_code=409, detail=f"Task must be {required} before {body.action}")
     completed_by = user.id if target == "completed" else None
@@ -926,12 +1142,27 @@ def create_handover(patient_id: str, body: HandoverCreate, user: UserDep) -> dic
             "current_risks": current_risks, "version": 1}
 
 
+class UnresolvedActionDecision(BaseModel):
+    task_id: str
+    decision: Literal["accept", "decline"]
+    reason: str = Field(default="", max_length=500)
+
+
 class HandoverAccept(BaseModel):
     version: int = Field(ge=1)
+    action_decisions: list[UnresolvedActionDecision] = Field(default_factory=list, max_length=50)
 
 
 @app.post("/api/handovers/{handover_id}/accept")
 def accept_handover(handover_id: str, body: HandoverAccept, user: UserDep) -> dict:
+    """Accept accountability for the patient AND for each unresolved action.
+
+    Transferring the patient without transferring the outstanding work is how a
+    task ends a shift owned by a nurse who has gone home. The receiver therefore
+    takes every unresolved action by default; declining one is allowed but must
+    carry a reason, and a declined action stays with the sender rather than
+    becoming unowned.
+    """
     handover = db.fetchone("SELECT * FROM handovers WHERE id=? AND tenant_id=?", (handover_id, user.tenant_id))
     if not handover:
         raise HTTPException(status_code=404, detail="Handover not found")
@@ -941,6 +1172,46 @@ def accept_handover(handover_id: str, body: HandoverAccept, user: UserDep) -> di
         raise HTTPException(status_code=409, detail="Handover is not pending")
     if body.version != handover["version"]:
         raise HTTPException(status_code=409, detail="Handover changed; refresh before accepting")
+    unresolved = db.fetchall(
+        """SELECT id,title,required_competency FROM tasks
+        WHERE patient_id=? AND status IN ('open','accepted')""",
+        (handover["patient_id"],),
+    )
+    unresolved_ids = {row["id"] for row in unresolved}
+    decisions = {item.task_id: item for item in body.action_decisions}
+    unknown = sorted(set(decisions) - unresolved_ids)
+    if unknown:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "unknown_unresolved_action", "task_ids": unknown},
+        )
+    declined_without_reason = [
+        task_id for task_id, item in decisions.items()
+        if item.decision == "decline" and not item.reason.strip()
+    ]
+    if declined_without_reason:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "decline_requires_reason", "task_ids": declined_without_reason},
+        )
+    held = held_competencies(user.id)
+    accepted_actions: list[dict] = []
+    declined_actions: list[dict] = []
+    for row in unresolved:
+        decision = decisions.get(row["id"])
+        if decision and decision.decision == "decline":
+            declined_actions.append({"task_id": row["id"], "title": row["title"],
+                                     "reason": decision.reason, "retained_by": handover["sender_id"]})
+            continue
+        competency = row["required_competency"]
+        if competency and competency not in held:
+            declined_actions.append({
+                "task_id": row["id"], "title": row["title"],
+                "reason": f"Receiver does not hold the verified competency '{competency}'",
+                "retained_by": handover["sender_id"],
+            })
+            continue
+        accepted_actions.append({"task_id": row["id"], "title": row["title"]})
     accepted_at = now()
     with db.connect() as conn:
         changed = conn.execute(
@@ -951,11 +1222,21 @@ def accept_handover(handover_id: str, body: HandoverAccept, user: UserDep) -> di
         if changed.rowcount != 1:
             raise HTTPException(status_code=409, detail="Handover changed; refresh before accepting")
         conn.execute("UPDATE patients SET accountable_nurse_id=?,version=version+1 WHERE id=?", (user.id,handover["patient_id"]))
+        for action in accepted_actions:
+            conn.execute(
+                "UPDATE tasks SET assigned_to=?,version=version+1 WHERE id=?",
+                (user.id, action["task_id"]),
+            )
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="handover.accepted",resource_type="Communication",resource_id=handover_id,
-                 patient_id=handover["patient_id"],details={"accountability_transferred":True})
+                 patient_id=handover["patient_id"],
+                 details={"accountability_transferred":True,
+                          "accepted_action_ids":[a["task_id"] for a in accepted_actions],
+                          "declined_actions":declined_actions})
     return {"id": handover_id, "status": "accepted", "accepted_at": accepted_at,
-            "version": handover["version"] + 1}
+            "version": handover["version"] + 1,
+            "accepted_actions": accepted_actions,
+            "declined_actions": declined_actions}
 
 
 class CarePlanCreate(BaseModel):
@@ -1059,10 +1340,31 @@ def administer(order_id: str, body: AdministrationCreate, user: UserDep) -> dict
         ).fetchone()
         if existing:
             raise HTTPException(status_code=409, detail="Medication occurrence already has a terminal administration record")
+        administered_at = now()
+        publication_id = None
+        # Only an order this ward received FROM pharmacy has a loop to close.
+        # A locally authored order has no external owner waiting on the outcome,
+        # so queueing one would manufacture an obligation nobody holds.
+        if order["source_order_id"]:
+            publication_id = queue_medication_outcome(
+                conn,
+                order=order,
+                patient=patient,
+                administration_id=administration_id,
+                outcome=body.outcome,
+                reason=body.reason,
+                administered_at=administered_at,
+                user=user,
+            )
         try:
-            conn.execute("INSERT INTO medication_administrations VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+            conn.execute(
+                """INSERT INTO medication_administrations
+                (id,tenant_id,ward_id,patient_id,order_id,outcome,reason,administered_by,
+                 cosigned_by,administered_at,mrn_verified,dob_verified,publication_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 (administration_id,user.tenant_id,patient["ward_id"],patient["id"],order_id,body.outcome,
-                 body.reason,user.id,cosigner["id"] if cosigner else None,now(),body.mrn_verified,body.date_of_birth_verified))
+                 body.reason,user.id,cosigner["id"] if cosigner else None,administered_at,
+                 body.mrn_verified,body.date_of_birth_verified,publication_id))
         except sqlite3.IntegrityError as exc:
             raise HTTPException(
                 status_code=409,
@@ -1073,8 +1375,71 @@ def administer(order_id: str, body: AdministrationCreate, user: UserDep) -> dict
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="medication.administration-recorded",resource_type="MedicationAdministration",
                  resource_id=administration_id,patient_id=patient["id"],
-                 details={"order_id":order_id,"outcome":body.outcome,"cosigner_id":body.cosigner_id})
-    return {"id": administration_id, "outcome": body.outcome, "server_confirmed": True}
+                 details={"order_id":order_id,"outcome":body.outcome,"cosigner_id":body.cosigner_id,
+                          "source_order_id":order["source_order_id"],
+                          "publication_id":publication_id})
+    contract = publications.contract(publications.KIND_MEDICATION_OUTCOME)
+    return {
+        "id": administration_id,
+        "outcome": body.outcome,
+        "server_confirmed": True,
+        "publication_id": publication_id,
+        "publication_status": (
+            publications.STATUS_PENDING if publication_id else "not-applicable"
+        ),
+        "publication_note": contract.gap_note if publication_id else None,
+    }
+
+
+def queue_medication_outcome(
+    conn: sqlite3.Connection,
+    *,
+    order: dict,
+    patient: dict,
+    administration_id: str,
+    outcome: str,
+    reason: str | None,
+    administered_at: str,
+    user: CurrentUser,
+) -> str:
+    """Durable outbox row for a hub-sourced order's administration outcome.
+
+    Written inside the administration transaction so the outcome and the
+    obligation to tell pharmacy about it can never diverge.
+    """
+    correlation_id = f"ns-medadmin-{administration_id}"
+    payload = {
+        "tenant_id": user.tenant_id,
+        "patient_id": patient["source_patient_id"] or patient["id"],
+        "source_order_id": order["source_order_id"],
+        "outcome": outcome,
+        "reason": reason,
+        "administered_at": administered_at,
+        "administered_by": user.id,
+        "correlation_id": correlation_id,
+    }
+    missing = publications.missing_fields(publications.KIND_MEDICATION_OUTCOME, payload)
+    if missing:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Medication outcome payload is missing contract fields: {missing}",
+        )
+    contract = publications.contract(publications.KIND_MEDICATION_OUTCOME)
+    publication_id = new_id("publication")
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    conn.execute(
+        """INSERT INTO outbound_publications
+        (id,tenant_id,kind,connector,resource_type,operation,resource_id,correlation_id,
+         content_hash,payload_json,status,error_code,error_detail,receipt_json,
+         hub_audit_event_id,attempts,created_by,created_at,completed_at)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,NULL,?,NULL,NULL,0,?,?,NULL)""",
+        (publication_id, user.tenant_id, contract.kind, contract.connector,
+         contract.resource_type, contract.operation, administration_id, correlation_id,
+         hashlib.sha256(canonical.encode()).hexdigest(), canonical,
+         publications.STATUS_PENDING,
+         None if contract.deliverable else contract.gap_note, user.id, now()),
+    )
+    return publication_id
 
 
 class AssessmentCreate(BaseModel):
@@ -1099,11 +1464,18 @@ def assess(patient_id: str, body: AssessmentCreate, user: UserDep) -> dict:
             task_id = new_id("task")
             created_tasks.append(task_id)
             priority = "stat" if body.risk_level == "critical" else "high" if body.risk_level == "high" else "normal"
-            conn.execute("INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            conn.execute(
+                """INSERT INTO tasks
+                (id,tenant_id,ward_id,patient_id,title,description,priority,status,due_at,
+                 assigned_to,created_by,created_at,completed_by,completed_at,completion_note,
+                 version,required_competency,origin_kind,origin_id)
+                VALUES (?,?,?,?,?,?,?,'open',?,?,?,?,NULL,NULL,NULL,1,?,'safety-assessment',?)""",
                 (task_id,user.tenant_id,patient["ward_id"],patient_id,action,
-                 f"Generated from {body.assessment_type} assessment",priority,"open",
+                 f"Generated from {body.assessment_type} assessment",priority,
                  (datetime.now(UTC)+timedelta(hours=1)).isoformat(),patient["accountable_nurse_id"],
-                 user.id,now(),None,None,None,1))
+                 user.id,now(),
+                 "pressure-injury-assessment" if body.assessment_type == "pressure-injury" else None,
+                 assessment_id))
         db.audit(conn,event_id=new_id("audit"),tenant_id=user.tenant_id,actor_id=user.id,
                  action="safety-assessment.recorded",resource_type="RiskAssessment",
                  resource_id=assessment_id,patient_id=patient_id,
@@ -1125,6 +1497,25 @@ def audit_log(user: UserDep, limit: int = Query(default=100, ge=1, le=500)) -> d
     events = db.fetchall(f"SELECT * FROM audit_events WHERE {' AND '.join(clauses)} ORDER BY sequence DESC LIMIT ?", tuple(params))
     valid, count = db.verify_audit()
     return {"chain_valid": valid, "total_events": count, "events": events}
+
+
+# The national-capability surface is registered last so it sees the finished
+# helper set. `db` and `settings` are handed over as callables, not values,
+# because both are rebound per test run; capturing them here would freeze the
+# router onto the import-time database.
+app.include_router(
+    national_routes.build_router(
+        national_routes.RouteContext(
+            get_db=lambda: db,
+            get_settings=lambda: settings,
+            current_user=current_user,
+            scoped_patient=scoped_patient,
+            require_roles=require_roles,
+            new_id=new_id,
+            now=now,
+        )
+    )
+)
 
 
 @app.exception_handler(sqlite3.IntegrityError)
