@@ -21,6 +21,10 @@ class Settings:
     escalation_due_minutes: int = 5
     integration_hub_url: str | None = None
     integration_hub_token: str | None = None
+    # Explicitly opt into the local supervised gateway's development
+    # authentication headers. Production and normal deployments leave this
+    # unset and use the configured bearer credential unchanged.
+    integration_hub_auth_mode: str = ""
     integration_timeout_seconds: float = 10.0
     inbound_hmac_secret: str | None = None
     alert_refresh_seconds: int = 5
@@ -37,6 +41,9 @@ def get_settings() -> Settings:
         escalation_due_minutes=int(os.getenv("NURSING_STATION_ESCALATION_DUE_MINUTES", "5")),
         integration_hub_url=os.getenv("NURSING_STATION_HUB_URL") or None,
         integration_hub_token=os.getenv("NURSING_STATION_HUB_TOKEN") or None,
+        integration_hub_auth_mode=(
+            os.getenv("NURSING_STATION_HUB_AUTH_MODE") or ""
+        ).strip().lower(),
         integration_timeout_seconds=float(
             os.getenv("NURSING_STATION_HUB_TIMEOUT_SECONDS", "10")
         ),
