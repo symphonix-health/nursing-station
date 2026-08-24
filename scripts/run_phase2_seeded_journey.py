@@ -87,7 +87,14 @@ def wait_json(url: str, timeout: float = 120) -> dict[str, Any]:
 
 
 def main() -> int:
-    inbound_secret = secrets.token_urlsafe(32)
+    # Keep the real connector signature contract stable when the runner
+    # reuses the supervised API Gateway. A temporary random secret is only
+    # useful when the runner also owns the gateway process; the default here
+    # matches BulletTrain's synthetic UAT launch secret.
+    inbound_secret = os.getenv(
+        "BT_NURSING_STATION_WEBHOOK_HMAC_SECRET",
+        "bt-uat-nursing-station-webhook-hmac",
+    )
     service_token = secrets.token_urlsafe(32)
     source_services = (
         "picis_system", "lis", "pacs_ris", "pharmacy_system",
@@ -127,6 +134,11 @@ def main() -> int:
                 "NURSING_STATION_DB": str(temp_path / "nursing.db"),
                 "NURSING_STATION_HUB_URL": f"http://127.0.0.1:{hub_port}",
                 "NURSING_STATION_HUB_TOKEN": service_token,
+                # The supervised gateway uses AUTH_MODE=dev and authenticates
+                # this synthetic principal from X-Dev-* headers. A temporary
+                # gateway uses AUTH_MODE=off, where the extra client-side
+                # headers are harmless but unnecessary.
+                "NURSING_STATION_HUB_AUTH_MODE": "dev" if reuse_hub else "off",
                 "NURSING_STATION_INBOUND_HMAC_SECRET": inbound_secret,
             }
         )
@@ -200,7 +212,17 @@ def main() -> int:
                 delivered = httpx.post(
                     f"http://127.0.0.1:{hub_port}/v1/connectors/nursing_station/exchange",
                     json=hub_event,
-                    headers={"Authorization": f"Bearer {service_token}"},
+                    headers={
+                        "Authorization": f"Bearer {service_token}",
+                        # The supervised gateway authenticates synthetic UAT
+                        # callers through its explicit dev-header contract.
+                        # AUTH_MODE=off on a runner-owned temporary gateway
+                        # ignores these additional headers.
+                        "X-Dev-Subject": "lis",
+                        "X-Dev-Roles": "system",
+                        "X-Dev-Scopes": "nursing.critical-result.notify",
+                        "X-Dev-Tenant": "tenant-st-brigids",
+                    },
                     timeout=15,
                 )
                 if delivered.status_code >= 400:
@@ -220,7 +242,11 @@ def main() -> int:
                 report = client.post("/api/wards/ward-med-a/hmis-measures", headers=manager_headers)
                 if report.status_code >= 400:
                     raise RuntimeError(f"HMIS submission failed: HTTP {report.status_code} {report.text}")
-                encoded = json.dumps(report.json()["measures"]["counts"])
+                report_body = report.json()
+                receipt = report_body.get("receipt") or {}
+                if not receipt.get("measures") or not receipt.get("measure_definitions"):
+                    raise RuntimeError("HMIS receipt did not retain the quality dataset")
+                encoded = json.dumps(report_body, sort_keys=True)
                 if "9991000003" in encoded or "Ava Patel" in encoded or "pat-ava" in encoded:
                     raise RuntimeError("HMIS payload contains patient-level data")
                 print(json.dumps({"status": "passed", "sources": 5, "patient": "pat-005", "hmis_receipt": True, "critical_alert": True, "ports": "registered"}))

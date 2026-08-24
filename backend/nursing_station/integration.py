@@ -60,6 +60,41 @@ class IntegrationError(RuntimeError):
         self.hub_audit_event_id = hub_audit_event_id
 
 
+def _exchange_headers(
+    *,
+    token: str,
+    correlation_id: str,
+    auth_mode: str,
+    actor_id: str,
+    tenant_id: str,
+    role: str,
+    scopes: list[str],
+) -> dict[str, str]:
+    """Build the hub headers, including the explicit local dev-auth opt-in.
+
+    The supervised UAT gateway runs with ``AUTH_MODE=dev``. Its dev auth
+    contract is header based, so the synthetic Nursing Station client must
+    forward the same principal that is already present in the exchange body.
+    This remains opt-in through ``NURSING_STATION_HUB_AUTH_MODE``; deployed
+    clients continue to send only their bearer credential.
+    """
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "X-Correlation-ID": correlation_id,
+        "X-Trace-ID": correlation_id,
+    }
+    if auth_mode == "dev":
+        headers.update(
+            {
+                "X-Dev-Subject": actor_id,
+                "X-Dev-Roles": role,
+                "X-Dev-Scopes": " ".join(scopes),
+                "X-Dev-Tenant": tenant_id,
+            }
+        )
+    return headers
+
+
 class HubClient:
     def __init__(self, settings: Settings):
         if not settings.integration_hub_url or not settings.integration_hub_token:
@@ -69,6 +104,7 @@ class HubClient:
             )
         self.base_url = settings.integration_hub_url.rstrip("/")
         self.token = settings.integration_hub_token
+        self.auth_mode = settings.integration_hub_auth_mode
         self.timeout = settings.integration_timeout_seconds
 
     async def exchange(
@@ -105,11 +141,15 @@ class HubClient:
                     response = await client.post(
                         f"{self.base_url}/v1/connectors/{connector}/exchange",
                         json=request_body,
-                        headers={
-                            "Authorization": f"Bearer {self.token}",
-                            "X-Correlation-ID": correlation_id,
-                            "X-Trace-ID": correlation_id,
-                        },
+                        headers=_exchange_headers(
+                            token=self.token,
+                            correlation_id=correlation_id,
+                            auth_mode=self.auth_mode,
+                            actor_id=actor_id,
+                            tenant_id=tenant_id,
+                            role=role,
+                            scopes=request_body["scopes"],
+                        ),
                     )
                 if response.status_code not in {502, 503, 504} or attempt == retry_count:
                     break
