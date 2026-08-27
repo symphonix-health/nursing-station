@@ -11,6 +11,9 @@ def _registry_path() -> Path:
     configured = os.environ.get("SYMPHONIX_PORT_REGISTRY")
     if configured:
         return Path(configured)
+    workspace = os.environ.get("SYMPHONIX_WORKSPACE_ROOT")
+    if workspace:
+        return Path(workspace) / "workspace-tooling" / "ports.workspace.json"
     return Path(__file__).resolve().parents[3] / "workspace-tooling" / "ports.workspace.json"
 
 

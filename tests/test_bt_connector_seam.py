@@ -16,19 +16,24 @@ implemented-to-the-queue.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
-import pytest
 from nursing_station import publications, workforce
 
-BT_ROOT = Path(__file__).resolve().parents[2] / "BulletTrain"
+WORKSPACE = Path(
+    os.environ.get("SYMPHONIX_WORKSPACE_ROOT", Path(__file__).resolve().parents[2])
+).resolve()
+BT_ROOT = WORKSPACE / "BulletTrain"
 MANIFEST_DIR = BT_ROOT / "connectors" / "manifests"
 EVENT_REGISTRY = BT_ROOT / "connectors" / "registries" / "outbound_webhook_events.json"
 
-pytestmark = pytest.mark.skipif(
-    not MANIFEST_DIR.exists(),
-    reason=f"BulletTrain connector manifests not present at {MANIFEST_DIR}",
-)
+
+def test_bullettrain_connector_evidence_is_available() -> None:
+    assert MANIFEST_DIR.is_dir(), (
+        f"BulletTrain connector manifests not present at {MANIFEST_DIR}; "
+        "configure SYMPHONIX_WORKSPACE_ROOT or restore the required sibling"
+    )
 
 
 def _exchange_routes(connector: str) -> dict:
@@ -105,8 +110,10 @@ def test_nursing_station_still_owns_only_the_critical_result_route():
 
 def test_no_canonical_event_kind_exists_for_nursing_staffing_or_handover():
     """Producing an unregistered kind is rejected before dispatch, so do not claim one."""
-    if not EVENT_REGISTRY.exists():
-        pytest.skip(f"BulletTrain event registry not present at {EVENT_REGISTRY}")
+    assert EVENT_REGISTRY.is_file(), (
+        f"BulletTrain event registry not present at {EVENT_REGISTRY}; "
+        "this seam cannot be treated as tested"
+    )
     kinds = set(json.loads(EVENT_REGISTRY.read_text(encoding="utf-8")).get("events") or {})
     claimed = {
         kind
