@@ -949,3 +949,60 @@ def test_every_sibling_read_is_keyed_on_the_shared_cross_system_identifier():
         assert "pat-ava" not in payload.values()
     assert set(_integration_payload(patient, "pharmacy-system")) == {"patient_id"}
     assert set(_integration_payload(patient, "lis")) == {"external_nhs_number"}
+
+
+# ---------------------------------------------------------------------------
+# FR-NS-151 -- a criterion is met only from the owning system's own receipt
+# ---------------------------------------------------------------------------
+def test_every_pack_discharge_source_has_a_confirmation_route():
+    """A criterion whose owner has no route can only ever stay pending.
+
+    Until 2026-09-02 only pharmacy-system had one, so four of the six criteria
+    were unreachable by design. This asserts the pack and the confirmation
+    table agree, so adding a criterion to a pack without wiring its owner fails
+    here rather than silently stranding a discharge.
+    """
+    from nursing_station.country_packs import available_jurisdictions, load_pack
+    from nursing_station.national_routes import DISCHARGE_CONFIRMATIONS
+
+    for jurisdiction in available_jurisdictions():
+        pack = load_pack(jurisdiction)
+        for criterion in pack.discharge_criteria:
+            source = criterion["evidence_source"]
+            if source == "nursing-station":
+                continue  # the ward confirms its own criteria directly
+            assert source in DISCHARGE_CONFIRMATIONS, (
+                f"{jurisdiction} criterion {criterion['criterion_id']} is owned by {source}, "
+                "which has no confirmation route: it could only ever stay pending"
+            )
+
+
+def test_a_confirmation_without_a_reference_is_not_evidence():
+    """A bare confirmed:true, or an empty 200, must not meet a criterion.
+
+    An unimplemented route returning 200 with nothing in it is exactly what
+    this guards against: dispatch is not confirmation.
+    """
+    from nursing_station.national_routes import _confirmed_evidence
+
+    assert _confirmed_evidence({"confirmed": True, "evidence_reference": "appt-1"}) == "appt-1"
+    assert _confirmed_evidence({"confirmed": True, "evidence_reference": None}) is None
+    assert _confirmed_evidence({"confirmed": True}) is None
+    assert _confirmed_evidence({"confirmed": False, "evidence_reference": "appt-1"}) is None
+    assert _confirmed_evidence({}) is None
+    assert _confirmed_evidence(None) is None
+
+
+def test_a_supply_confirmation_that_is_pending_is_not_evidence():
+    from nursing_station.national_routes import _supply_chain_discharge_evidence
+
+    assert _supply_chain_discharge_evidence(
+        {"status": "confirmed", "evidence_reference": "dsc-1"}
+    ) == "dsc-1"
+    for body in (
+        {"status": "not_found", "evidence_reference": None},
+        {"status": "pending", "evidence_reference": "dsc-1"},
+        {"status": "cancelled", "evidence_reference": "dsc-1"},
+        {"status": "confirmed", "evidence_reference": None},
+    ):
+        assert _supply_chain_discharge_evidence(body) is None, body

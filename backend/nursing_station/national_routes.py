@@ -1514,10 +1514,61 @@ def _pharmacy_discharge_evidence(body: dict) -> str | None:
     return None
 
 
+def _confirmed_evidence(body: dict) -> str | None:
+    """The shared shape the four discharge-confirmation routes answer with.
+
+    Each owning system answers ``confirmed`` plus an ``evidence_reference``, and
+    a typed ``reason`` when it cannot confirm. A criterion is met only when the
+    system says confirmed AND names the record it is confirming: a bare
+    ``confirmed: true`` with nothing to point at is not evidence, and neither is
+    a 200 with an empty body, which is what an unimplemented route would return.
+    """
+    if not isinstance(body, dict):
+        return None
+    if body.get("confirmed") is not True:
+        return None
+    reference = body.get("evidence_reference")
+    return str(reference) if reference else None
+
+
+def _supply_chain_discharge_evidence(body: dict) -> str | None:
+    """supply-chain-erp answers with a confirmation record, not a confirmed flag."""
+    if not isinstance(body, dict):
+        return None
+    if str(body.get("status") or "").lower() in {"not_found", "pending", "cancelled"}:
+        return None
+    reference = body.get("evidence_reference")
+    return str(reference) if reference else None
+
+
 DISCHARGE_CONFIRMATIONS: dict[str, dict[str, Any]] = {
     "pharmacy-system": {
         "connector": "pharmacy_system",
         "resource_type": "NursingMedicationContext",
         "evidence": _pharmacy_discharge_evidence,
+    },
+    # Each of these four systems owns a discharge criterion in the country pack
+    # and answers the same confirmation shape. The criterion is met only from
+    # the owning system's own receipt (FR-NS-151); an unconfirmed answer leaves
+    # it pending with that system's typed reason, never met.
+    "community-nursing": {
+        "connector": "community_nursing",
+        "resource_type": "NursingDischargeConfirmation",
+        "evidence": _confirmed_evidence,
+    },
+    "appointment-system": {
+        "connector": "appointment_system",
+        "resource_type": "NursingDischargeConfirmation",
+        "evidence": _confirmed_evidence,
+    },
+    "ambulance-ems": {
+        "connector": "ambulance_ems",
+        "resource_type": "NursingDischargeConfirmation",
+        "evidence": _confirmed_evidence,
+    },
+    "supply-chain-erp": {
+        "connector": "supply_chain_erp",
+        "resource_type": "NursingDischargeConfirmation",
+        "evidence": _supply_chain_discharge_evidence,
     },
 }
