@@ -24,7 +24,8 @@
         "nursing:read",
         "nursing:write",
         "patient:read",
-        "audit:write"
+        "audit:write",
+        "connector:exchange"
       ],
       "denied_scopes": [
         "system:admin"
