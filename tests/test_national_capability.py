@@ -7,6 +7,7 @@ test asserts the fail-closed behaviour rather than substituting a fake hub.
 
 from __future__ import annotations
 
+import dataclasses
 import json
 from datetime import UTC, datetime, timedelta
 
@@ -493,11 +494,45 @@ def test_dispatching_without_a_configured_hub_fails_loudly_and_keeps_the_obligat
     assert entry["completed_at"] is None
 
 
-def test_dispatch_is_role_gated_and_skips_kinds_with_no_route(client, headers, charge):
+def test_dispatch_is_role_gated_and_attempts_only_deliverable_kinds(client, headers, charge):
+    """Draining is a senior act, and it attempts only what has a destination.
+
+    Every kind now has a registered route, so nothing is skipped; the skip path
+    is still exercised below with a contract whose route is withdrawn, because
+    the behaviour that matters is "a missing destination is not a delivery
+    failure" and that must not rot away with the last gap.
+    """
     assert client.post("/api/publications/dispatch", headers=headers).status_code == 403
-    # A staffing declaration has no BulletTrain destination; draining the queue
-    # reports it as skipped with its named gap rather than attempting a delivery
-    # that cannot land.
+    client.post(
+        "/api/wards/ward-med-a/staffing-declarations", headers=charge,
+        json={"reason": "Two registered nurses off sick on a high-acuity ward tonight."},
+    )
+    drained = client.post("/api/publications/dispatch?kind=staffing.shortage.declaration",
+                          headers=charge)
+    # The declaration now HAS a destination, so the drain tries to reach it and
+    # fails loudly on the unconfigured hub instead of skipping. A destination
+    # that exists but cannot be reached is a delivery failure, not an absent
+    # route, and the two must not read the same.
+    assert drained.status_code == 503, drained.text
+    assert drained.json()["detail"]["code"] == "integration_not_configured"
+    queue = client.get("/api/publications", headers=charge).json()["publications"]
+    declaration = next(
+        row for row in queue if row["kind"] == publications.KIND_STAFFING_DECLARATION
+    )
+    assert declaration["status"] == publications.STATUS_PENDING
+    assert declaration["connector"] == "role_assumption"
+
+
+def test_a_kind_whose_route_is_withdrawn_is_skipped_not_failed(client, charge, monkeypatch):
+    """A missing destination is not a delivery failure, and never was."""
+    from nursing_station import publications as pub
+
+    withdrawn = dataclasses.replace(
+        pub.contract(pub.KIND_STAFFING_DECLARATION),
+        route_status=pub.ROUTE_UNREGISTERED,
+        gap_note="the receiving route was withdrawn",
+    )
+    monkeypatch.setitem(pub.PUBLICATION_CONTRACTS, pub.KIND_STAFFING_DECLARATION, withdrawn)
     client.post(
         "/api/wards/ward-med-a/staffing-declarations", headers=charge,
         json={"reason": "Two registered nurses off sick on a high-acuity ward tonight."},
@@ -862,12 +897,10 @@ def test_the_publication_surface_names_every_open_bullettrain_gap(client, charge
     ):
         assert contracts[kind]["route_status"] == "registered"
         assert not contracts[kind]["gap"]
-    # Still owned by nobody, and said so rather than faked.
-    for kind in (
-        publications.KIND_STAFFING_DECLARATION,
-    ):
-        assert contracts[kind]["route_status"] == "unregistered"
-        assert contracts[kind]["gap"]
+    # Every national publication this repo owns now has a destination.
+    assert contracts[publications.KIND_STAFFING_DECLARATION]["route_status"] == "registered"
+    assert not contracts[publications.KIND_STAFFING_DECLARATION]["gap"]
+    assert not publications.open_gaps(), publications.open_gaps()
 
 
 def test_the_publication_surface_is_role_gated(client, headers):

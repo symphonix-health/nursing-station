@@ -74,11 +74,15 @@ PUBLICATION_CONTRACTS: dict[str, PublicationContract] = {
     ),
     KIND_STAFFING_DECLARATION: PublicationContract(
         kind=KIND_STAFFING_DECLARATION,
-        connector="global_agent_registry",
+        # The governed model lives in BulletTrain's own security plane
+        # (bullettrain/security/staffing_state.py), not in GHARRA: the connector
+        # names the service that actually owns the lifecycle. The declare
+        # surface landed on the Role Registry on 2026-09-02.
+        connector="role_assumption",
         resource_type="StaffingDeclaration",
         operation="write",
         scope="gra.staffing.declare",
-        route_status=ROUTE_UNREGISTERED,
+        route_status=ROUTE_REGISTERED,
         # The field list is the governed role-assumption declaration contract
         # verbatim (governance/policies/role_assumption.yaml
         # staffing_escalation.declaration_required_fields). Nursing Station adds
@@ -87,12 +91,6 @@ PUBLICATION_CONTRACTS: dict[str, PublicationContract] = {
         required_fields=(
             "declaration_id", "scope_unit", "declared_by", "reason",
             "starts_at", "expires_at",
-        ),
-        gap_note=(
-            "BulletTrain's governed role assumption owns StaffingDeclaration but exposes "
-            "no declare/revoke HTTP surface yet, so no connector exchange route exists. "
-            "The declaration is durable here and queued; the effective policy tier is "
-            "BulletTrain's to decide and is never computed locally."
         ),
     ),
     KIND_HARM_INCIDENT: PublicationContract(

@@ -323,9 +323,9 @@ BulletTrain was read **read-only**. Nothing in that repository was edited.
 | Need | Why |
 |---|---|
 | `pharmacy_system` exchange route `NursingMedicationOutcome` (write) | LANDED 2026-09-02. pharmacy-system serves `POST /api/nursing-outcomes` (idempotent by correlation id; refuses an outcome for an order it never issued or whose patient does not match) and exposes the recorded outcomes on its own nursing context; the route is on `BT-PHARMACY-SYSTEM-HUB-001`. Proven end to end by BulletTrain `scripts/verify_nursing_publication_loops.py`. **The WARD half is still blocked**: see section 7. |
-| A declare/revoke surface for `StaffingDeclaration`, and a connector route reaching it | `FR-NS-132` emits the exact governed field set but has no destination. BulletTrain's own `docs/security/governed_role_assumption.md` names this API as the next part of that work. |
+| A declare/revoke surface for `StaffingDeclaration`, and a connector route reaching it | LANDED 2026-09-02. The Role Registry serves `/api/role-assumption/staffing-declarations` (declare, revoke, list, active) over the existing governed store; the payload is exactly the six governed fields and a seventh is a 422; the surface decides no tier and says so on every response; revocation retains the declaration rather than deleting it. Reached through the new `role_assumption` connector. This repo's contract now names that connector rather than `global_agent_registry`: the governed model lives in BulletTrain's security plane, not in GHARRA. Proven end to end. |at work. |
 | `hmis` exchange route `NursingHarmIncidentReport` (write) | LANDED 2026-09-02. HMIS serves `POST /api/nursing-harm-incidents`: de-identified by schema (`extra=forbid`, so a patient id, a description or a reporter is a 422), idempotent by the ward's correlation id, readable back and summarised by ward. A present-on-admission pressure injury is refused as harm this ward did not acquire. Proven end to end by BulletTrain `scripts/verify_nursing_publication_loops.py`. |
-| A roster publisher and a `workforce` / `NursingRosterContext` read route | `FR-NS-130` declares the consumption contract; nothing in the estate publishes a nursing roster, which is why two quality measures report `source-unavailable`. |
+| A roster publisher and a `workforce` / `NursingRosterContext` read route | LANDED 2026-09-02. The Health Worker Registry publishes the roster (`/v1/workforce/nursing-roster`), resolving each assignment's registration from its own worker records rather than the publisher's claim; an unpublished ward-shift answers 404 'absent, not an empty shift'. Reached through the new `workforce` connector. A service identity may read a roster and may not author one. |
 | Discharge confirmation routes for `supply-chain-erp`, `community-nursing` (receipt, not dispatch), `appointment-system`, `ambulance-ems` | `FR-NS-151` meets a criterion only from the owning system's receipt. |
 | `nursing_station` registration in `connector_registry_index.json` | LANDED 2026-09-02 on BulletTrain main: `BT-NURSING-STATION-HUB-001` is listed in the registry index beside community-nursing, so discovery-then-dispatch finds it. |
 | HMIS acceptance of the additive `measures` block on `NursingMeasureReport` | PROVEN 2026-09-02. HMIS validates the block strictly (`NursingQualityMeasure`, `NursingMeasureDefinitions`, `extra=forbid`), retains it (`0005_nursing_quality_dataset`) and echoes it on the receipt; a live submission returned all seven measures with the pack's jurisdiction and version. |
@@ -336,10 +336,17 @@ grading cannot rot apart.
 
 ## 7. Remaining work, stated plainly
 
-- Families 5 and 7 and the harm-reporting leg of family 6 are **implemented to
-  the queue**, not closed-loop. No receipt exists because no receiver exists.
-- Two of the seven quality measures (`NSQ-STAFF-01`, `NSQ-STAFF-02`) report
-  `source-unavailable` in every period until a roster is published.
+- **Updated 2026-09-02.** Family 5's declaration leg and family 6's harm
+  reporting leg are now closed-loop: both have a real receiver and both are
+  proven end to end by BulletTrain
+  `scripts/verify_nursing_publication_loops.py`, which reads each record back
+  out of the receiving system's own API. Family 7 (discharge coordination) is
+  still implemented to the queue: four owning systems have no confirmation
+  route, so those criteria stay pending with `hub_route_unregistered`.
+- The roster now has a publisher, so `NSQ-STAFF-01` and `NSQ-STAFF-02` can be
+  computed for a ward whose roster is published. They still report
+  `source-unavailable` for a shift nobody has published, which is the correct
+  answer rather than a zero.
 - Ward-facing UI: BUILT 2026-09-02 (`frontend/src/national.tsx`, wired in
   `App.tsx`): `/work-queue` (ranked work with factor breakdown, delegability,
   interruption record/resume), `/escalations` (pack intervals and seniority,

@@ -63,10 +63,22 @@ def test_publication_contract_route_status_matches_bullettrain():
 
 
 def test_every_undeliverable_contract_states_its_gap():
+    """Every publication now has a destination, and the rule still holds.
+
+    This asserted a non-empty gap list until 2026-09-02, when the last of the
+    four BulletTrain-side routes landed. The invariant it protects is the one
+    that matters and is kept: a contract that CANNOT be delivered must name why.
+    An empty gap list is now the honest state, not a silenced check.
+    """
     gaps = publications.open_gaps()
-    assert gaps, "expected at least one open BulletTrain-side gap while routes are missing"
     for gap in gaps:
         assert gap["gap"].strip(), f"{gap['kind']} is undeliverable but names no gap"
+    undeliverable = [
+        contract.kind
+        for contract in publications.PUBLICATION_CONTRACTS.values()
+        if not contract.deliverable
+    ]
+    assert [gap["kind"] for gap in gaps] == undeliverable
 
 
 def test_the_quality_dataset_reuses_the_proven_hmis_envelope():
