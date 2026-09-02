@@ -1053,11 +1053,12 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
             "roster_contract": {
                 "connector": workforce.ROSTER_CONNECTOR,
                 "resource_type": workforce.ROSTER_RESOURCE_TYPE,
-                "owner": "unassigned",
+                "owner": "health-worker-registry",
                 "note": (
-                    "No estate service currently publishes a nursing roster and no BulletTrain "
-                    "exchange route exists for one. Nursing Station consumes a roster when one "
-                    "is published and never authors it."
+                    "The Health Worker Registry publishes the nursing shift roster and resolves "
+                    "each assignment's registration from its own worker records. Nursing Station "
+                    "consumes it and never authors one; a ward-shift with no published roster is "
+                    "reported absent, not as an empty shift."
                 ),
             },
             "declaration_policy": active.safe_staffing.get("declaration_policy", {}),

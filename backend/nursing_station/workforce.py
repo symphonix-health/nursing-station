@@ -1,9 +1,10 @@
 """Ward staffing position and governed shortage declaration (FR-NS-130..132).
 
-Nursing Station does not own the roster. No estate service currently does: the
-registered nursing roster, professional registration status and temporary
-staffing bookings have no canonical owner and no BulletTrain connector route.
-This module therefore does three separate things and keeps them separate.
+Nursing Station does not own the roster. The Health Worker Registry does: it
+holds professional identity and registration, and since 2026-09-02 it also
+holds shift assignments, published through BulletTrain's ``workforce``
+connector as ``NursingRosterContext``. This module therefore does three
+separate things and keeps them separate.
 
 1. **Consume.** :func:`validate_roster_payload` states the contract Nursing
    Station expects from a roster owner over the hub. Nothing here authors a

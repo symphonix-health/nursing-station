@@ -688,7 +688,7 @@ def test_staffing_position_computes_the_requirement_and_reports_the_missing_rost
     assert position["actual_registered_hours"] is None
     assert position["actual_skill_mix_percent"] is None
     assert position["triggers_fired"] == []
-    assert response.json()["roster_contract"]["owner"] == "unassigned"
+    assert response.json()["roster_contract"]["owner"] == "health-worker-registry"
 
 
 def test_roster_refresh_fails_closed_without_a_configured_hub(client, charge):

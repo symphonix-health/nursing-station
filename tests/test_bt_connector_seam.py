@@ -86,14 +86,22 @@ def test_the_quality_dataset_reuses_the_proven_hmis_envelope():
     )
 
 
-def test_no_roster_exchange_route_exists_yet():
-    """The roster has no owner and no route; the staffing family must say so."""
+def test_the_roster_route_exists_and_is_a_read():
+    """The roster has an owner now: the Health Worker Registry publishes it.
+
+    This test was the inverse until 2026-09-02, pinning the absence. It is
+    inverted rather than deleted so the seam still fails loudly if the route is
+    ever withdrawn and Nursing Station is left consuming nothing.
+    """
     routes = _exchange_routes(workforce.ROSTER_CONNECTOR)
-    assert workforce.ROSTER_RESOURCE_TYPE not in routes, (
-        f"BulletTrain now publishes {workforce.ROSTER_CONNECTOR}/"
-        f"{workforce.ROSTER_RESOURCE_TYPE}. The staffing family can be regraded from "
-        "'consumed contract declared, no publisher' to a real consumption loop."
+    assert workforce.ROSTER_RESOURCE_TYPE in routes, (
+        f"BulletTrain no longer publishes {workforce.ROSTER_CONNECTOR}/"
+        f"{workforce.ROSTER_RESOURCE_TYPE}; the staffing position would silently lose its "
+        "actuals and two quality measures would return to source-unavailable."
     )
+    route = routes[workforce.ROSTER_RESOURCE_TYPE]
+    assert route["operation"] == "read", "Nursing Station must never be able to write a roster"
+    assert set(route["required_keys"]) == {"ward_id", "shift_date", "shift"}
 
 
 def test_nursing_station_still_owns_only_the_critical_result_route():
