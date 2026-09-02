@@ -101,15 +101,10 @@ PUBLICATION_CONTRACTS: dict[str, PublicationContract] = {
         resource_type="NursingHarmIncidentReport",
         operation="write",
         scope="hmis.incident.write",
-        route_status=ROUTE_UNREGISTERED,
+        route_status=ROUTE_REGISTERED,
         required_fields=(
             "tenant_id", "facility_id", "ward_id", "incident_type",
             "harm_level", "occurred_at", "correlation_id",
-        ),
-        gap_note=(
-            "hmis exposes NursingMeasureReport but no incident route. Externally "
-            "reportable ward incidents are queued de-identified; Nursing Station is not "
-            "the national incident registry and never claims the report was filed."
         ),
     ),
     KIND_QUALITY_DATASET: PublicationContract(

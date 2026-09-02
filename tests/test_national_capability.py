@@ -858,13 +858,13 @@ def test_the_publication_surface_names_every_open_bullettrain_gap(client, charge
     for kind in (
         publications.KIND_QUALITY_DATASET,
         publications.KIND_MEDICATION_OUTCOME,
+        publications.KIND_HARM_INCIDENT,
     ):
         assert contracts[kind]["route_status"] == "registered"
         assert not contracts[kind]["gap"]
     # Still owned by nobody, and said so rather than faked.
     for kind in (
         publications.KIND_STAFFING_DECLARATION,
-        publications.KIND_HARM_INCIDENT,
     ):
         assert contracts[kind]["route_status"] == "unregistered"
         assert contracts[kind]["gap"]
