@@ -11,9 +11,21 @@
     "phase2_integration_hazards": "safety/PHASE_2_INTEGRATION_HAZARDS.md"
   },
   "applicable_patterns": [
-    "service", "database", "auth", "api", "frontend", "testing",
-    "observability", "fsm", "security", "accessibility", "monitoring",
-    "resilience", "code_quality", "python", "typescript"
+    "service",
+    "database",
+    "auth",
+    "api",
+    "frontend",
+    "testing",
+    "observability",
+    "fsm",
+    "security",
+    "accessibility",
+    "monitoring",
+    "resilience",
+    "code_quality",
+    "python",
+    "typescript"
   ],
   "evidence_boundary": "Phase 2 implements hub-mediated seeded context for PICIS, LIS, PACS/RIS, pharmacy-system, blood-transfusion, de-identified HMIS measures, and a signed LIS critical-result alert with explicit nurse acknowledgement. The 2026-08-05 national-capability wave adds risk-ranked ward work with competency gating and interruption capture, a jurisdiction-configured deterioration profile and named escalation response, eMAR reconciliation and outcome queueing, unresolved-action transfer at handover, the ward staffing position and governed shortage declaration, harm incident and review, discharge readiness, and the nursing quality dataset. Safe staffing, discharge coordination and external harm reporting are implemented TO THE DURABLE QUEUE only: no BulletTrain-side route or receiver exists for them yet, so none is claimed closed-loop. No frontend surface exists for the national-capability workflows. Clinical release remains gated by human safety, privacy, security, and deployment approvals.",
   "country_policy": {
@@ -60,5 +72,49 @@
       "python -m scripts.ci.validate_ports",
       "python -m pytest tests/unit/connectors/test_symphonix_sibling_connector.py tests/unit/test_interface_catalogue_network_diagram.py -q"
     ]
-  }
+  },
+  "delegations": [
+    {
+      "task_id": "NFR-NS-031",
+      "title": "Responsive layout at phone, tablet and desktop widths",
+      "depends_on": [],
+      "status": "planned",
+      "source": "caid add-requirement",
+      "requirement": {
+        "requirement_id": "NFR-NS-031"
+      },
+      "audit_verdict": "NOT_FOUND",
+      "component_modes": {
+        "SignalBox": "verify_owner_then_generate"
+      },
+      "guidance": "Incremental requirement NFR-NS-031: Responsive layout at phone, tablet and desktop widths\nEvery ward-facing surface SHALL render without horizontal page scroll at 375, 768 and 1280 CSS pixel widths. At phone width the primary navigation SHALL be off-screen until opened by a control of at least 44 CSS pixels, the main content SHALL fill at least 80 percent of the viewport, form fields SHALL stack to at least 75 percent of the viewport, every interactive control SHALL present a 44 CSS pixel touch target with at most five exceptions, and no text SHALL render under 12 CSS pixels with at most three exceptions. Conformance SHALL be measured through SignalBox browser_responsive_audit in a headed persona-driven session against the running application, and the report SHALL be retained as evidence; a unit test or generated matrix alone is not responsive evidence.\n\nPer-component disposition (existing-codebase audit; verify before coding):\n  - VERIFY ownership, then GENERATE real implementation symbol SignalBox (disposition: requirements-only; audit verdict: NOT_FOUND; requirements/traceability evidence found, but no implementation)\n\nValidated brownfield lessons (mandatory for this amendment):\n  - L-387 (CRITICAL): Brownfield intake dispositions (BUILD-NEW / RETAIN-AS-OWNER / HUB-CONSUME) are hypotheses -- verify each against live code before building, or you rebuild working features\n  - L-388 (CRITICAL): A gate PASS can be annotation-satisfied with zero implementation -- before enhancing 'on top of' a passed requirement, verify the implementation exists\n  - L-389 (CRITICAL): In amended repos, derived catalogues drift from their generators -- regenerate-by-merge in the committed file's own shape, never overwrite\n  - L-390 (HIGH): Registering a requirement touches a closed web of alignment surfaces enforced by different gates -- enumerate the whole web up front, including hardcoded mirror lists inside test files\n  - L-391 (HIGH): Rotation-generated scenario rows without per-row distinct executable substance are padding -- the fix is real per-row identifiers or distinct fixtures, never a waiver or a nonce\n  - L-392 (CRITICAL): Enum member-name vs value drift across an SDK seam survives mock-shielded suites -- every dispatch method needs one contract test against the REAL dependency\n  - L-393 (HIGH): Repos with ignore-by-default allowlists silently drop new test files from version control -- git check-ignore every newly created file before declaring an amendment landed\n  - L-394 (HIGH): Establish the empirical red baseline (failure/error/skip SET, not count) before amending a repo -- documented baselines go stale, and regression attribution needs set difference against a clean tree\n  - L-395 (MEDIUM): Additive schema evolution over legacy data: coerce old shapes compatibly and SURFACE missing governance evidence -- never backfill fabricated values to make the new schema look complete",
+      "lessons_applied": [
+        "L-387",
+        "L-388",
+        "L-389",
+        "L-390",
+        "L-391",
+        "L-392",
+        "L-393",
+        "L-394",
+        "L-395"
+      ],
+      "ui_required": true,
+      "ui_rationale": "inference.detect_platform() classified platform='fullstack' and inference._implies_user_interaction()=True against the requirement statement + acceptance criteria"
+    }
+  ],
+  "tasks": 1,
+  "incremental_history": [
+    {
+      "requirement_id": "NFR-NS-031",
+      "title": "Responsive layout at phone, tablet and desktop widths",
+      "verdict": "NOT_FOUND",
+      "action": "planned",
+      "timestamp": "2026-09-02T14:11:18.981246+00:00",
+      "components": [
+        "SignalBox"
+      ]
+    }
+  ],
+  "incremental": true
 }

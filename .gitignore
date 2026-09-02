@@ -15,3 +15,23 @@ tests/screenshots/*.png
 evidence/**/keys/workspace_ed25519
 evidence/**/evidence-state.json
 evidence/**/state/
+
+# --- caid add-requirement: baseline entries not already present ---
+venv/
+dist/
+build/
+.coverage
+node_modules/
+.vite/
+.env
+*.key
+*.pem
+credentials.json
+*.db
+*.db-journal
+data/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.claude/worktrees/
