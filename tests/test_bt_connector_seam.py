@@ -19,7 +19,7 @@ import json
 import os
 from pathlib import Path
 
-from nursing_station import publications, workforce
+from nursing_station import national_routes, publications, workforce
 
 WORKSPACE = Path(
     os.environ.get("SYMPHONIX_WORKSPACE_ROOT", Path(__file__).resolve().parents[2])
@@ -144,3 +144,28 @@ def test_no_canonical_event_kind_exists_for_nursing_staffing_or_handover():
         f"BulletTrain registered {sorted(claimed)}. Nursing Station's outbound publications "
         "can now target a canonical event kind instead of stopping at the durable queue."
     )
+
+
+def test_every_discharge_criterion_owner_has_a_read_route_in_bullettrain():
+    """The four owners can answer, and can only ever be asked -- never told.
+
+    FR-NS-151 meets a criterion only from the owning system's own receipt, so
+    the day one of these routes is withdrawn the criterion silently returns to
+    permanently pending and a ward waits on an answer nobody is being asked
+    for. Read-only is asserted as firmly as existence: a write route here
+    would let this repo assert another system's criterion met, which is the
+    one thing the requirement forbids.
+    """
+    for source, contract in national_routes.DISCHARGE_CONFIRMATIONS.items():
+        routes = _exchange_routes(contract["connector"])
+        resource_type = contract["resource_type"]
+        assert resource_type in routes, (
+            f"BulletTrain no longer routes {contract['connector']}/{resource_type}, so the "
+            f"{source} discharge criterion can never be met again"
+        )
+        route = routes[resource_type]
+        assert route["operation"] == "read", (
+            f"{source} must be ASKED for its confirmation; a write route would let this "
+            "repo assert another system's criterion met"
+        )
+        assert route["method"] == "GET"

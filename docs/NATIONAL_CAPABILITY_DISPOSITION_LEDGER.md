@@ -20,7 +20,7 @@ dispositions turned out to be wrong. Line numbers are as of this commit.
 | 4 | Structured handover (`REQ-NS-NAT-004`) | BUILD-NEW | **already-covered except one leg** (audit wrong) | `FR-NS-120` |
 | 5 | Staffing / skill mix (`REQ-NS-NAT-005`) | HUB-CONSUME | **missing here AND unowned estate-wide** | `FR-NS-130`, `FR-NS-131`, `FR-NS-132`, `NFR-NS-028` |
 | 6 | Pressure injury / falls / infection (`REQ-NS-NAT-006`) | BUILD-NEW | **partial** — prevention and assessment existed; incident, review and reporting did not | `FR-NS-140`, `FR-NS-141` |
-| 7 | Discharge readiness (`REQ-NS-NAT-007`) | HUB-CONSUME | **missing** | `FR-NS-150`, `FR-NS-151` |
+| 7 | Discharge readiness (`REQ-NS-NAT-007`) | HUB-CONSUME | **built, and closed-loop since 2026-09-02** | `FR-NS-150`, `FR-NS-151` |
 | 8 | Nursing quality dataset (`REQ-NS-NAT-008`) | BUILD-NEW | **partial** — the de-identified transport existed; the dataset did not | `FR-NS-160`, `FR-NS-161` |
 | — | Country policy (audit section 5) | — | **missing** | `FR-NS-170`, `NFR-NS-027` |
 | — | Outbound national obligations | — | **missing** | `NFR-NS-029` |
@@ -323,10 +323,10 @@ BulletTrain was read **read-only**. Nothing in that repository was edited.
 | Need | Why |
 |---|---|
 | `pharmacy_system` exchange route `NursingMedicationOutcome` (write) | LANDED 2026-09-02. pharmacy-system serves `POST /api/nursing-outcomes` (idempotent by correlation id; refuses an outcome for an order it never issued or whose patient does not match) and exposes the recorded outcomes on its own nursing context; the route is on `BT-PHARMACY-SYSTEM-HUB-001`. Proven end to end by BulletTrain `scripts/verify_nursing_publication_loops.py`. **The WARD half is still blocked**: see section 7. |
-| A declare/revoke surface for `StaffingDeclaration`, and a connector route reaching it | LANDED 2026-09-02. The Role Registry serves `/api/role-assumption/staffing-declarations` (declare, revoke, list, active) over the existing governed store; the payload is exactly the six governed fields and a seventh is a 422; the surface decides no tier and says so on every response; revocation retains the declaration rather than deleting it. Reached through the new `role_assumption` connector. This repo's contract now names that connector rather than `global_agent_registry`: the governed model lives in BulletTrain's security plane, not in GHARRA. Proven end to end. |at work. |
+| A declare/revoke surface for `StaffingDeclaration`, and a connector route reaching it | LANDED 2026-09-02. The Role Registry serves `/api/role-assumption/staffing-declarations` (declare, revoke, list, active) over the existing governed store; the payload is exactly the six governed fields and a seventh is a 422; the surface decides no tier and says so on every response; revocation retains the declaration rather than deleting it. Reached through the new `role_assumption` connector. This repo's contract now names that connector rather than `global_agent_registry`: the governed model lives in BulletTrain's security plane, not in GHARRA. Proven end to end. |
 | `hmis` exchange route `NursingHarmIncidentReport` (write) | LANDED 2026-09-02. HMIS serves `POST /api/nursing-harm-incidents`: de-identified by schema (`extra=forbid`, so a patient id, a description or a reporter is a 422), idempotent by the ward's correlation id, readable back and summarised by ward. A present-on-admission pressure injury is refused as harm this ward did not acquire. Proven end to end by BulletTrain `scripts/verify_nursing_publication_loops.py`. |
 | A roster publisher and a `workforce` / `NursingRosterContext` read route | LANDED 2026-09-02. The Health Worker Registry publishes the roster (`/v1/workforce/nursing-roster`), resolving each assignment's registration from its own worker records rather than the publisher's claim; an unpublished ward-shift answers 404 'absent, not an empty shift'. Reached through the new `workforce` connector. A service identity may read a roster and may not author one. |
-| Discharge confirmation routes for `supply-chain-erp`, `community-nursing` (receipt, not dispatch), `appointment-system`, `ambulance-ems` | `FR-NS-151` meets a criterion only from the owning system's receipt. |
+| Discharge confirmation routes for `supply-chain-erp`, `community-nursing` (receipt, not dispatch), `appointment-system`, `ambulance-ems` | LANDED 2026-09-02. All four now answer the read side of `FR-NS-151`, and `DISCHARGE_CONFIRMATIONS` covers all five sources. `appointment-system` and `community-nursing` had no route and gained one; `ambulance-ems` and `supply-chain-erp` already had one that had never been reachable, because BulletTrain carried only a descriptive `*_connector_manifest.json` for each with no `connector_class` and no `runtime` block -- the hub could not dispatch to either system for any purpose. Both now have a real manifest. Proven end to end: each owner's real record was arranged, read back through the hub connector, and put through this repo's own evidence extractor. All four met their criterion from the owner's own answer; all four left it PENDING for a patient nothing was arranged for. |
 | `nursing_station` registration in `connector_registry_index.json` | LANDED 2026-09-02 on BulletTrain main: `BT-NURSING-STATION-HUB-001` is listed in the registry index beside community-nursing, so discovery-then-dispatch finds it. |
 | HMIS acceptance of the additive `measures` block on `NursingMeasureReport` | PROVEN 2026-09-02. HMIS validates the block strictly (`NursingQualityMeasure`, `NursingMeasureDefinitions`, `extra=forbid`), retains it (`0005_nursing_quality_dataset`) and echoes it on the receipt; a live submission returned all seven measures with the pack's jurisdiction and version. |
 
@@ -340,9 +340,28 @@ grading cannot rot apart.
   reporting leg are now closed-loop: both have a real receiver and both are
   proven end to end by BulletTrain
   `scripts/verify_nursing_publication_loops.py`, which reads each record back
-  out of the receiving system's own API. Family 7 (discharge coordination) is
-  still implemented to the queue: four owning systems have no confirmation
-  route, so those criteria stay pending with `hub_route_unregistered`.
+  out of the receiving system's own API.
+
+- **Family 7 closed 2026-09-02.** All four owning systems now answer the read
+  side of the discharge contract, so no criterion is stranded on
+  `hub_route_unregistered` any longer. The closure was proven, not declared:
+  each system had its real record arranged through its own API -- a referral
+  triaged onto a caseload, a follow-up booked and confirmed, a transfer driven
+  to a named handover, a supply confirmation against stock the service says it
+  holds unquarantined -- then read back through the hub connector and put
+  through this repo's own evidence extractor. What was asserted is this
+  repository's verdict on the answer, not the answer itself.
+
+  Both directions were asserted for all four, because a positive-only check
+  cannot tell a working extractor from one that confirms everything: a patient
+  nothing was arranged for left every criterion pending, with each system's own
+  typed reason.
+
+  Driving it found a real defect in `community-nursing`'s side of the contract:
+  its acceptance test named three statuses a case never takes and omitted the
+  two that mean the service has taken the patient on, so every hub-delivered
+  referral would have read as unaccepted and held a patient whose community
+  nursing was in fact arranged. Fixed and pinned in that repository.
 - The roster now has a publisher, so `NSQ-STAFF-01` and `NSQ-STAFF-02` can be
   computed for a ward whose roster is published. They still report
   `source-unavailable` for a shift nobody has published, which is the correct
