@@ -75,7 +75,9 @@ def test_signalbox_headed_persona_audit_passed_every_route_and_width() -> None:
             assert result["passed"] is True, f"{route} {result['width_name']}: {result['failures']}"
             assert result["measure"]["horizontal_scroll"] is False
             if result["width_name"] == "mobile":
-                assert set(result["checks"]) == MOBILE_CHECKS, sorted(result["checks"])
+                # SignalBox may add checks (v0.7.1 added R1_no_clipped_content);
+                # the estate's core set must always be present and passed.
+                assert MOBILE_CHECKS <= set(result["checks"]), sorted(result["checks"])
                 assert result["measure"]["inner_width"] == 375
                 assert result["measure"]["small_touch_targets"] <= 5
                 assert result["measure"]["tiny_text_count"] <= 3

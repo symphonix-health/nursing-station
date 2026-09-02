@@ -1,14 +1,14 @@
 {
  "app": "nursing-station",
  "base_url": "http://127.0.0.1:5282",
- "session_id": "nursing-station-responsive-20260902T152256",
+ "session_id": "nursing-station-responsive-20260902T155037",
  "persona": "nurse",
  "operator": "amina.okafor@nursing.test",
  "tenant": "tenant-st-brigids",
  "headed": true,
  "widths": "mobile,tablet,desktop",
  "criteria": "BulletTrain frontend/e2e/L3-VIS-responsive.spec.ts (R1, R2, R5, R6)",
- "started_at": "2026-09-02T15:23:04+01:00",
+ "started_at": "2026-09-02T15:50:44+01:00",
  "routes": {
   "/ward": {
    "passed": true,
@@ -47,10 +47,13 @@
        "DIV",
        "board-row",
        "DIV"
-      ]
+      ],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
       "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
       "R6_sidebar_hidden_on_mobile": true,
       "R6_content_fills_mobile": true,
       "R6_fields_stack_on_mobile": true,
@@ -168,10 +171,13 @@
        "badge caution",
        "sub",
        "DIV"
-      ]
+      ],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -275,10 +281,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -320,10 +329,13 @@
        "BUTTON",
        "BUTTON",
        "BUTTON"
-      ]
+      ],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
       "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
       "R6_sidebar_hidden_on_mobile": true,
       "R6_content_fills_mobile": true,
       "R6_fields_stack_on_mobile": true,
@@ -435,10 +447,13 @@
       "overflowing_elements": [
        "BUTTON",
        "BUTTON"
-      ]
+      ],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -542,10 +557,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -581,10 +599,13 @@
       "tiny_text_count": 0,
       "tiny_text_examples": [],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
       "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
       "R6_sidebar_hidden_on_mobile": true,
       "R6_content_fills_mobile": true,
       "R6_fields_stack_on_mobile": true,
@@ -693,10 +714,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -800,10 +824,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -839,10 +866,13 @@
       "tiny_text_count": 0,
       "tiny_text_examples": [],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
       "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
       "R6_sidebar_hidden_on_mobile": true,
       "R6_content_fills_mobile": true,
       "R6_fields_stack_on_mobile": true,
@@ -951,10 +981,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -1058,10 +1091,13 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": []
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
      },
      "checks": {
-      "R1_no_horizontal_scroll": true
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
      },
      "failures": [],
      "passed": true,
@@ -1070,7 +1106,7 @@
    ]
   }
  },
- "finished_at": "2026-09-02T15:23:40+01:00",
+ "finished_at": "2026-09-02T15:51:07+01:00",
  "failing_checks": [],
  "passed": true,
  "source_report": "BulletTrain docs/verification/responsive/nursing-station/latest.json",
