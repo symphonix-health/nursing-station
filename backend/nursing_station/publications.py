@@ -66,15 +66,10 @@ PUBLICATION_CONTRACTS: dict[str, PublicationContract] = {
         resource_type="NursingMedicationOutcome",
         operation="write",
         scope="pharmacy.administration.write",
-        route_status=ROUTE_UNREGISTERED,
+        route_status=ROUTE_REGISTERED,
         required_fields=(
             "tenant_id", "patient_id", "source_order_id", "outcome",
             "administered_at", "administered_by", "correlation_id",
-        ),
-        gap_note=(
-            "pharmacy_system's connector manifest exposes NursingMedicationContext (read) "
-            "but no write route for a nursing administration outcome. The outcome is "
-            "queued with its correlation id and never reported as delivered."
         ),
     ),
     KIND_STAFFING_DECLARATION: PublicationContract(
@@ -144,6 +139,11 @@ def contract(kind: str) -> PublicationContract:
 
 def missing_fields(kind: str, payload: dict) -> list[str]:
     return [field for field in contract(kind).required_fields if field not in payload]
+
+
+def deliverable_kinds() -> list[str]:
+    """The kinds a dispatch attempt may be made for today."""
+    return [item.kind for item in PUBLICATION_CONTRACTS.values() if item.deliverable]
 
 
 def open_gaps() -> list[dict]:

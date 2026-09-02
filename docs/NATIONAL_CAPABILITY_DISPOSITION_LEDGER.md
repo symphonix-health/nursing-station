@@ -322,13 +322,13 @@ BulletTrain was read **read-only**. Nothing in that repository was edited.
 
 | Need | Why |
 |---|---|
-| `pharmacy_system` exchange route `NursingMedicationOutcome` (write) | `FR-NS-111` closes the eMAR loop only when pharmacy can receive the administration/omission outcome. Today the outcome is durable and queued. |
+| `pharmacy_system` exchange route `NursingMedicationOutcome` (write) | LANDED 2026-09-02. pharmacy-system serves `POST /api/nursing-outcomes` (idempotent by correlation id; refuses an outcome for an order it never issued or whose patient does not match) and exposes the recorded outcomes on its own nursing context; the route is on `BT-PHARMACY-SYSTEM-HUB-001`. Proven end to end by BulletTrain `scripts/verify_nursing_publication_loops.py`. **The WARD half is still blocked**: see section 7. |
 | A declare/revoke surface for `StaffingDeclaration`, and a connector route reaching it | `FR-NS-132` emits the exact governed field set but has no destination. BulletTrain's own `docs/security/governed_role_assumption.md` names this API as the next part of that work. |
 | `hmis` exchange route `NursingHarmIncidentReport` (write) | `FR-NS-140` queues externally reportable ward incidents de-identified; there is no incident route on the HMIS connector. |
 | A roster publisher and a `workforce` / `NursingRosterContext` read route | `FR-NS-130` declares the consumption contract; nothing in the estate publishes a nursing roster, which is why two quality measures report `source-unavailable`. |
 | Discharge confirmation routes for `supply-chain-erp`, `community-nursing` (receipt, not dispatch), `appointment-system`, `ambulance-ems` | `FR-NS-151` meets a criterion only from the owning system's receipt. |
 | `nursing_station` registration in `connector_registry_index.json` | LANDED 2026-09-02 on BulletTrain main: `BT-NURSING-STATION-HUB-001` is listed in the registry index beside community-nursing, so discovery-then-dispatch finds it. |
-| HMIS acceptance of the additive `measures` block on `NursingMeasureReport` | The six required envelope keys are unchanged, so delivery is unaffected, but HMIS-side handling of `measures` is unproven. |
+| HMIS acceptance of the additive `measures` block on `NursingMeasureReport` | PROVEN 2026-09-02. HMIS validates the block strictly (`NursingQualityMeasure`, `NursingMeasureDefinitions`, `extra=forbid`), retains it (`0005_nursing_quality_dataset`) and echoes it on the receipt; a live submission returned all seven measures with the pack's jurisdiction and version. |
 
 `tests/test_bt_connector_seam.py` pins every one of these read-only and turns
 **red** the day any of them lands, so the gap notes, this ledger and the family
@@ -368,3 +368,44 @@ grading cannot rot apart.
   a separate change with its own blast radius, so it was recorded rather than
   bundled into this wave. The identical before/after output is also the control
   proving the committed audit copy leaked no phantom obligations.
+
+## 8. What driving the loops found (2026-09-02)
+
+Landing the receivers meant driving the seams for real, and two defects
+surfaced that no test in either repository could have caught, because both
+sides were individually correct.
+
+**Every sibling read was keyed on the wrong identifier.** `_integration_payload`
+sent `source_patient_id` -- picis's local encounter id, `pat-ava` -- to
+pharmacy-system and pacs-ris, which key on the shared cross-system identifier
+(`9991000003`). Both answered HTTP 200 with empty collections, and the ward's
+Integrations tab rendered that as "Patient context received; no reportable
+items". A clinician reading that surface would conclude the patient had no
+medication and no imaging. Verified against both live services: keyed on
+`pat-ava` they return zero rows; keyed on the shared identifier they return the
+seeded cohort. Fixed in `main.py::_integration_payload` and in the discharge
+coordination, which had the same fault; pinned by
+`test_every_sibling_read_is_keyed_on_the_shared_cross_system_identifier`.
+
+**The eMAR loop's ward half is blocked one layer deeper.** With the identifier
+corrected, pharmacy returns five real medication requests for the seeded
+patient -- and `FR-NS-110` maps none of them. pharmacy-system publishes a single
+free-text `dose` (`"1 tablet BD"`) with no `dose_unit`, `route` or `due_at`, and
+the upstream `prescription.for_dispense` event it is built from carries only a
+free-text `dosage` string. Nursing Station refuses to infer the missing fields,
+which is `FR-NS-043` working as written, so no hub-sourced order exists for a
+nurse to administer. Nothing here fabricates one. The outcome route, its
+refusals and its receipt are proven against a real pharmacy medication request
+through the real connector; the ward half stays open until pharmacy-system
+publishes a structured dosage instruction, and that is now the named owner of
+this gap rather than the missing route.
+
+**The queue had no dispatcher.** `STATUS_PUBLISHED` was declared and never
+written, which was honest while every destination was missing. `POST
+/api/publications/{id}/dispatch` and `POST /api/publications/dispatch` now send
+deliverable publications, move them to `published` only on a receipt, keep a
+typed failure otherwise, and report a kind with no route as skipped with its
+named gap rather than failed. The HMIS quality submission moved onto the same
+durable path: it previously dispatched straight from memory, so a crash between
+building the payload and hearing back left no record that the obligation
+existed (`NFR-NS-029`).

@@ -76,3 +76,12 @@ screenshots, and the responsive audit of every route under
 from `GET /api/country-pack` (`early_warning`), asserted in
 `tests/test_national_capability.py`; `FR-NS-092`'s open interruptions are
 served with their identifiers on the work queue so they can be resumed.
+
+`FR-NS-111` (medication outcome) and `NFR-NS-029` (durable outbound
+publication) are evidenced end to end by BulletTrain
+`scripts/verify_nursing_publication_loops.py`, which drives each seam through
+the real connector against the real receiving service and refuses to report a
+delivery it cannot read back from that service's own API. Its report is
+`BulletTrain/docs/verification/publication-loops/nursing-station/latest.json`.
+The medication seam records which leg it proved and names the blocker on the
+ward half; see the disposition ledger section 8.

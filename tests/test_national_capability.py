@@ -439,6 +439,14 @@ def test_an_administered_order_is_never_overwritten_by_a_later_snapshot(client, 
 
 
 def test_a_hub_sourced_outcome_is_queued_and_never_reported_as_delivered(client, charge):
+    """Administration writes the obligation; it does not deliver it.
+
+    pharmacy_system now publishes the NursingMedicationOutcome write route, so
+    this outcome CAN be delivered -- but recording an administration still only
+    queues it. Delivery is a separate, explicit dispatch that must hear a
+    receipt, so a pharmacy outage can never be hidden inside a nurse's
+    administration succeeding.
+    """
     order_id = _reconcile()["created"][0]
     recorded = client.post(
         f"/api/medication-orders/{order_id}/administrations", headers=charge,
@@ -448,7 +456,6 @@ def test_a_hub_sourced_outcome_is_queued_and_never_reported_as_delivered(client,
     ).json()
     assert recorded["publication_status"] == publications.STATUS_PENDING
     assert recorded["publication_id"]
-    assert "no write route" in recorded["publication_note"]
 
     queue = client.get("/api/publications", headers=charge).json()
     entry = next(p for p in queue["publications"] if p["id"] == recorded["publication_id"])
@@ -457,6 +464,51 @@ def test_a_hub_sourced_outcome_is_queued_and_never_reported_as_delivered(client,
     assert entry["status"] == publications.STATUS_PENDING
     assert entry["completed_at"] is None
     assert entry["correlation_id"].startswith("ns-medadmin-")
+    assert entry["receipt_json"] is None if "receipt_json" in entry else True
+
+
+def test_dispatching_without_a_configured_hub_fails_loudly_and_keeps_the_obligation(
+    client, charge
+):
+    """No hub, no delivery, and the row still says pending -- not delivered.
+
+    The test environment configures no BulletTrain hub, so this is the honest
+    unavailable path: the dispatch refuses with 503 and the publication is left
+    exactly where it was for a retry.
+    """
+    order_id = _reconcile()["created"][0]
+    recorded = client.post(
+        f"/api/medication-orders/{order_id}/administrations", headers=charge,
+        json={"outcome": "withheld", "reason": "Systolic below the hold parameter",
+              "mrn_verified": "MRN-104401", "date_of_birth_verified": "1964-12-30",
+              "cosigner_id": None},
+    ).json()
+    publication_id = recorded["publication_id"]
+    response = client.post(f"/api/publications/{publication_id}/dispatch", headers=charge)
+    assert response.status_code == 503, response.text
+    assert response.json()["detail"]["code"] == "integration_not_configured"
+    queue = client.get("/api/publications", headers=charge).json()
+    entry = next(p for p in queue["publications"] if p["id"] == publication_id)
+    assert entry["status"] == publications.STATUS_PENDING
+    assert entry["completed_at"] is None
+
+
+def test_dispatch_is_role_gated_and_skips_kinds_with_no_route(client, headers, charge):
+    assert client.post("/api/publications/dispatch", headers=headers).status_code == 403
+    # A staffing declaration has no BulletTrain destination; draining the queue
+    # reports it as skipped with its named gap rather than attempting a delivery
+    # that cannot land.
+    client.post(
+        "/api/wards/ward-med-a/staffing-declarations", headers=charge,
+        json={"reason": "Two registered nurses off sick on a high-acuity ward tonight."},
+    )
+    drained = client.post("/api/publications/dispatch?kind=staffing.shortage.declaration",
+                          headers=charge)
+    assert drained.status_code == 200, drained.text
+    body = drained.json()
+    assert body["attempted"] == 0
+    assert body["skipped_unregistered"]
+    assert all(item["gap"] for item in body["skipped_unregistered"])
 
 
 def test_a_locally_authored_order_creates_no_external_obligation(client, headers):
@@ -801,9 +853,16 @@ def test_the_measure_payload_carries_no_patient_identifiers(client, headers, cha
 def test_the_publication_surface_names_every_open_bullettrain_gap(client, charge):
     body = client.get("/api/publications", headers=charge).json()
     contracts = {row["kind"]: row for row in body["contracts"]}
-    assert contracts[publications.KIND_QUALITY_DATASET]["route_status"] == "registered"
+    # Registered destinations: HMIS measures, and pharmacy's administration
+    # outcome since BT-PHARMACY-SYSTEM-HUB-001 gained NursingMedicationOutcome.
     for kind in (
+        publications.KIND_QUALITY_DATASET,
         publications.KIND_MEDICATION_OUTCOME,
+    ):
+        assert contracts[kind]["route_status"] == "registered"
+        assert not contracts[kind]["gap"]
+    # Still owned by nobody, and said so rather than faked.
+    for kind in (
         publications.KIND_STAFFING_DECLARATION,
         publications.KIND_HARM_INCIDENT,
     ):
@@ -835,3 +894,25 @@ def test_work_queue_carries_open_interruption_ids_until_resumed(client, headers)
     queue = client.get("/api/ward-board/work-queue", headers=headers).json()
     entry = next(row for row in queue["entries"] if row["id"] == "task-002")
     assert entry["open_interruptions"] == []
+
+
+# ---------------------------------------------------------------------------
+# FR-NS-110 / NFR-NS-015 -- every sibling read is keyed on the SHARED identifier
+# ---------------------------------------------------------------------------
+def test_every_sibling_read_is_keyed_on_the_shared_cross_system_identifier():
+    """picis's local encounter id means nothing to pharmacy or pacs-ris.
+
+    Sending it produced an empty 200 from both -- a context the ward rendered
+    as "no reportable items" rather than "asked with the wrong key". The value
+    is now always the shared identifier; only the parameter NAME differs,
+    because the connector routes name it differently.
+    """
+    from nursing_station.main import _integration_payload
+
+    patient = {"external_nhs_number": "9991000003", "source_patient_id": "pat-ava"}
+    for source in ("picis-system", "lis", "blood-transfusion", "pharmacy-system", "pacs-ris"):
+        payload = _integration_payload(patient, source)
+        assert list(payload.values()) == ["9991000003"], (source, payload)
+        assert "pat-ava" not in payload.values()
+    assert set(_integration_payload(patient, "pharmacy-system")) == {"patient_id"}
+    assert set(_integration_payload(patient, "lis")) == {"external_nhs_number"}

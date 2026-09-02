@@ -917,7 +917,9 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
             try:
                 exchanged = await hub.exchange(
                     connector=contract["connector"], resource_type=contract["resource_type"],
-                    operation="read", payload={"patient_id": patient["source_patient_id"]},
+                    # The shared cross-system identifier, not picis's local encounter
+                    # id: see _integration_payload in main.py for the evidence.
+                    operation="read", payload={"patient_id": patient["external_nhs_number"]},
                     tenant_id=user.tenant_id, actor_id=user.id, role=user.role,
                     correlation_id=correlation_id,
                 )
@@ -1288,6 +1290,125 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
                 }
                 for contract in publications.PUBLICATION_CONTRACTS.values()
             ],
+        }
+
+    # ------------------------------------------------------------------
+    # Dispatch the durable queue -- NFR-NS-029
+    # ------------------------------------------------------------------
+    async def _dispatch_one(row: dict, user: Any) -> dict:
+        """Send one pending publication and record what actually came back.
+
+        A publication moves to ``published`` only on a hub success envelope,
+        with the sibling's own receipt stored beside it. Anything else is a
+        typed failure the queue keeps, so a retry is possible and nothing is
+        reported as delivered that was not.
+        """
+        contract = publications.contract(row["kind"])
+        if not contract.deliverable:
+            return {
+                "publication_id": row["id"], "status": row["status"],
+                "error_code": "hub_route_unregistered", "message": contract.gap_note,
+            }
+        if row["status"] == publications.STATUS_PUBLISHED:
+            return {"publication_id": row["id"], "status": row["status"], "duplicate": True}
+        try:
+            hub = HubClient(settings())
+        except IntegrationError as exc:
+            raise HTTPException(
+                status_code=503, detail={"code": exc.code, "message": exc.detail}
+            ) from exc
+        payload = json.loads(row["payload_json"])
+        try:
+            exchanged = await hub.exchange(
+                connector=contract.connector,
+                resource_type=contract.resource_type,
+                operation=contract.operation,
+                payload=payload,
+                tenant_id=row["tenant_id"],
+                actor_id=user.id,
+                role=user.role,
+                correlation_id=row["correlation_id"],
+                scopes=[contract.scope],
+            )
+        except IntegrationError as exc:
+            db().execute(
+                """UPDATE outbound_publications SET status=?,error_code=?,error_detail=?,
+                attempts=attempts+1 WHERE id=?""",
+                (publications.STATUS_FAILED, exc.code, exc.detail, row["id"]),
+            )
+            return {
+                "publication_id": row["id"], "status": publications.STATUS_FAILED,
+                "error_code": exc.code, "message": exc.detail,
+            }
+        receipt = exchanged["body"]
+        db().execute(
+            """UPDATE outbound_publications SET status=?,error_code=NULL,error_detail=NULL,
+            receipt_json=?,hub_audit_event_id=?,attempts=attempts+1,completed_at=? WHERE id=?""",
+            (
+                publications.STATUS_PUBLISHED,
+                json.dumps(receipt, default=str),
+                exchanged.get("hub_audit_event_id"),
+                ctx.now(),
+                row["id"],
+            ),
+        )
+        return {
+            "publication_id": row["id"], "status": publications.STATUS_PUBLISHED,
+            "receipt": receipt, "hub_audit_event_id": exchanged.get("hub_audit_event_id"),
+        }
+
+    @router.post("/api/publications/{publication_id}/dispatch")
+    async def dispatch_publication(
+        publication_id: str, user: CurrentUser = Depends(ctx.current_user)
+    ) -> dict:
+        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        row = db().fetchone(
+            "SELECT * FROM outbound_publications WHERE id=? AND tenant_id=?",
+            (publication_id, user.tenant_id),
+        )
+        if not row:
+            raise HTTPException(status_code=404, detail="Publication not found")
+        return await _dispatch_one(row, user)
+
+    @router.post("/api/publications/dispatch")
+    async def dispatch_pending_publications(
+        user: CurrentUser = Depends(ctx.current_user),
+        kind: str | None = Query(default=None),
+    ) -> dict:
+        """Drain the deliverable pending queue.
+
+        Only kinds whose BulletTrain route exists are attempted; the rest keep
+        their named gap and are reported as skipped rather than failed, because
+        a missing destination is not a delivery error.
+        """
+        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        deliverable = publications.deliverable_kinds()
+        clauses = ["tenant_id=?", "status<>?"]
+        params: list[Any] = [user.tenant_id, publications.STATUS_PUBLISHED]
+        if kind:
+            clauses.append("kind=?")
+            params.append(kind)
+        rows = db().fetchall(
+            f"SELECT * FROM outbound_publications WHERE {' AND '.join(clauses)}"
+            f" ORDER BY created_at LIMIT 50",
+            tuple(params),
+        )
+        results = []
+        skipped = []
+        for row in rows:
+            if row["kind"] not in deliverable:
+                skipped.append({
+                    "publication_id": row["id"], "kind": row["kind"],
+                    "gap": publications.contract(row["kind"]).gap_note,
+                })
+                continue
+            results.append(await _dispatch_one(row, user))
+        return {
+            "attempted": len(results),
+            "published": len([r for r in results if r["status"] == publications.STATUS_PUBLISHED]),
+            "failed": len([r for r in results if r["status"] == publications.STATUS_FAILED]),
+            "skipped_unregistered": skipped,
+            "results": results,
         }
 
     return router

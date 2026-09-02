@@ -119,6 +119,7 @@ class HubClient:
         role: str,
         correlation_id: str,
         purpose_of_use: str = "treatment",
+        scopes: list[str] | None = None,
     ) -> dict[str, Any]:
         request_body = {
             "tenant_id": tenant_id,
@@ -129,7 +130,12 @@ class HubClient:
             "standard": "fhir-r4-semantics",
             "resource_type": resource_type,
             "purpose_of_use": purpose_of_use,
-            "scopes": ["nursing.context.read"] if operation == "read" else ["hmis.measure.write"],
+            # The caller passes the scope its publication contract declares. The
+            # default is the read scope; a write that supplies none would be
+            # asking for a scope that belongs to a different destination, which
+            # is what the hardcoded hmis.measure.write literal used to do for
+            # every write regardless of connector.
+            "scopes": scopes or ["nursing.context.read"],
             "roles": [role],
             "source_system": "nursing-station",
         }

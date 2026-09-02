@@ -456,9 +456,21 @@ def reconcile_medication_orders(
 
 
 def _integration_payload(patient: dict, source: str) -> dict:
+    """Which identifier each sibling's read route is keyed on.
+
+    The KEY differs because the connector routes name their parameter
+    differently; the VALUE is always the shared cross-system identifier.
+    ``source_patient_id`` is the identifier picis issued for its own encounter
+    and means nothing to another system: sending it to pharmacy-system and
+    pacs-ris returned an empty 200 for every patient, which the ward surface
+    rendered as "context received, no reportable items" -- a silent false
+    negative on a patient's medication and imaging context, and the reason the
+    eMAR reconciliation had nothing to reconcile. Verified 2026-09-02 against
+    both live services: keyed on "pat-ava" they return zero rows, keyed on
+    "9991000003" they return the seeded cohort.
+    """
     key = "external_nhs_number" if source in {"picis-system", "lis", "blood-transfusion"} else "patient_id"
-    value = patient["external_nhs_number"] if key == "external_nhs_number" else patient["source_patient_id"]
-    return {key: value}
+    return {key: patient["external_nhs_number"]}
 
 
 @app.get("/api/patients/{patient_id}/integrations")
@@ -688,23 +700,67 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
         },
     }
     correlation_id = new_id("ns-hmis")
+    # NFR-NS-029: the obligation is durable BEFORE any transport. A crash
+    # between building this payload and hearing back from HMIS now leaves a
+    # replayable pending row rather than a lost submission.
+    contract = publications.contract(publications.KIND_QUALITY_DATASET)
+    missing = publications.missing_fields(publications.KIND_QUALITY_DATASET, payload)
+    if missing:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Quality dataset payload is missing contract fields: {missing}",
+        )
+    publication_id = new_id("publication")
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+    with db.connect() as conn:
+        conn.execute(
+            """INSERT INTO outbound_publications
+            (id,tenant_id,kind,connector,resource_type,operation,resource_id,correlation_id,
+             content_hash,payload_json,status,error_code,error_detail,receipt_json,
+             hub_audit_event_id,attempts,created_by,created_at,completed_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,NULL,0,?,?,NULL)""",
+            (
+                publication_id, user.tenant_id, publications.KIND_QUALITY_DATASET,
+                contract.connector, contract.resource_type, contract.operation, ward_id,
+                correlation_id, hashlib.sha256(canonical.encode()).hexdigest(), canonical,
+                publications.STATUS_PENDING, user.id, now(),
+            ),
+        )
     try:
         exchanged = await hub.exchange(
             connector="hmis", resource_type="NursingMeasureReport", operation="write",
             payload=payload, tenant_id=user.tenant_id, actor_id=user.id, role=user.role,
             correlation_id=correlation_id, purpose_of_use="operations",
+            scopes=[contract.scope],
         )
     except IntegrationError as exc:
         with db.connect() as conn:
+            conn.execute(
+                """UPDATE outbound_publications SET status=?,error_code=?,error_detail=?,
+                attempts=attempts+1 WHERE id=?""",
+                (publications.STATUS_FAILED, exc.code, exc.detail, publication_id),
+            )
             db.audit(
                 conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
                 action="hmis.measure.failed", resource_type="MeasureReport",
                 resource_id=correlation_id, patient_id=None,
-                details={"ward_id": ward_id, "error_code": exc.code, "correlation_id": correlation_id},
+                details={"ward_id": ward_id, "error_code": exc.code,
+                         "correlation_id": correlation_id, "publication_id": publication_id},
             )
         raise HTTPException(status_code=502, detail={"code": exc.code, "message": exc.detail}) from exc
     submitted_at = now()
     with db.connect() as conn:
+        conn.execute(
+            """UPDATE outbound_publications SET status=?,receipt_json=?,hub_audit_event_id=?,
+            attempts=attempts+1,completed_at=? WHERE id=?""",
+            (
+                publications.STATUS_PUBLISHED,
+                json.dumps(exchanged["body"], default=str),
+                exchanged.get("hub_audit_event_id"),
+                submitted_at,
+                publication_id,
+            ),
+        )
         for result in quality_results:
             conn.execute(
                 """INSERT INTO quality_measure_results
@@ -719,7 +775,7 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
                 (new_id("measure"), user.tenant_id, ward_id, period[0], period[1],
                  result.measure_id, result.measure_type, result.numerator, result.denominator,
                  result.value, result.unit, result.status, result.source_id,
-                 pack.jurisdiction, pack.pack_version, submitted_at, correlation_id),
+                 pack.jurisdiction, pack.pack_version, submitted_at, publication_id),
             )
         db.audit(
             conn, event_id=new_id("audit"), tenant_id=user.tenant_id, actor_id=user.id,
@@ -730,7 +786,12 @@ async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
                      "measure_ids": [r.measure_id for r in quality_results],
                      "hub_audit_event_id": exchanged.get("hub_audit_event_id")},
         )
-    return {"correlation_id": correlation_id, "measures": payload, "receipt": exchanged["body"]}
+    return {
+        "correlation_id": correlation_id,
+        "publication_id": publication_id,
+        "measures": payload,
+        "receipt": exchanged["body"],
+    }
 
 
 @app.get("/api/governance/seed")
