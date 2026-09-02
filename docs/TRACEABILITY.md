@@ -50,3 +50,17 @@ requirement obligations for any gate that scrapes them.
 The agent persona prepares and recommends; the human decides. The approved
 synthetic clinical-simulation scope cannot be interpreted as live-patient,
 professional-registration, statutory, or medical-device approval.
+
+`NFR-NS-031` (responsive layout, landed 2026-09-02) is evidenced by
+`tests/test_responsive_layout.py`, which pins the phone-width stylesheet rules
+(off-screen navigation drawer, 44px controls, 12px minimum text, single-column
+grids) and refuses `evidence/signalbox-responsive/latest.json` unless it was
+produced by SignalBox's `browser_responsive_audit` in a HEADED, persona-driven
+session against the running application with every route and width passing
+the estate criteria (BulletTrain `frontend/e2e/L3-VIS-responsive.spec.ts`).
+The report and SignalBox's own screenshots per width live under
+`evidence/signalbox-responsive/`; the driver is BulletTrain
+`scripts/signalbox_responsive_audit.py`. The defect this closes was found by a
+person looking at a 375px window, not by any automated check: there was no
+horizontal overflow, so a scrollWidth test passed while the navigation stayed
+on screen and the metadata rendered at 9px.

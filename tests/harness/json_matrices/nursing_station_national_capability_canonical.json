@@ -22,11 +22,11 @@
   ],
   "metadata": {
     "subsystem": "nursing-station",
-    "scenario_count": 40,
+    "scenario_count": 45,
     "distribution": {
-      "Positive": 34,
-      "Negative": 4,
-      "Edge": 2
+      "Positive": 37,
+      "Negative": 5,
+      "Edge": 3
     },
     "requirement_ids": [
       "FR-NS-090",
@@ -50,7 +50,8 @@
       "NFR-NS-027",
       "NFR-NS-028",
       "NFR-NS-029",
-      "NFR-NS-030"
+      "NFR-NS-030",
+      "NFR-NS-031"
     ],
     "mapping_policy": "authored one-flow-per-row national capability scenarios"
   },
@@ -2168,6 +2169,266 @@
         "quality",
         "Edge",
         "FR-NS-160"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-SERVED-0041",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC01"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-031 Responsive layout evidence served at runtime: The service serves the retained SignalBox responsive-audit report, headed and persona-driven, with every route and width passed",
+      "description": "The service serves the retained SignalBox responsive-audit report, headed and persona-driven, with every route and width passed",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/responsive-evidence"
+      },
+      "input_payload": {
+        "viewer": "usr-amina"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status": "passed",
+        "headed": true,
+        "persona": "nurse",
+        "routes": [
+          "/ward",
+          "/patients/pat-005",
+          "/tasks",
+          "/governance"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "responsive",
+        "Positive",
+        "NFR-NS-031"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-AUTH-0042",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "scenario_category": "Negative",
+      "title": "NFR-NS-031 Responsive layout evidence served at runtime: Responsive-audit evidence is served only to signed-in staff",
+      "description": "Responsive-audit evidence is served only to signed-in staff",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/responsive-evidence"
+      },
+      "input_payload": {
+        "authorization": "absent"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 401
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "responsive",
+        "Negative",
+        "NFR-NS-031"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-UNKNOWN-ROUTE-0043",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "scenario_category": "Edge",
+      "title": "NFR-NS-031 Responsive layout evidence served at runtime: A route the audit never visited yields no evidence rather than a fabricated pass",
+      "description": "A route the audit never visited yields no evidence rather than a fabricated pass",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/responsive-evidence"
+      },
+      "input_payload": {
+        "route": "/never-audited"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "status_code": 404
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "responsive",
+        "Edge",
+        "NFR-NS-031"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-ROUTE-DETAIL-0044",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-031 Responsive layout evidence served at runtime: Per-route evidence carries each width's checks and SignalBox's own screenshot reference",
+      "description": "Per-route evidence carries each width's checks and SignalBox's own screenshot reference",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/responsive-evidence"
+      },
+      "input_payload": {
+        "route": "/ward"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "route": "/ward",
+        "results": [
+          "mobile",
+          "tablet",
+          "desktop"
+        ],
+        "each_result": [
+          "checks",
+          "failures",
+          "screenshot"
+        ]
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "responsive",
+        "Positive",
+        "NFR-NS-031"
+      ]
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-PROVENANCE-0045",
+      "subsystem": "nursing-station",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "scenario_category": "Positive",
+      "title": "NFR-NS-031 Responsive layout evidence served at runtime: The served evidence names the SignalBox session, the driving persona and the estate criteria it was measured against",
+      "description": "The served evidence names the SignalBox session, the driving persona and the estate criteria it was measured against",
+      "preconditions": [
+        "Durable governed synthetic database is initialised with the ward MED-A cohort",
+        "Active country pack is the IE pack at its committed version"
+      ],
+      "trigger": {
+        "method": "GET",
+        "path": "/api/governance/responsive-evidence"
+      },
+      "input_payload": {
+        "inspect": "provenance"
+      },
+      "expected_connector_calls": [],
+      "expected_events": [],
+      "expected_outputs": {
+        "session_id": "nursing-station-responsive-*",
+        "persona": "nurse",
+        "criteria": "L3-VIS-responsive.spec.ts"
+      },
+      "fault_profile": {
+        "kind": "none"
+      },
+      "security_profile": {
+        "tenant_scoped": true,
+        "facility_scoped": true,
+        "ward_scoped": true,
+        "audit_required": true,
+        "named_human_required": false
+      },
+      "priority": "high",
+      "automation_status": "automated",
+      "estimated_duration_seconds": 3,
+      "tags": [
+        "national-capability",
+        "responsive",
+        "Positive",
+        "NFR-NS-031"
       ]
     }
   ]

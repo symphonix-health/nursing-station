@@ -9,14 +9,16 @@ import {
   HeartPulse,
   LayoutDashboard,
   LogOut,
+  Menu,
   Moon,
   Network,
   RefreshCw,
   ShieldCheck,
   Sun,
   UsersRound,
+  X,
 } from 'lucide-react'
-import { NavLink, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { auth, request } from './api/client'
 import type {
   CarePlan,
@@ -146,6 +148,17 @@ function ClinicalAlerts({ privacy }: { privacy: boolean }) {
 function Layout({ user }: { user: User }) {
   const navigate = useNavigate()
   const [privacy, setPrivacy] = useState(sessionStorage.getItem('nursing-privacy') === 'on')
+  // Phone widths show the primary navigation as an off-canvas drawer
+  // (hidden until the 44px toggle opens it) instead of a full-width bar.
+  const [navOpen, setNavOpen] = useState(false)
+  const location = useLocation()
+  useEffect(() => { setNavOpen(false) }, [location.pathname])
+  useEffect(() => {
+    if (!navOpen) return
+    const onKey = (event: globalThis.KeyboardEvent) => { if (event.key === 'Escape') setNavOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [navOpen])
 
   function togglePrivacy() {
     setPrivacy(current => {
@@ -163,8 +176,9 @@ function Layout({ user }: { user: User }) {
   return (
     <div className="bt-app">
       <a className="skip-link" href="#main-content">Skip to main content</a>
-      <div className="bt-shell">
-        <aside className="bt-sidebar" aria-label="Primary navigation">
+      <div className={navOpen ? 'bt-shell nav-open' : 'bt-shell'}>
+        <button type="button" className="nav-backdrop" aria-label="Close navigation" tabIndex={navOpen ? 0 : -1} onClick={() => setNavOpen(false)} />
+        <aside id="primary-navigation" className="bt-sidebar" aria-label="Primary navigation">
           <div className="brand">
             <div className="brand-mark"><HeartPulse size={21} /></div>
             <div className="brand-text">
@@ -182,9 +196,21 @@ function Layout({ user }: { user: User }) {
           </div>
         </aside>
         <header className="bt-header">
-          <div>
-            <div className="header-title">Clinical operations</div>
-            <div className="header-meta">Phase 2 / durable nursing record / governed sibling context</div>
+          <div className="header-lead">
+            <button
+              type="button"
+              className="btn nav-toggle"
+              aria-label={navOpen ? 'Close navigation' : 'Open navigation'}
+              aria-expanded={navOpen}
+              aria-controls="primary-navigation"
+              onClick={() => setNavOpen(open => !open)}
+            >
+              {navOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+            <div>
+              <div className="header-title">Clinical operations</div>
+              <div className="header-meta">Phase 2 / durable nursing record / governed sibling context</div>
+            </div>
           </div>
           <div className="header-actions">
             <button className="btn" aria-pressed={privacy} onClick={togglePrivacy}>
@@ -819,6 +845,57 @@ function TasksPage({ privacy }: { privacy: boolean }) {
   )
 }
 
+type ResponsiveEvidence = {
+  status: 'passed' | 'failed'
+  headed: boolean
+  persona: string
+  session_id: string
+  criteria: string
+  widths: string
+  verified_at: string
+  failing_checks: string[]
+  routes: Record<string, { passed: boolean; widths: string[]; failing_checks: string[] }>
+}
+
+function ResponsiveEvidencePanel() {
+  const { data, error } = useQuery({
+    queryKey: ['responsive-evidence'],
+    queryFn: () => request<ResponsiveEvidence>('/api/governance/responsive-evidence'),
+  })
+  return (
+    <section className="panel governance-panel" aria-labelledby="responsive-evidence-heading">
+      <div className="panel-head">
+        <h2 id="responsive-evidence-heading">Responsive layout evidence</h2>
+        {data && <Status kind={data.status === 'passed' ? 'normal' : 'danger'} label={data.status === 'passed' ? 'All checks passed' : 'Checks failed'} />}
+      </div>
+      {error && <div className="alert caution" role="status"><FileClock size={18} /><div>{(error as Error).message}</div></div>}
+      {data && (
+        <>
+          <p>
+            SignalBox responsive audit, {data.headed ? 'headed' : 'headless'} session driven as persona {data.persona || 'unknown'}, verified {data.verified_at ? new Date(data.verified_at).toLocaleString() : 'unknown'}.
+            Criteria: {data.criteria}. Widths: {data.widths}.
+          </p>
+          <div className="table-scroll">
+            <table className="table" aria-label="Responsive audit by route">
+              <thead><tr><th>Route</th><th>Widths</th><th>Result</th></tr></thead>
+              <tbody>
+                {Object.entries(data.routes).map(([route, entry]) => (
+                  <tr key={route}>
+                    <td className="num">{route}</td>
+                    <td>{entry.widths.join(' / ')}</td>
+                    <td>{entry.passed ? <Status kind="normal" label="Passed" /> : <Status kind="danger" label={entry.failing_checks.join('; ') || 'Failed'} />}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="sub">Session {data.session_id}. Served from the retained report; a unit test or generated matrix alone is not responsive evidence.</p>
+        </>
+      )}
+    </section>
+  )
+}
+
 function GovernancePage() {
   const { data: health, error } = useQuery({
     queryKey: ['health'],
@@ -843,6 +920,7 @@ function GovernancePage() {
           <p className="sub">Real patient data: {String(seed.declaration.contains_real_patient_data)} / real person data: {String(seed.declaration.contains_real_person_data)} / pseudonymised real data: {String(seed.declaration.contains_pseudonymised_real_data)} / live clinical source: {String(seed.declaration.source_is_live_clinical_system)}.</p>
         </section>
       )}
+      <ResponsiveEvidencePanel />
       <div className="panel governance-panel">
         <h2>Phase boundary</h2>
         <p>Phase 2 preserves durable nursing-owned workflows and adds governed BulletTrain context from the real seeded sibling services. Critical LIS results enter the ward alert feed through an authenticated, audited hub event and require explicit nurse acknowledgement.</p>

@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import os
+from pathlib import Path
 import sqlite3
 import uuid
 from contextlib import asynccontextmanager
@@ -739,6 +741,128 @@ def seed_governance(_: UserDep) -> dict:
     row["record_counts"] = json.loads(row.pop("record_counts_json"))
     row["declaration"] = json.loads(row.pop("declaration_json"))
     return row
+
+
+RESPONSIVE_EVIDENCE_PATH = Path(
+    os.environ.get(
+        "NURSING_STATION_RESPONSIVE_EVIDENCE_PATH",
+        str(Path(__file__).resolve().parents[2] / "evidence" / "signalbox-responsive" / "latest.json"),
+    )
+)
+
+
+@app.get("/api/governance/responsive-evidence")
+def responsive_evidence(_: UserDep, route: str | None = None) -> dict:
+    """The retained SignalBox responsive-audit report for this frontend (NFR-NS-031).
+
+    Served, not asserted: the report is what a person could watch being made
+    (a headed, persona-driven SignalBox session against the running app). An
+    absent report is reported absent (503), a route the audit did not visit is
+    404, and a failed check is surfaced as failed -- never rewritten as passed.
+    """
+    if not RESPONSIVE_EVIDENCE_PATH.is_file():
+        raise HTTPException(
+            status_code=503,
+            detail="Responsive-audit evidence is absent; run the SignalBox responsive audit",
+        )
+    try:
+        report = json.loads(RESPONSIVE_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise HTTPException(status_code=503, detail=f"Responsive-audit evidence unreadable: {exc}") from exc
+    routes = report.get("routes") or {}
+    summary = {
+        "status": "passed" if report.get("passed") is True else "failed",
+        "headed": bool(report.get("headed")),
+        "persona": report.get("persona") or "",
+        "operator": report.get("operator") or "",
+        "session_id": report.get("session_id") or "",
+        "criteria": report.get("criteria") or "",
+        "widths": report.get("widths") or "",
+        "verified_at": report.get("finished_at") or report.get("started_at") or "",
+        "failing_checks": list(report.get("failing_checks") or []),
+        "source": "evidence/signalbox-responsive/latest.json",
+    }
+    if route is not None:
+        entry = routes.get(route)
+        if entry is None:
+            raise HTTPException(status_code=404, detail=f"No responsive-audit evidence for route {route!r}")
+        keys = ("width_name", "width", "height", "passed", "checks", "failures", "screenshot")
+        return {
+            **summary,
+            "route": route,
+            "passed": bool(entry.get("passed")),
+            "results": [{k: r.get(k) for k in keys} for r in entry.get("results") or []],
+        }
+    summary["routes"] = {
+        path: {
+            "passed": bool(entry.get("passed")),
+            "widths": [r.get("width_name") for r in entry.get("results") or []],
+            "failing_checks": list(entry.get("failing_checks") or []),
+        }
+        for path, entry in routes.items()
+    }
+    return summary
+
+
+RESPONSIVE_EVIDENCE_PATH = Path(
+    os.environ.get(
+        "NURSING_STATION_RESPONSIVE_EVIDENCE_PATH",
+        str(Path(__file__).resolve().parents[2] / "evidence" / "signalbox-responsive" / "latest.json"),
+    )
+)
+
+
+@app.get("/api/governance/responsive-evidence")
+def responsive_evidence(_: UserDep, route: str | None = None) -> dict:
+    """The retained SignalBox responsive-audit report for this frontend (NFR-NS-031).
+
+    Served, not asserted: the report is what a person could watch being made
+    (a headed, persona-driven SignalBox session against the running app). An
+    absent report is reported absent (503), a route the audit did not visit is
+    404, and a failed check is surfaced as failed -- never rewritten as passed.
+    """
+    if not RESPONSIVE_EVIDENCE_PATH.is_file():
+        raise HTTPException(
+            status_code=503,
+            detail="Responsive-audit evidence is absent; run the SignalBox responsive audit",
+        )
+    try:
+        report = json.loads(RESPONSIVE_EVIDENCE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise HTTPException(status_code=503, detail=f"Responsive-audit evidence unreadable: {exc}") from exc
+    routes = report.get("routes") or {}
+    summary = {
+        "status": "passed" if report.get("passed") is True else "failed",
+        "headed": bool(report.get("headed")),
+        "persona": report.get("persona") or "",
+        "operator": report.get("operator") or "",
+        "session_id": report.get("session_id") or "",
+        "criteria": report.get("criteria") or "",
+        "widths": report.get("widths") or "",
+        "verified_at": report.get("finished_at") or report.get("started_at") or "",
+        "failing_checks": list(report.get("failing_checks") or []),
+        "source": "evidence/signalbox-responsive/latest.json",
+    }
+    if route is not None:
+        entry = routes.get(route)
+        if entry is None:
+            raise HTTPException(status_code=404, detail=f"No responsive-audit evidence for route {route!r}")
+        keys = ("width_name", "width", "height", "passed", "checks", "failures", "screenshot")
+        return {
+            **summary,
+            "route": route,
+            "passed": bool(entry.get("passed")),
+            "results": [{k: r.get(k) for k in keys} for r in entry.get("results") or []],
+        }
+    summary["routes"] = {
+        path: {
+            "passed": bool(entry.get("passed")),
+            "widths": [r.get("width_name") for r in entry.get("results") or []],
+            "failing_checks": list(entry.get("failing_checks") or []),
+        }
+        for path, entry in routes.items()
+    }
+    return summary
 
 
 @app.post("/api/auth/login")

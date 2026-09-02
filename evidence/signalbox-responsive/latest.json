@@ -1,0 +1,1078 @@
+{
+ "app": "nursing-station",
+ "base_url": "http://127.0.0.1:5282",
+ "session_id": "nursing-station-responsive-20260902T152256",
+ "persona": "nurse",
+ "operator": "amina.okafor@nursing.test",
+ "tenant": "tenant-st-brigids",
+ "headed": true,
+ "widths": "mobile,tablet,desktop",
+ "criteria": "BulletTrain frontend/e2e/L3-VIS-responsive.spec.ts (R1, R2, R5, R6)",
+ "started_at": "2026-09-02T15:23:04+01:00",
+ "routes": {
+  "/ward": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 12,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 49,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": [
+       "board-row board-head",
+       "DIV",
+       "DIV",
+       "DIV",
+       "DIV",
+       "DIV",
+       "board-row",
+       "DIV"
+      ]
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/ward-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 753,
+      "client_width": 753,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 677,
+      "main_left": 76,
+      "interactive_count": 15,
+      "small_touch_targets": 8,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 43,
+        "h": 37,
+        "t": "Open navigation"
+       },
+       {
+        "w": 86,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 40,
+        "h": 34,
+        "t": "Sign out"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Acknowledge"
+       }
+      ],
+      "text_count": 84,
+      "tiny_text_count": 51,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "MED-A / adult-medical"
+       },
+       {
+        "px": 9,
+        "t": "Seeded synthetic"
+       },
+       {
+        "px": 9,
+        "t": "Durable source"
+       },
+       {
+        "px": 9,
+        "t": "Patients"
+       },
+       {
+        "px": 9,
+        "t": "Deterioration review"
+       },
+       {
+        "px": 9,
+        "t": "Overdue tasks"
+       },
+       {
+        "px": 9,
+        "t": "Bed"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [
+       "board-row board-head",
+       "DIV",
+       "DIV",
+       "board-row",
+       "DIV",
+       "badge caution",
+       "sub",
+       "DIV"
+      ]
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/ward-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1265,
+      "client_width": 1265,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1025,
+      "main_left": 240,
+      "interactive_count": 15,
+      "small_touch_targets": 9,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       },
+       {
+        "w": 44,
+        "h": 38,
+        "t": "Open navigation"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Privacy mode"
+       },
+       {
+        "w": 92,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 42,
+        "h": 36,
+        "t": "Sign out"
+       }
+      ],
+      "text_count": 97,
+      "tiny_text_count": 53,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "MED-A / adult-medical"
+       },
+       {
+        "px": 9,
+        "t": "Seeded synthetic"
+       },
+       {
+        "px": 9,
+        "t": "Durable source"
+       },
+       {
+        "px": 9,
+        "t": "Patients"
+       },
+       {
+        "px": 9,
+        "t": "Deterioration review"
+       },
+       {
+        "px": 9,
+        "t": "Overdue tasks"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/ward-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/patients/pat-005": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 10,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 29,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": [
+       "BUTTON",
+       "BUTTON",
+       "BUTTON",
+       "BUTTON",
+       "BUTTON"
+      ]
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/patients_pat-005-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 768,
+      "client_width": 768,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 692,
+      "main_left": 76,
+      "interactive_count": 16,
+      "small_touch_targets": 15,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 43,
+        "h": 37,
+        "t": "Open navigation"
+       },
+       {
+        "w": 88,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 41,
+        "h": 35,
+        "t": "Sign out"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Acknowledge"
+       }
+      ],
+      "text_count": 32,
+      "tiny_text_count": 9,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 9,
+        "t": "Patient / two identifiers"
+       },
+       {
+        "px": 10,
+        "t": "MRN-104401 / DOB 1964-12-30 / (no photo)"
+       },
+       {
+        "px": 9,
+        "t": "Allergies"
+       },
+       {
+        "px": 9,
+        "t": "Location / isolation"
+       },
+       {
+        "px": 10,
+        "t": "Nursing record / Bed A-18"
+       },
+       {
+        "px": 9,
+        "t": "Seeded synthetic"
+       },
+       {
+        "px": 9,
+        "t": "No observation"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [
+       "BUTTON",
+       "BUTTON"
+      ]
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/patients_pat-005-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1280,
+      "client_width": 1280,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1040,
+      "main_left": 240,
+      "interactive_count": 17,
+      "small_touch_targets": 17,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       },
+       {
+        "w": 44,
+        "h": 38,
+        "t": "Open navigation"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Privacy mode"
+       },
+       {
+        "w": 92,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 42,
+        "h": 36,
+        "t": "Sign out"
+       }
+      ],
+      "text_count": 41,
+      "tiny_text_count": 11,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 9,
+        "t": "Patient / two identifiers"
+       },
+       {
+        "px": 10,
+        "t": "MRN-104401 / DOB 1964-12-30 / (no photo)"
+       },
+       {
+        "px": 9,
+        "t": "Allergies"
+       },
+       {
+        "px": 9,
+        "t": "Location / isolation"
+       },
+       {
+        "px": 9,
+        "t": "Code status"
+       },
+       {
+        "px": 10,
+        "t": "Nursing record / Bed A-18"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/patients_pat-005-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/tasks": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 10,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 23,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/tasks-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 768,
+      "client_width": 768,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 692,
+      "main_left": 76,
+      "interactive_count": 13,
+      "small_touch_targets": 8,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 43,
+        "h": 37,
+        "t": "Open navigation"
+       },
+       {
+        "w": 88,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 41,
+        "h": 35,
+        "t": "Sign out"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Acknowledge"
+       }
+      ],
+      "text_count": 23,
+      "tiny_text_count": 10,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Ward work queue"
+       },
+       {
+        "px": 9,
+        "t": "stat"
+       },
+       {
+        "px": 10,
+        "t": "Owner Amina Okafor / created by Grace Me"
+       },
+       {
+        "px": 9,
+        "t": "high"
+       },
+       {
+        "px": 10,
+        "t": "Owner Amina Okafor / created by Grace Me"
+       },
+       {
+        "px": 9,
+        "t": "high"
+       },
+       {
+        "px": 10,
+        "t": "Owner Grace Mensah / created by Grace Me"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/tasks-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1280,
+      "client_width": 1280,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1040,
+      "main_left": 240,
+      "interactive_count": 13,
+      "small_touch_targets": 9,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       },
+       {
+        "w": 44,
+        "h": 38,
+        "t": "Open navigation"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Privacy mode"
+       },
+       {
+        "w": 92,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 42,
+        "h": 36,
+        "t": "Sign out"
+       }
+      ],
+      "text_count": 29,
+      "tiny_text_count": 11,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Ward work queue"
+       },
+       {
+        "px": 9,
+        "t": "stat"
+       },
+       {
+        "px": 10,
+        "t": "Owner Amina Okafor / created by Grace Me"
+       },
+       {
+        "px": 9,
+        "t": "high"
+       },
+       {
+        "px": 10,
+        "t": "Owner Amina Okafor / created by Grace Me"
+       },
+       {
+        "px": 9,
+        "t": "high"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/tasks-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/governance": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 6,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 38,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/governance-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 753,
+      "client_width": 753,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 677,
+      "main_left": 76,
+      "interactive_count": 9,
+      "small_touch_targets": 8,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 43,
+        "h": 37,
+        "t": "Open navigation"
+       },
+       {
+        "w": 86,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 40,
+        "h": 34,
+        "t": "Sign out"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Acknowledge"
+       }
+      ],
+      "text_count": 38,
+      "tiny_text_count": 17,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Clinical governance"
+       },
+       {
+        "px": 9,
+        "t": "Service"
+       },
+       {
+        "px": 9,
+        "t": "Audit chain"
+       },
+       {
+        "px": 10,
+        "t": "7 events"
+       },
+       {
+        "px": 9,
+        "t": "Synthetic lineage"
+       },
+       {
+        "px": 10,
+        "t": "seed.uk.nursing_station.phase2_v1"
+       },
+       {
+        "px": 9,
+        "t": "No live source"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/governance-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1265,
+      "client_width": 1265,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1025,
+      "main_left": 240,
+      "interactive_count": 9,
+      "small_touch_targets": 9,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       },
+       {
+        "w": 44,
+        "h": 38,
+        "t": "Open navigation"
+       },
+       {
+        "w": 133,
+        "h": 40,
+        "t": "Privacy mode"
+       },
+       {
+        "w": 92,
+        "h": 37,
+        "t": "system"
+       },
+       {
+        "w": 42,
+        "h": 36,
+        "t": "Sign out"
+       }
+      ],
+      "text_count": 44,
+      "tiny_text_count": 18,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Clinical governance"
+       },
+       {
+        "px": 9,
+        "t": "Service"
+       },
+       {
+        "px": 9,
+        "t": "Audit chain"
+       },
+       {
+        "px": 10,
+        "t": "7 events"
+       },
+       {
+        "px": 9,
+        "t": "Synthetic lineage"
+       },
+       {
+        "px": 10,
+        "t": "seed.uk.nursing_station.phase2_v1"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/governance-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  }
+ },
+ "finished_at": "2026-09-02T15:23:40+01:00",
+ "failing_checks": [],
+ "passed": true,
+ "source_report": "BulletTrain docs/verification/responsive/nursing-station/latest.json",
+ "regenerate": "BulletTrain: python scripts/signalbox_responsive_audit.py --app nursing-station --base-url http://127.0.0.1:5282 --route /ward --route /patients/pat-005 --route /tasks --route /governance --persona nurse --username <nurse> --password <...> --tenant tenant-st-brigids --sidebar-selector .bt-sidebar --main-selector .bt-main --signed-in-marker 'registered nurse'"
+}

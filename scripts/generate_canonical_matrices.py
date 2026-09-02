@@ -131,6 +131,8 @@ REQUIREMENTS: dict[str, RequirementSpec] = {
     "NFR-NS-028": RequirementSpec("Nursing Station consumes roster and registration state and never becomes its author; an unavailable roster degrades the staffing position rather than producing one", "staffing", "/api/wards/ward-med-a/staffing-position", ("tests/test_national_capability.py::test_staffing_position_computes_the_requirement_and_reports_the_missing_roster", "tests/test_bt_connector_seam.py::test_no_roster_exchange_route_exists_yet")),
     "NFR-NS-029": RequirementSpec("Every outbound national publication is durable, idempotent by correlation identifier, and remains pending until a receipt arrives; an unregistered hub route is surfaced as a named gap", "publications", "/api/publications", ("tests/test_national_capability.py::test_the_publication_surface_names_every_open_bullettrain_gap", "tests/test_bt_connector_seam.py::test_publication_contract_route_status_matches_bullettrain")),
     "NFR-NS-030": RequirementSpec("Every national safety decision records the named human who made it and nothing auto-resolves, auto-declares, auto-reviews or auto-adopts", "governance", "/api/observations/{observation_id}/escalation-response", ("tests/test_national_capability.py::test_escalation_response_names_a_human_and_never_self_resolves", "tests/test_national_capability.py::test_incident_review_needs_a_second_person_and_produces_owned_learning")),
+    # ---- Responsive layout (2026-09-02) -----------------------------------
+    "NFR-NS-031": RequirementSpec("Ward-facing surfaces reflow to phone, tablet and desktop widths with the navigation off-screen until opened, 44px controls and 12px minimum text on a phone, proven by a headed persona-driven SignalBox responsive audit", "responsive", "/api/governance/responsive-evidence", ("tests/test_responsive_layout.py", "evidence/signalbox-responsive/latest.json")),
 }
 
 # FROZEN. The legacy 100-row matrix rotates over exactly these ids in exactly
@@ -171,6 +173,7 @@ DOMAIN_TITLES = {
     "quality": "Nursing quality measure definition and dataset",
     "country-pack": "Versioned country policy and adoption governance",
     "publications": "Durable outbound national publication queue",
+    "responsive": "Responsive layout evidence served at runtime",
 }
 
 
@@ -637,6 +640,42 @@ NATIONAL_SCENARIOS: tuple[NationalScenario, ...] = (
         "source-unavailable and no-denominator remain distinguishable"),
        "tests/test_national_capability.py::test_quality_measures_apply_the_pack_definitions_to_this_wards_records",
        fault="boundary-empty-denominator"),
+    # ---- NFR-NS-031 ---------------------------------------------------
+    _s("RESP-SERVED", ("NFR-NS-031",), "Positive",
+       "The service serves the retained SignalBox responsive-audit report, headed and persona-driven, with every route and width passed",
+       "GET", "/api/governance/responsive-evidence",
+       {"viewer": "usr-amina"},
+       {"status": "passed", "headed": True, "persona": "nurse", "routes": ["/ward", "/patients/pat-005", "/tasks", "/governance"]},
+       ("HTTP 200", "status == 'passed' and headed is true", "each route lists mobile, tablet and desktop"),
+       "tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"),
+    _s("RESP-AUTH", ("NFR-NS-031",), "Negative",
+       "Responsive-audit evidence is served only to signed-in staff",
+       "GET", "/api/governance/responsive-evidence",
+       {"authorization": "absent"},
+       {"status_code": 401},
+       ("HTTP 401", "no evidence body is returned without a bearer token"),
+       "tests/test_responsive_layout.py::test_responsive_evidence_is_refused_without_a_token"),
+    _s("RESP-UNKNOWN-ROUTE", ("NFR-NS-031",), "Edge",
+       "A route the audit never visited yields no evidence rather than a fabricated pass",
+       "GET", "/api/governance/responsive-evidence",
+       {"route": "/never-audited"},
+       {"status_code": 404},
+       ("HTTP 404", "the detail names the route", "no route entry is invented"),
+       "tests/test_responsive_layout.py::test_responsive_evidence_for_an_unaudited_route_is_not_invented"),
+    _s("RESP-ROUTE-DETAIL", ("NFR-NS-031",), "Positive",
+       "Per-route evidence carries each width's checks and SignalBox's own screenshot reference",
+       "GET", "/api/governance/responsive-evidence",
+       {"route": "/ward"},
+       {"route": "/ward", "results": ["mobile", "tablet", "desktop"], "each_result": ["checks", "failures", "screenshot"]},
+       ("HTTP 200", "results list mobile, tablet and desktop in that order", "every result names its screenshot"),
+       "tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"),
+    _s("RESP-PROVENANCE", ("NFR-NS-031",), "Positive",
+       "The served evidence names the SignalBox session, the driving persona and the estate criteria it was measured against",
+       "GET", "/api/governance/responsive-evidence",
+       {"inspect": "provenance"},
+       {"session_id": "nursing-station-responsive-*", "persona": "nurse", "criteria": "L3-VIS-responsive.spec.ts"},
+       ("session_id, persona and criteria are non-empty", "criteria names the estate spec"),
+       "tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"),
 )
 
 

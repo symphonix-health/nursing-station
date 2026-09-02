@@ -46,3 +46,4 @@
 - `UC-NS-038`: A charge nurse reviews the nursing quality dataset and sees which measures are computed, which have no denominator, and which are unavailable because no roster was published.
 - `UC-NS-039`: A Clinical Safety Officer records an adoption decision for the exact country-pack version reviewed; a later pack version does not inherit it.
 - `UC-NS-040`: A charge nurse or auditor inspects the durable outbound publication queue and sees, per national workflow, whether a destination exists and what remains pending.
+- `UC-NS-041`: A nurse opens the ward board on a phone: the navigation stays off-screen until she opens it from a 44 pixel control, the content fills the screen, every control is large enough to tap, the text is legible, and nothing scrolls sideways.

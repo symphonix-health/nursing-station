@@ -30,6 +30,10 @@ credentials.json
 *.db
 *.db-journal
 data/
+# The governed synthetic database is committed evidence (see the disposition
+# ledger); keep it trackable despite the baseline rules above.
+!data/nursing_station.db
+!data/.gitkeep
 .vscode/
 .idea/
 .DS_Store

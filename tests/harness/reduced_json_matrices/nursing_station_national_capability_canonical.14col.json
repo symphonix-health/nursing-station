@@ -19,11 +19,11 @@
   "metadata": {
     "format": "Standard BulletTrain 14-column format",
     "component": "Nursing Station",
-    "total_scenarios": 40,
+    "total_scenarios": 45,
     "distribution": {
-      "Positive": 34,
-      "Negative": 4,
-      "Edge": 2
+      "Positive": 37,
+      "Negative": 5,
+      "Edge": 3
     },
     "requirement_ids": [
       "FR-NS-090",
@@ -47,7 +47,8 @@
       "NFR-NS-027",
       "NFR-NS-028",
       "NFR-NS-029",
-      "NFR-NS-030"
+      "NFR-NS-030",
+      "NFR-NS-031"
     ],
     "mapping_policy": "authored one-flow-per-row national capability scenarios"
   },
@@ -1994,6 +1995,241 @@
       "estimated_duration": "3s",
       "automation_status": "automated",
       "notes": "Direct executable evidence: tests/test_national_capability.py::test_quality_measures_apply_the_pack_definitions_to_this_wards_records"
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-SERVED-0041",
+      "component": "Nursing Station",
+      "scenario": "The service serves the retained SignalBox responsive-audit report, headed and persona-driven, with every route and width passed",
+      "test_type": "positive",
+      "priority": "high",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC01"
+      ],
+      "expected_outcomes": [
+        "status: passed",
+        "headed: True",
+        "persona: nurse",
+        "routes: ['/ward', '/patients/pat-005', '/tasks', '/governance']"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite seeded with ward MED-A",
+        "country_pack": "IE",
+        "authenticated_role": "registered_nurse"
+      },
+      "test_data": {
+        "method": "GET",
+        "endpoint": "/api/governance/responsive-evidence",
+        "payload": {
+          "viewer": "usr-amina"
+        }
+      },
+      "validation_rules": [
+        "HTTP 200",
+        "status == 'passed' and headed is true",
+        "each route lists mobile, tablet and desktop"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application",
+        "nursing_station.country_packs"
+      ],
+      "tags": [
+        "national-capability",
+        "responsive",
+        "positive",
+        "NFR-NS-031"
+      ],
+      "estimated_duration": "3s",
+      "automation_status": "automated",
+      "notes": "Direct executable evidence: tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-AUTH-0042",
+      "component": "Nursing Station",
+      "scenario": "Responsive-audit evidence is served only to signed-in staff",
+      "test_type": "negative",
+      "priority": "high",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "expected_outcomes": [
+        "status_code: 401"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite seeded with ward MED-A",
+        "country_pack": "IE",
+        "authenticated_role": "registered_nurse"
+      },
+      "test_data": {
+        "method": "GET",
+        "endpoint": "/api/governance/responsive-evidence",
+        "payload": {
+          "authorization": "absent"
+        }
+      },
+      "validation_rules": [
+        "HTTP 401",
+        "no evidence body is returned without a bearer token"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application",
+        "nursing_station.country_packs"
+      ],
+      "tags": [
+        "national-capability",
+        "responsive",
+        "negative",
+        "NFR-NS-031"
+      ],
+      "estimated_duration": "3s",
+      "automation_status": "automated",
+      "notes": "Direct executable evidence: tests/test_responsive_layout.py::test_responsive_evidence_is_refused_without_a_token"
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-UNKNOWN-ROUTE-0043",
+      "component": "Nursing Station",
+      "scenario": "A route the audit never visited yields no evidence rather than a fabricated pass",
+      "test_type": "edge",
+      "priority": "high",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "expected_outcomes": [
+        "status_code: 404"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite seeded with ward MED-A",
+        "country_pack": "IE",
+        "authenticated_role": "registered_nurse"
+      },
+      "test_data": {
+        "method": "GET",
+        "endpoint": "/api/governance/responsive-evidence",
+        "payload": {
+          "route": "/never-audited"
+        }
+      },
+      "validation_rules": [
+        "HTTP 404",
+        "the detail names the route",
+        "no route entry is invented"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application",
+        "nursing_station.country_packs"
+      ],
+      "tags": [
+        "national-capability",
+        "responsive",
+        "edge",
+        "NFR-NS-031"
+      ],
+      "estimated_duration": "3s",
+      "automation_status": "automated",
+      "notes": "Direct executable evidence: tests/test_responsive_layout.py::test_responsive_evidence_for_an_unaudited_route_is_not_invented"
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-ROUTE-DETAIL-0044",
+      "component": "Nursing Station",
+      "scenario": "Per-route evidence carries each width's checks and SignalBox's own screenshot reference",
+      "test_type": "positive",
+      "priority": "high",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "expected_outcomes": [
+        "route: /ward",
+        "results: ['mobile', 'tablet', 'desktop']",
+        "each_result: ['checks', 'failures', 'screenshot']"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite seeded with ward MED-A",
+        "country_pack": "IE",
+        "authenticated_role": "registered_nurse"
+      },
+      "test_data": {
+        "method": "GET",
+        "endpoint": "/api/governance/responsive-evidence",
+        "payload": {
+          "route": "/ward"
+        }
+      },
+      "validation_rules": [
+        "HTTP 200",
+        "results list mobile, tablet and desktop in that order",
+        "every result names its screenshot"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application",
+        "nursing_station.country_packs"
+      ],
+      "tags": [
+        "national-capability",
+        "responsive",
+        "positive",
+        "NFR-NS-031"
+      ],
+      "estimated_duration": "3s",
+      "automation_status": "automated",
+      "notes": "Direct executable evidence: tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"
+    },
+    {
+      "use_case_id": "NS-NAT-RESP-PROVENANCE-0045",
+      "component": "Nursing Station",
+      "scenario": "The served evidence names the SignalBox session, the driving persona and the estate criteria it was measured against",
+      "test_type": "positive",
+      "priority": "high",
+      "requirement_ids": [
+        "NFR-NS-031"
+      ],
+      "acceptance_criteria_ids": [
+        "NFR-NS-031-AC02"
+      ],
+      "expected_outcomes": [
+        "session_id: nursing-station-responsive-*",
+        "persona: nurse",
+        "criteria: L3-VIS-responsive.spec.ts"
+      ],
+      "preconditions": {
+        "database": "durable governed synthetic SQLite seeded with ward MED-A",
+        "country_pack": "IE",
+        "authenticated_role": "registered_nurse"
+      },
+      "test_data": {
+        "method": "GET",
+        "endpoint": "/api/governance/responsive-evidence",
+        "payload": {
+          "inspect": "provenance"
+        }
+      },
+      "validation_rules": [
+        "session_id, persona and criteria are non-empty",
+        "criteria names the estate spec"
+      ],
+      "dependencies": [
+        "nursing-station FastAPI application",
+        "nursing_station.country_packs"
+      ],
+      "tags": [
+        "national-capability",
+        "responsive",
+        "positive",
+        "NFR-NS-031"
+      ],
+      "estimated_duration": "3s",
+      "automation_status": "automated",
+      "notes": "Direct executable evidence: tests/test_responsive_layout.py::test_responsive_evidence_is_served_to_signed_in_staff"
     }
   ]
 }

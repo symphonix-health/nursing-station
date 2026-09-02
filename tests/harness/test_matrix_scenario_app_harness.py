@@ -154,6 +154,9 @@ def _request(client, domain: str, headers: dict[str, str], category: str):
         return client.get("/api/wards/ward-med-a/quality-measures", headers=charge_headers)
     if domain == "country-pack":
         return client.get("/api/country-pack", headers=active_headers)
+    if domain == "responsive":
+        suffix = "?route=/never-audited" if edge else ""
+        return client.get(f"/api/governance/responsive-evidence{suffix}", headers=active_headers)
     if domain == "publications":
         queue_headers = {} if unauthenticated else _login(client, "grace.mensah@nursing.test")
         if edge:
@@ -170,13 +173,13 @@ def test_matrix_scenario(client, scenario):
         "ward-board", "observations", "tasks", "care-plans", "handover",
         "medications", "safety", "audit", "integrations", "reporting", "alerts",
         "governance", "work-orchestration", "deterioration", "emar", "staffing",
-        "harm", "discharge", "quality", "country-pack", "publications",
+        "harm", "discharge", "quality", "country-pack", "publications", "responsive",
     })
     response = _request(client, domain, headers, category)
     read_domains = {
         "ward-board", "audit", "tasks", "integrations", "alerts", "governance",
         "work-orchestration", "deterioration", "emar", "staffing", "harm",
-        "discharge", "quality", "country-pack", "publications",
+        "discharge", "quality", "country-pack", "publications", "responsive",
     }
     expected = 503 if domain == "reporting" else 200 if domain in read_domains else 201
     if category == "positive":

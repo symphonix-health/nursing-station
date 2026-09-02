@@ -2,7 +2,7 @@
   "schema_version": "BT_REQUIREMENTS_SUPERSET_V1",
   "metadata": {
     "subsystem": "nursing-station",
-    "requirement_count": 80
+    "requirement_count": 81
   },
   "requirements": [
     {
@@ -2094,6 +2094,36 @@
         "tests/test_national_capability.py::test_incident_review_needs_a_second_person_and_produces_owned_learning"
       ],
       "domain": "governance"
+    },
+    {
+      "requirement_id": "NFR-NS-031",
+      "title": "Ward-facing surfaces reflow to phone, tablet and desktop widths with the navigation off-screen until opened, 44px controls and 12px minimum text on a phone, proven by a headed persona-driven SignalBox responsive audit",
+      "category": "non-functional",
+      "source": "docs/REQUIREMENTS.md",
+      "coverage_status": "covered",
+      "statement": "Ward-facing surfaces reflow to phone, tablet and desktop widths with the navigation off-screen until opened, 44px controls and 12px minimum text on a phone, proven by a headed persona-driven SignalBox responsive audit",
+      "acceptance_criteria": [
+        {
+          "ac_id": "NFR-NS-031-AC01",
+          "verification_method": "semantically mapped canonical matrix rows"
+        },
+        {
+          "ac_id": "NFR-NS-031-AC02",
+          "verification_method": "repo-owned direct executable evidence"
+        }
+      ],
+      "matrix_row_ids": [
+        "NS-NAT-RESP-SERVED-0041",
+        "NS-NAT-RESP-AUTH-0042",
+        "NS-NAT-RESP-UNKNOWN-ROUTE-0043",
+        "NS-NAT-RESP-ROUTE-DETAIL-0044",
+        "NS-NAT-RESP-PROVENANCE-0045"
+      ],
+      "direct_evidence": [
+        "tests/test_responsive_layout.py",
+        "evidence/signalbox-responsive/latest.json"
+      ],
+      "domain": "responsive"
     }
   ]
 }
