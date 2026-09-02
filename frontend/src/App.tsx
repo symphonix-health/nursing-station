@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { auth, request } from './api/client'
+import { CountryPackPanel, DischargeTab, EscalationsPage, IncidentsPage, PublicationsPanel, QualityPage, StaffingPage, WorkQueuePage, scoreKind, usePackThresholds } from './national'
 import type {
   CarePlan,
   ClinicalAlertFeed,
@@ -43,6 +44,7 @@ const PATIENT_TABS = [
   'handover',
   'safety',
   'integrations',
+  'discharge',
 ] as const
 
 function ThemeToggle() {
@@ -189,6 +191,11 @@ function Layout({ user }: { user: User }) {
           <nav className="nav">
             <NavLink to="/ward"><LayoutDashboard size={18} /><span>Ward board</span></NavLink>
             <NavLink to="/tasks"><ClipboardCheck size={18} /><span>Tasks</span></NavLink>
+            <NavLink to="/work-queue"><ClipboardList size={18} /><span>Work queue</span></NavLink>
+            <NavLink to="/escalations"><BellRing size={18} /><span>Escalations</span></NavLink>
+            <NavLink to="/incidents"><Activity size={18} /><span>Incidents</span></NavLink>
+            <NavLink to="/staffing"><UsersRound size={18} /><span>Staffing</span></NavLink>
+            {['nurse_in_charge', 'clinical_safety_officer'].includes(user.role) && <NavLink to="/quality"><FileClock size={18} /><span>Quality</span></NavLink>}
             <NavLink to="/governance"><ShieldCheck size={18} /><span>Governance</span></NavLink>
           </nav>
           <div className="sidebar-foot">
@@ -232,7 +239,12 @@ function Layout({ user }: { user: User }) {
             <Route path="/ward" element={<WardPage privacy={privacy} />} />
             <Route path="/patients/:patientId" element={<PatientPage user={user} privacy={privacy} />} />
             <Route path="/tasks" element={<TasksPage privacy={privacy} />} />
-            <Route path="/governance" element={<GovernancePage />} />
+            <Route path="/work-queue" element={<WorkQueuePage user={user} privacy={privacy} />} />
+            <Route path="/escalations" element={<EscalationsPage user={user} privacy={privacy} />} />
+            <Route path="/incidents" element={<IncidentsPage user={user} privacy={privacy} />} />
+            <Route path="/staffing" element={<StaffingPage user={user} />} />
+            <Route path="/quality" element={<QualityPage />} />
+            <Route path="/governance" element={<GovernancePage user={user} />} />
             <Route path="*" element={<Navigate to="/ward" replace />} />
           </Routes>
         </main>
@@ -257,6 +269,7 @@ const initials = (name: string) => name.split(' ').map(part => part[0]).join('')
 const displayName = (patient: Pick<Patient, 'name' | 'bed'>, privacy: boolean) => privacy ? `Patient ${patient.bed}` : patient.name
 
 function WardPage({ privacy }: { privacy: boolean }) {
+  const thresholds = usePackThresholds()
   const { data, isLoading, error } = useQuery({
     queryKey: ['ward-board'],
     queryFn: () => request<WardBoard>('/api/ward-board'),
@@ -266,7 +279,7 @@ function WardPage({ privacy }: { privacy: boolean }) {
   if (!data) return null
 
   const overdue = data.patients.reduce((sum, patient) => sum + patient.overdue_tasks, 0)
-  const high = data.patients.filter(patient => (patient.latest_score ?? 0) >= 5).length
+  const high = data.patients.filter(patient => (patient.latest_score ?? 0) >= thresholds.escalate).length
   return (
     <>
       <div className="page-head">
@@ -307,7 +320,7 @@ function WardPage({ privacy }: { privacy: boolean }) {
             <div>
               {patient.latest_score == null
                 ? <Status kind="info" label="Not recorded" />
-                : <Status kind={patient.latest_score >= 7 ? 'danger' : patient.latest_score >= 5 ? 'caution' : 'normal'} label={`Score ${patient.latest_score}`} />}
+                : <Status kind={scoreKind(patient.latest_score, thresholds)} label={`Score ${patient.latest_score}`} />}
               <div className="sub">{patient.observation_time ? new Date(patient.observation_time).toLocaleTimeString() : 'No current set'}</div>
             </div>
             <div><span className="num">{patient.open_tasks}</span> open<div className="sub">{patient.overdue_tasks} overdue</div></div>
@@ -404,6 +417,7 @@ function PatientPage({ user, privacy }: { user: User; privacy: boolean }) {
         {tab === 'handover' && <Handover patient={data} user={user} />}
         {tab === 'safety' && <Safety patient={data} onSaved={refresh} />}
         {tab === 'integrations' && <Integrations patient={data} />}
+        {tab === 'discharge' && <DischargeTab patient={data} user={user} />}
       </div>
     </>
   )
@@ -474,6 +488,7 @@ function Integrations({ patient }: { patient: Patient }) {
 }
 
 function Overview({ patient }: { patient: Patient }) {
+  const thresholds = usePackThresholds()
   const latest = patient.observations?.[0]
   const activeTasks = patient.tasks?.filter(task => ['open', 'accepted'].includes(task.status)) ?? []
   return (
@@ -482,7 +497,7 @@ function Overview({ patient }: { patient: Patient }) {
         <div className="panel-head">
           <h2>Current state</h2>
           {latest
-            ? <Status kind={latest.score >= 7 ? 'danger' : latest.score >= 5 ? 'caution' : 'normal'} label={`Score ${latest.score}`} />
+            ? <Status kind={scoreKind(latest.score, thresholds)} label={`Score ${latest.score}`} />
             : <Status kind="info" label="No observation" />}
         </div>
         {latest ? (
@@ -512,6 +527,7 @@ function Overview({ patient }: { patient: Patient }) {
 }
 
 function Observations({ patient, onSaved }: { patient: Patient; onSaved: () => void }) {
+  const thresholds = usePackThresholds()
   const consciousness = useReference('consciousness')
   const [form, setForm] = useState({
     respiratory_rate: '18', oxygen_saturation: '97', supplemental_oxygen: false,
@@ -574,7 +590,7 @@ function Observations({ patient, onSaved }: { patient: Patient; onSaved: () => v
             <tbody>{patient.observations?.map(observation => (
               <tr key={observation.id}>
                 <td>{new Date(observation.recorded_at).toLocaleString()}<div className="sub">{observation.recorded_by_name}</div></td>
-                <td><Status kind={observation.score >= 7 ? 'danger' : observation.score >= 5 ? 'caution' : 'normal'} label={`${observation.score}`} /><div className="sub">{observation.warning_profile_version}</div></td>
+                <td><Status kind={scoreKind(observation.score, thresholds)} label={`${observation.score}`} /><div className="sub">{observation.warning_profile_version}</div></td>
                 <td>{observation.oxygen_saturation} {observation.units_json.oxygen_saturation}</td>
                 <td>{observation.systolic_bp} {observation.units_json.systolic_bp}</td>
                 <td>{observation.pulse} {observation.units_json.pulse}</td>
@@ -896,7 +912,7 @@ function ResponsiveEvidencePanel() {
   )
 }
 
-function GovernancePage() {
+function GovernancePage({ user }: { user: User }) {
   const { data: health, error } = useQuery({
     queryKey: ['health'],
     queryFn: () => request<{ status: string; audit_chain_valid: boolean; audit_events: number; integrations: string; warning_profile: string }>('/health'),
@@ -920,6 +936,8 @@ function GovernancePage() {
           <p className="sub">Real patient data: {String(seed.declaration.contains_real_patient_data)} / real person data: {String(seed.declaration.contains_real_person_data)} / pseudonymised real data: {String(seed.declaration.contains_pseudonymised_real_data)} / live clinical source: {String(seed.declaration.source_is_live_clinical_system)}.</p>
         </section>
       )}
+      <CountryPackPanel user={user} />
+      <PublicationsPanel user={user} />
       <ResponsiveEvidencePanel />
       <div className="panel governance-panel">
         <h2>Phase boundary</h2>

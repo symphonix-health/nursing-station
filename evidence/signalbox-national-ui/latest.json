@@ -1,0 +1,73 @@
+{
+ "verified_at": "2026-09-02T16:25:07+01:00",
+ "frontend": "http://127.0.0.1:5282",
+ "backend": "http://127.0.0.1:9201",
+ "sessions": [
+  {
+   "persona": "nurse",
+   "operator": "amina.okafor@nursing.test",
+   "session_id": "nursing-national-nurse-162335",
+   "screenshots": [
+    "evidence/signalbox-national-ui/screenshots/nurse-work-queue-interrupted-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse-incidents-reported-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse-discharge-coordinated-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse-escalations-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse-staffing-position-2026-09-02.jpg"
+   ],
+   "assertions": [
+    "nurse (amina.okafor@nursing.test) signed in through the real login form in a headed SignalBox session",
+    "/work-queue: Risk-ranked work queue, open items present in the accessibility snapshot",
+    "/work-queue after recording an interruption: Interrupted, clinical-emergency, Resume present in the accessibility snapshot",
+    "API: task task-001 carries open interruption interruption-76ed97c25f4e with rank_score 124.51 (was 99.44)",
+    "API: task task-001 has no open interruption after the nurse clicked Resume",
+    "/incidents: Report an incident present in the accessibility snapshot",
+    "/incidents after reporting: fall / moderate, Unwitnessed fall present in the accessibility snapshot",
+    "API: incident incident-c9edf07b5d6e recorded by usr-amina; externally_reportable=True decided by the pack; status awaiting-review",
+    "/patients/pat-003 discharge tab: Criteria, mandatory present in the accessibility snapshot",
+    "discharge tab after coordination: Hub coordination present in the accessibility snapshot",
+    "API: after hub coordination 1 criteria met, 5 pending with typed reasons; ready_for_discharge=False (not claimed)",
+    "/escalations: Escalation responses present in the accessibility snapshot",
+    "No unanswered escalation on the ward at this time",
+    "/staffing: Ward staffing position, Roster state present in the accessibility snapshot"
+   ]
+  },
+  {
+   "persona": "nurse_in_charge",
+   "operator": "grace.mensah@nursing.test",
+   "session_id": "nursing-national-nurse_in_charge-162421",
+   "screenshots": [
+    "evidence/signalbox-national-ui/screenshots/nurse_in_charge-incident-reviewed-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse_in_charge-staffing-declared-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse_in_charge-quality-dataset-2026-09-02.jpg",
+    "evidence/signalbox-national-ui/screenshots/nurse_in_charge-governance-publications-2026-09-02.jpg"
+   ],
+   "assertions": [
+    "nurse_in_charge (grace.mensah@nursing.test) signed in through the real login form in a headed SignalBox session",
+    "/incidents after review: Reviewed, avoidable present in the accessibility snapshot",
+    "API: incident incident-c9edf07b5d6e reviewed by usr-grace (not the reporter), avoidability avoidable",
+    "/staffing as nurse in charge: Declare a staffing shortage present in the accessibility snapshot",
+    "/staffing after declaring: Active, Two registered nurses off sick present in the accessibility snapshot",
+    "API: declaration ns-staffing-96acad09b34f active, declared_by usr-grace, scope_unit ward-med-a -- the governed six-field set, no tier of its own",
+    "API: declaration ns-staffing-96acad09b34f revoked by usr-grace with a recorded reason",
+    "/quality: Nursing quality dataset, source-unavailable present in the accessibility snapshot",
+    "API: 7 measures in states ['computed', 'no-denominator', 'source-unavailable']; unavailable ['NSQ-STAFF-01', 'NSQ-STAFF-02'] (no roster is published)",
+    "/governance as nurse in charge: Outbound national publications, Country pack present in the accessibility snapshot"
+   ]
+  },
+  {
+   "persona": "clinical_safety_officer",
+   "operator": "clinical.safety@nursing.test",
+   "session_id": "nursing-national-clinical_safety_officer-162456",
+   "screenshots": [
+    "evidence/signalbox-national-ui/screenshots/clinical_safety_officer-governance-country-pack-2026-09-02.jpg"
+   ],
+   "assertions": [
+    "clinical_safety_officer (clinical.safety@nursing.test) signed in through the real login form in a headed SignalBox session",
+    "/governance as clinical safety officer: Country pack present in the accessibility snapshot",
+    "Pack 2026.08.0 already carried a recorded decision by usr-cso; the form is not offered twice"
+   ]
+  }
+ ],
+ "source_report": "BulletTrain docs/verification/national-ui/nursing-station/latest.json",
+ "driver": "BulletTrain scripts/signalbox_nursing_national_ui.py (headed SignalBox, one session per persona)"
+}

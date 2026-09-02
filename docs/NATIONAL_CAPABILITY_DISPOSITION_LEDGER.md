@@ -305,10 +305,12 @@ same pack. Validation refuses a dangling citation.
   and several test assertions; it was judged out of blast radius for this wave
   and is recorded here instead. `/health` now reports `jurisdiction` beside
   `synthetic_seed` so the mismatch is visible rather than hidden.
-- **Hardcoded warning thresholds in the frontend.** `frontend/src/App.tsx:551`
-  colours the observation score with literal `>= 7` and `>= 5` comparisons
-  rather than reading the pack thresholds. No frontend file was touched in this
-  wave, so this is unchanged and unverified by headed evidence.
+- **Hardcoded warning thresholds in the frontend.** RESOLVED 2026-09-02: `GET
+  /api/country-pack` now serves the active pack's `early_warning` block
+  (profile, thresholds, response intervals, responder seniority) and the
+  frontend (`usePackThresholds`, `scoreKind` in `frontend/src/national.tsx`)
+  colours and counts deterioration from it; the literals are gone from
+  `App.tsx`. `tests/test_national_capability.py` asserts the served thresholds.
 - **18-column padding blind spot.** The legacy 18-column matrix escapes the
   padding detector only because each row carries a per-row `scenario_index`
   counter; its 14-column twin, which has no such counter, reports 27 duplicate
@@ -325,7 +327,7 @@ BulletTrain was read **read-only**. Nothing in that repository was edited.
 | `hmis` exchange route `NursingHarmIncidentReport` (write) | `FR-NS-140` queues externally reportable ward incidents de-identified; there is no incident route on the HMIS connector. |
 | A roster publisher and a `workforce` / `NursingRosterContext` read route | `FR-NS-130` declares the consumption contract; nothing in the estate publishes a nursing roster, which is why two quality measures report `source-unavailable`. |
 | Discharge confirmation routes for `supply-chain-erp`, `community-nursing` (receipt, not dispatch), `appointment-system`, `ambulance-ems` | `FR-NS-151` meets a criterion only from the owning system's receipt. |
-| `nursing_station` registration in `connector_registry_index.json` | The manifest exists and dispatches, but the connector is invisible to `GET /v1/connectors`, so a sibling doing discovery-then-dispatch cannot find it. |
+| `nursing_station` registration in `connector_registry_index.json` | LANDED 2026-09-02 on BulletTrain main: `BT-NURSING-STATION-HUB-001` is listed in the registry index beside community-nursing, so discovery-then-dispatch finds it. |
 | HMIS acceptance of the additive `measures` block on `NursingMeasureReport` | The six required envelope keys are unchanged, so delivery is unaffected, but HMIS-side handling of `measures` is unproven. |
 
 `tests/test_bt_connector_seam.py` pins every one of these read-only and turns
@@ -338,11 +340,22 @@ grading cannot rot apart.
   the queue**, not closed-loop. No receipt exists because no receiver exists.
 - Two of the seven quality measures (`NSQ-STAFF-01`, `NSQ-STAFF-02`) report
   `source-unavailable` in every period until a roster is published.
-- No frontend surface was built for any new capability. The backend is complete
-  and the API is exercised, but the ward-facing UI for the work queue,
-  escalation response, incident review, discharge readiness, staffing position
-  and quality dataset does not exist yet. No frontend file was modified, so no
-  headed-SignalBox evidence was produced or required for this wave.
+- Ward-facing UI: BUILT 2026-09-02 (`frontend/src/national.tsx`, wired in
+  `App.tsx`): `/work-queue` (ranked work with factor breakdown, delegability,
+  interruption record/resume), `/escalations` (pack intervals and seniority,
+  named response), `/incidents` (report, and review by someone other than the
+  reporter), `/staffing` (position, roster refresh, nurse-in-charge declaration
+  and revocation), `/quality` (dataset with computed / no-denominator /
+  source-unavailable states), the patient `Discharge` tab (open, confirm a
+  nursing-owned criterion, coordinate through the hub with typed pending
+  reasons, complete only when nothing mandatory is outstanding), and on
+  `/governance` the country pack with the CSO's adoption decision and the
+  outbound publication queue with its named gaps. Every write is a named human
+  act; the UI resolves nothing. Headed SignalBox evidence, one session per
+  persona (nurse, nurse in charge, clinical safety officer):
+  `evidence/signalbox-national-ui/` and BulletTrain
+  `docs/verification/national-ui/nursing-station/`. The work queue now also
+  carries each task's open interruption ids so a nurse can resume from the UI.
 - The CAID NFR-derivation artefacts (`derived_nfrs.json`,
   `nfr_canonical_matrices/`) remain absent, so six shared-suite tests continue to
   skip. This wave did not opt in.

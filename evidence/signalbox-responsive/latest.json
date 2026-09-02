@@ -1,14 +1,14 @@
 {
  "app": "nursing-station",
  "base_url": "http://127.0.0.1:5282",
- "session_id": "nursing-station-responsive-20260902T155037",
+ "session_id": "nursing-station-responsive-20260902T162607",
  "persona": "nurse",
  "operator": "amina.okafor@nursing.test",
  "tenant": "tenant-st-brigids",
  "headed": true,
  "widths": "mobile,tablet,desktop",
  "criteria": "BulletTrain frontend/e2e/L3-VIS-responsive.spec.ts (R1, R2, R5, R6)",
- "started_at": "2026-09-02T15:50:44+01:00",
+ "started_at": "2026-09-02T16:26:14+01:00",
  "routes": {
   "/ward": {
    "passed": true,
@@ -81,8 +81,8 @@
       "main_found": true,
       "main_width": 677,
       "main_left": 76,
-      "interactive_count": 15,
-      "small_touch_targets": 8,
+      "interactive_count": 19,
+      "small_touch_targets": 12,
       "small_touch_examples": [
        {
         "w": 183,
@@ -105,24 +105,24 @@
         "t": "A"
        },
        {
-        "w": 43,
-        "h": 37,
-        "t": "Open navigation"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 86,
-        "h": 37,
-        "t": "system"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 40,
-        "h": 34,
-        "t": "Sign out"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Acknowledge"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        }
       ],
       "text_count": 84,
@@ -200,8 +200,8 @@
       "main_found": true,
       "main_width": 1025,
       "main_left": 240,
-      "interactive_count": 15,
-      "small_touch_targets": 9,
+      "interactive_count": 19,
+      "small_touch_targets": 13,
       "small_touch_examples": [
        {
         "w": 183,
@@ -221,30 +221,30 @@
        {
         "w": 212,
         "h": 38,
-        "t": "Governance"
+        "t": "Work queue"
        },
        {
-        "w": 44,
+        "w": 212,
         "h": 38,
-        "t": "Open navigation"
+        "t": "Escalations"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Privacy mode"
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
        },
        {
-        "w": 92,
-        "h": 37,
-        "t": "system"
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
        },
        {
-        "w": 42,
-        "h": 36,
-        "t": "Sign out"
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
        }
       ],
-      "text_count": 97,
+      "text_count": 101,
       "tiny_text_count": 53,
       "tiny_text_examples": [
        {
@@ -295,6 +295,1087 @@
     }
    ]
   },
+  "/work-queue": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 14,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 55,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/work-queue-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 753,
+      "client_width": 753,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 677,
+      "main_left": 76,
+      "interactive_count": 21,
+      "small_touch_targets": 20,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       }
+      ],
+      "text_count": 55,
+      "tiny_text_count": 28,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Ward work / ward-med-a / IE"
+       },
+       {
+        "px": 9,
+        "t": "Generated 9/2/2026, 4:26:20 PM"
+       },
+       {
+        "px": 10,
+        "t": "Weights: priority (stat 60, high 30, nor"
+       },
+       {
+        "px": 9,
+        "t": "#1 rank 100.72"
+       },
+       {
+        "px": 10,
+        "t": "stat / due 9/2/2026, 4:04:53 PM"
+       },
+       {
+        "px": 10,
+        "t": "Factors: priority 60, escalation_level 3"
+       },
+       {
+        "px": 9,
+        "t": "#2 rank 60"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/work-queue-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1265,
+      "client_width": 1265,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1025,
+      "main_left": 240,
+      "interactive_count": 21,
+      "small_touch_targets": 21,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Work queue"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Escalations"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       }
+      ],
+      "text_count": 65,
+      "tiny_text_count": 29,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Ward work / ward-med-a / IE"
+       },
+       {
+        "px": 9,
+        "t": "Generated 9/2/2026, 4:26:20 PM"
+       },
+       {
+        "px": 10,
+        "t": "Weights: priority (stat 60, high 30, nor"
+       },
+       {
+        "px": 9,
+        "t": "#1 rank 100.72"
+       },
+       {
+        "px": 10,
+        "t": "stat / due 9/2/2026, 4:04:53 PM"
+       },
+       {
+        "px": 10,
+        "t": "Factors: priority 60, escalation_level 3"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/work-queue-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/escalations": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 6,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 15,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/escalations-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 768,
+      "client_width": 768,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 692,
+      "main_left": 76,
+      "interactive_count": 13,
+      "small_touch_targets": 12,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       }
+      ],
+      "text_count": 15,
+      "tiny_text_count": 5,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Deterioration / IE-INEWS-CANDIDATE-v1 / "
+       },
+       {
+        "px": 9,
+        "t": "Answered"
+       },
+       {
+        "px": 10,
+        "t": "Score 5 / urgent"
+       },
+       {
+        "px": 10,
+        "t": "Responded 9/2/2026, 4:20:21 PM by usr-gr"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/escalations-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1280,
+      "client_width": 1280,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1040,
+      "main_left": 240,
+      "interactive_count": 13,
+      "small_touch_targets": 13,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Work queue"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Escalations"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       }
+      ],
+      "text_count": 25,
+      "tiny_text_count": 6,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Deterioration / IE-INEWS-CANDIDATE-v1 / "
+       },
+       {
+        "px": 9,
+        "t": "Answered"
+       },
+       {
+        "px": 10,
+        "t": "Score 5 / urgent"
+       },
+       {
+        "px": 10,
+        "t": "Responded 9/2/2026, 4:20:21 PM by usr-gr"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/escalations-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/incidents": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 16,
+      "small_touch_targets": 1,
+      "small_touch_examples": [
+       {
+        "w": 13,
+        "h": 20,
+        "t": "on"
+       }
+      ],
+      "text_count": 35,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [
+       302,
+       302,
+       302,
+       302,
+       302,
+       302,
+       302,
+       302
+      ],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/incidents-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 753,
+      "client_width": 753,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 677,
+      "main_left": 76,
+      "interactive_count": 23,
+      "small_touch_targets": 21,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       }
+      ],
+      "text_count": 35,
+      "tiny_text_count": 19,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Harm / ward-med-a"
+       },
+       {
+        "px": 11,
+        "t": "Patient"
+       },
+       {
+        "px": 11,
+        "t": "Type"
+       },
+       {
+        "px": 11,
+        "t": "Harm level"
+       },
+       {
+        "px": 11,
+        "t": "Classification"
+       },
+       {
+        "px": 11,
+        "t": "Occurred"
+       },
+       {
+        "px": 11,
+        "t": "Discovered"
+       }
+      ],
+      "input_widths": [
+       280,
+       85,
+       85,
+       85,
+       217,
+       217,
+       85,
+       280
+      ],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/incidents-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1265,
+      "client_width": 1265,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1025,
+      "main_left": 240,
+      "interactive_count": 23,
+      "small_touch_targets": 22,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Work queue"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Escalations"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       }
+      ],
+      "text_count": 45,
+      "tiny_text_count": 20,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Harm / ward-med-a"
+       },
+       {
+        "px": 11,
+        "t": "Patient"
+       },
+       {
+        "px": 11,
+        "t": "Type"
+       },
+       {
+        "px": 11,
+        "t": "Harm level"
+       },
+       {
+        "px": 11,
+        "t": "Classification"
+       },
+       {
+        "px": 11,
+        "t": "Occurred"
+       }
+      ],
+      "input_widths": [
+       448,
+       141,
+       141,
+       141,
+       217,
+       217,
+       141,
+       448
+      ],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/incidents-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
+  "/staffing": {
+   "passed": true,
+   "failing_checks": [],
+   "results": [
+    {
+     "width_name": "mobile",
+     "width": 375,
+     "height": 812,
+     "measure": {
+      "inner_width": 375,
+      "inner_height": 812,
+      "scroll_width": 360,
+      "client_width": 360,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": false,
+      "sidebar_width": 280,
+      "sidebar_left": -280,
+      "main_found": true,
+      "main_width": 360,
+      "main_left": 0,
+      "interactive_count": 6,
+      "small_touch_targets": 0,
+      "small_touch_examples": [],
+      "text_count": 21,
+      "tiny_text_count": 0,
+      "tiny_text_examples": [],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true,
+      "R6_sidebar_hidden_on_mobile": true,
+      "R6_content_fills_mobile": true,
+      "R6_fields_stack_on_mobile": true,
+      "R2_touch_targets": true,
+      "R5_text_size": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/staffing-mobile-375-2026-09-02.jpg"
+    },
+    {
+     "width_name": "tablet",
+     "width": 768,
+     "height": 1024,
+     "measure": {
+      "inner_width": 768,
+      "inner_height": 1024,
+      "scroll_width": 768,
+      "client_width": 768,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 76,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 692,
+      "main_left": 76,
+      "interactive_count": 13,
+      "small_touch_targets": 12,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       },
+       {
+        "w": 48,
+        "h": 38,
+        "t": "A"
+       }
+      ],
+      "text_count": 21,
+      "tiny_text_count": 9,
+      "tiny_text_examples": [
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Staffing / ward-med-a / 2026-09-02 day"
+       },
+       {
+        "px": 9,
+        "t": "sufficient"
+       },
+       {
+        "px": 9,
+        "t": "Occupied beds"
+       },
+       {
+        "px": 9,
+        "t": "High acuity"
+       },
+       {
+        "px": 9,
+        "t": "Required RN hours"
+       },
+       {
+        "px": 9,
+        "t": "Required RNs"
+       },
+       {
+        "px": 9,
+        "t": "Actual RN headcount"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/staffing-tablet-768-2026-09-02.jpg"
+    },
+    {
+     "width_name": "desktop",
+     "width": 1280,
+     "height": 800,
+     "measure": {
+      "inner_width": 1280,
+      "inner_height": 800,
+      "scroll_width": 1280,
+      "client_width": 1280,
+      "horizontal_scroll": false,
+      "sidebar_found": true,
+      "sidebar_visible": true,
+      "sidebar_width": 240,
+      "sidebar_left": 0,
+      "main_found": true,
+      "main_width": 1040,
+      "main_left": 240,
+      "interactive_count": 13,
+      "small_touch_targets": 13,
+      "small_touch_examples": [
+       {
+        "w": 183,
+        "h": 40,
+        "t": "Skip to main content"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Ward board"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Tasks"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Work queue"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Escalations"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
+       },
+       {
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
+       }
+      ],
+      "text_count": 31,
+      "tiny_text_count": 10,
+      "tiny_text_examples": [
+       {
+        "px": 9,
+        "t": "SYMPHONIX HEALTH"
+       },
+       {
+        "px": 10,
+        "t": "6.8 mmol/L; critical_high / observed 8/2"
+       },
+       {
+        "px": 10,
+        "t": "Staffing / ward-med-a / 2026-09-02 day"
+       },
+       {
+        "px": 9,
+        "t": "sufficient"
+       },
+       {
+        "px": 9,
+        "t": "Occupied beds"
+       },
+       {
+        "px": 9,
+        "t": "High acuity"
+       },
+       {
+        "px": 9,
+        "t": "Required RN hours"
+       },
+       {
+        "px": 9,
+        "t": "Required RNs"
+       }
+      ],
+      "input_widths": [],
+      "overflowing_elements": [],
+      "clipped_count": 0,
+      "clipped_examples": []
+     },
+     "checks": {
+      "R1_no_horizontal_scroll": true,
+      "R1_no_clipped_content": true
+     },
+     "failures": [],
+     "passed": true,
+     "screenshot": "evidence/signalbox-responsive/screenshots/staffing-desktop-1280-2026-09-02.jpg"
+    }
+   ]
+  },
   "/patients/pat-005": {
    "passed": true,
    "failing_checks": [],
@@ -324,6 +1405,7 @@
       "tiny_text_examples": [],
       "input_widths": [],
       "overflowing_elements": [
+       "BUTTON",
        "BUTTON",
        "BUTTON",
        "BUTTON",
@@ -363,8 +1445,8 @@
       "main_found": true,
       "main_width": 692,
       "main_left": 76,
-      "interactive_count": 16,
-      "small_touch_targets": 15,
+      "interactive_count": 20,
+      "small_touch_targets": 19,
       "small_touch_examples": [
        {
         "w": 183,
@@ -387,24 +1469,24 @@
         "t": "A"
        },
        {
-        "w": 43,
-        "h": 37,
-        "t": "Open navigation"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 88,
-        "h": 37,
-        "t": "system"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 41,
-        "h": 35,
-        "t": "Sign out"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Acknowledge"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        }
       ],
       "text_count": 32,
@@ -446,6 +1528,7 @@
       "input_widths": [],
       "overflowing_elements": [
        "BUTTON",
+       "BUTTON",
        "BUTTON"
       ],
       "clipped_count": 0,
@@ -476,8 +1559,8 @@
       "main_found": true,
       "main_width": 1040,
       "main_left": 240,
-      "interactive_count": 17,
-      "small_touch_targets": 17,
+      "interactive_count": 22,
+      "small_touch_targets": 22,
       "small_touch_examples": [
        {
         "w": 183,
@@ -497,30 +1580,30 @@
        {
         "w": 212,
         "h": 38,
-        "t": "Governance"
+        "t": "Work queue"
        },
        {
-        "w": 44,
+        "w": 212,
         "h": 38,
-        "t": "Open navigation"
+        "t": "Escalations"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Privacy mode"
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
        },
        {
-        "w": 92,
-        "h": 37,
-        "t": "system"
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
        },
        {
-        "w": 42,
-        "h": 36,
-        "t": "Sign out"
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
        }
       ],
-      "text_count": 41,
+      "text_count": 46,
       "tiny_text_count": 11,
       "tiny_text_examples": [
        {
@@ -592,10 +1675,10 @@
       "main_found": true,
       "main_width": 360,
       "main_left": 0,
-      "interactive_count": 10,
+      "interactive_count": 14,
       "small_touch_targets": 0,
       "small_touch_examples": [],
-      "text_count": 23,
+      "text_count": 35,
       "tiny_text_count": 0,
       "tiny_text_examples": [],
       "input_widths": [],
@@ -623,18 +1706,18 @@
      "measure": {
       "inner_width": 768,
       "inner_height": 1024,
-      "scroll_width": 768,
-      "client_width": 768,
+      "scroll_width": 753,
+      "client_width": 753,
       "horizontal_scroll": false,
       "sidebar_found": true,
       "sidebar_visible": true,
       "sidebar_width": 76,
       "sidebar_left": 0,
       "main_found": true,
-      "main_width": 692,
+      "main_width": 677,
       "main_left": 76,
-      "interactive_count": 13,
-      "small_touch_targets": 8,
+      "interactive_count": 21,
+      "small_touch_targets": 12,
       "small_touch_examples": [
        {
         "w": 183,
@@ -657,28 +1740,28 @@
         "t": "A"
        },
        {
-        "w": 43,
-        "h": 37,
-        "t": "Open navigation"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 88,
-        "h": 37,
-        "t": "system"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 41,
-        "h": 35,
-        "t": "Sign out"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Acknowledge"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        }
       ],
-      "text_count": 23,
-      "tiny_text_count": 10,
+      "text_count": 35,
+      "tiny_text_count": 18,
       "tiny_text_examples": [
        {
         "px": 10,
@@ -733,18 +1816,18 @@
      "measure": {
       "inner_width": 1280,
       "inner_height": 800,
-      "scroll_width": 1280,
-      "client_width": 1280,
+      "scroll_width": 1265,
+      "client_width": 1265,
       "horizontal_scroll": false,
       "sidebar_found": true,
       "sidebar_visible": true,
       "sidebar_width": 240,
       "sidebar_left": 0,
       "main_found": true,
-      "main_width": 1040,
+      "main_width": 1025,
       "main_left": 240,
-      "interactive_count": 13,
-      "small_touch_targets": 9,
+      "interactive_count": 21,
+      "small_touch_targets": 13,
       "small_touch_examples": [
        {
         "w": 183,
@@ -764,31 +1847,31 @@
        {
         "w": 212,
         "h": 38,
-        "t": "Governance"
+        "t": "Work queue"
        },
        {
-        "w": 44,
+        "w": 212,
         "h": 38,
-        "t": "Open navigation"
+        "t": "Escalations"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Privacy mode"
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
        },
        {
-        "w": 92,
-        "h": 37,
-        "t": "system"
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
        },
        {
-        "w": 42,
-        "h": 36,
-        "t": "Sign out"
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
        }
       ],
-      "text_count": 29,
-      "tiny_text_count": 11,
+      "text_count": 45,
+      "tiny_text_count": 19,
       "tiny_text_examples": [
        {
         "px": 9,
@@ -862,11 +1945,20 @@
       "interactive_count": 6,
       "small_touch_targets": 0,
       "small_touch_examples": [],
-      "text_count": 38,
+      "text_count": 60,
       "tiny_text_count": 0,
       "tiny_text_examples": [],
       "input_widths": [],
-      "overflowing_elements": [],
+      "overflowing_elements": [
+       "table",
+       "THEAD",
+       "TR",
+       "TH",
+       "TH",
+       "TH",
+       "TBODY",
+       "TR"
+      ],
       "clipped_count": 0,
       "clipped_examples": []
      },
@@ -900,8 +1992,8 @@
       "main_found": true,
       "main_width": 677,
       "main_left": 76,
-      "interactive_count": 9,
-      "small_touch_targets": 8,
+      "interactive_count": 13,
+      "small_touch_targets": 12,
       "small_touch_examples": [
        {
         "w": 183,
@@ -924,28 +2016,28 @@
         "t": "A"
        },
        {
-        "w": 43,
-        "h": 37,
-        "t": "Open navigation"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 86,
-        "h": 37,
-        "t": "system"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 40,
-        "h": 34,
-        "t": "Sign out"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Acknowledge"
+        "w": 48,
+        "h": 38,
+        "t": "A"
        }
       ],
-      "text_count": 38,
-      "tiny_text_count": 17,
+      "text_count": 71,
+      "tiny_text_count": 30,
       "tiny_text_examples": [
        {
         "px": 10,
@@ -965,7 +2057,7 @@
        },
        {
         "px": 10,
-        "t": "7 events"
+        "t": "26 events"
        },
        {
         "px": 9,
@@ -981,7 +2073,16 @@
        }
       ],
       "input_widths": [],
-      "overflowing_elements": [],
+      "overflowing_elements": [
+       "table",
+       "THEAD",
+       "TR",
+       "TH",
+       "TH",
+       "TBODY",
+       "TR",
+       "TD"
+      ],
       "clipped_count": 0,
       "clipped_examples": []
      },
@@ -1010,8 +2111,8 @@
       "main_found": true,
       "main_width": 1025,
       "main_left": 240,
-      "interactive_count": 9,
-      "small_touch_targets": 9,
+      "interactive_count": 13,
+      "small_touch_targets": 13,
       "small_touch_examples": [
        {
         "w": 183,
@@ -1031,31 +2132,31 @@
        {
         "w": 212,
         "h": 38,
-        "t": "Governance"
+        "t": "Work queue"
        },
        {
-        "w": 44,
+        "w": 212,
         "h": 38,
-        "t": "Open navigation"
+        "t": "Escalations"
        },
        {
-        "w": 133,
-        "h": 40,
-        "t": "Privacy mode"
+        "w": 212,
+        "h": 38,
+        "t": "Incidents"
        },
        {
-        "w": 92,
-        "h": 37,
-        "t": "system"
+        "w": 212,
+        "h": 38,
+        "t": "Staffing"
        },
        {
-        "w": 42,
-        "h": 36,
-        "t": "Sign out"
+        "w": 212,
+        "h": 38,
+        "t": "Governance"
        }
       ],
-      "text_count": 44,
-      "tiny_text_count": 18,
+      "text_count": 87,
+      "tiny_text_count": 32,
       "tiny_text_examples": [
        {
         "px": 9,
@@ -1079,7 +2180,7 @@
        },
        {
         "px": 10,
-        "t": "7 events"
+        "t": "26 events"
        },
        {
         "px": 9,
@@ -1106,9 +2207,9 @@
    ]
   }
  },
- "finished_at": "2026-09-02T15:51:07+01:00",
+ "finished_at": "2026-09-02T16:27:06+01:00",
  "failing_checks": [],
  "passed": true,
  "source_report": "BulletTrain docs/verification/responsive/nursing-station/latest.json",
- "regenerate": "BulletTrain: python scripts/signalbox_responsive_audit.py --app nursing-station --base-url http://127.0.0.1:5282 --route /ward --route /patients/pat-005 --route /tasks --route /governance --persona nurse --username <nurse> --password <...> --tenant tenant-st-brigids --sidebar-selector .bt-sidebar --main-selector .bt-main --signed-in-marker 'registered nurse'"
+ "regenerate": "BulletTrain: python scripts/signalbox_responsive_audit.py --app nursing-station --base-url http://127.0.0.1:5282 --route /ward --route /work-queue --route /escalations --route /incidents --route /staffing --route /patients/pat-005 --route /tasks --route /governance --persona nurse --username <nurse> --password <...> --tenant tenant-st-brigids --sidebar-selector .bt-sidebar --main-selector .bt-main --signed-in-marker 'registered nurse'"
 }

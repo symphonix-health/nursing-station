@@ -61,6 +61,12 @@ def test_country_pack_is_served_with_sources_and_is_not_adopted_by_default(clien
     assert set(body["available_jurisdictions"]) == {"GB", "IE", "KE", "US"}
     # Every clinically meaningful entry must be traceable to a dated publisher.
     assert active["sources"]
+    # FR-NS-101: the UI reads its deterioration thresholds from here.
+    early = body["early_warning"]
+    assert early["profile_id"] == active["early_warning_profile_id"]
+    assert early["thresholds"] == {"review": 3, "escalate": 5, "critical": 7}
+    assert early["response_minutes"]["critical"] > 0
+    assert early["responder_minimum_role"]["escalate"] == "nurse_in_charge"
     for source in active["sources"]:
         assert source["publisher"] and source["title"] and source["effective_from"]
 
@@ -807,3 +813,25 @@ def test_the_publication_surface_names_every_open_bullettrain_gap(client, charge
 
 def test_the_publication_surface_is_role_gated(client, headers):
     assert client.get("/api/publications", headers=headers).status_code == 403
+
+
+# ---------------------------------------------------------------------------
+# FR-NS-092 -- the queue names the open interruption so it can be resumed from the ward UI
+# ---------------------------------------------------------------------------
+def test_work_queue_carries_open_interruption_ids_until_resumed(client, headers):
+    recorded = client.post(
+        "/api/tasks/task-002/interruptions",
+        headers=headers,
+        json={"reason": "Called to a deteriorating patient in bay 3", "reason_category": "clinical-emergency"},
+    )
+    assert recorded.status_code == 201, recorded.text
+    interruption_id = recorded.json()["id"]
+    queue = client.get("/api/ward-board/work-queue", headers=headers).json()
+    entry = next(row for row in queue["entries"] if row["id"] == "task-002")
+    assert [item["id"] for item in entry["open_interruptions"]] == [interruption_id]
+    assert entry["open_interruptions"][0]["reason_category"] == "clinical-emergency"
+    assert entry["unresumed_interruptions"] == 1
+    assert client.post(f"/api/task-interruptions/{interruption_id}/resume", headers=headers).status_code == 200
+    queue = client.get("/api/ward-board/work-queue", headers=headers).json()
+    entry = next(row for row in queue["entries"] if row["id"] == "task-002")
+    assert entry["open_interruptions"] == []

@@ -64,3 +64,15 @@ The report and SignalBox's own screenshots per width live under
 person looking at a 375px window, not by any automated check: there was no
 horizontal overflow, so a scrollWidth test passed while the navigation stayed
 on screen and the metadata rendered at 9px.
+
+The ward-facing UI for the national capability requirements (landed
+2026-09-02, `frontend/src/national.tsx`) is evidenced by headed SignalBox
+sessions driven as the nurse, the nurse in charge and the Clinical Safety
+Officer, each exercising the surface whose named act it records and each
+assertion checked against the real API after the real click:
+`evidence/signalbox-national-ui/latest.json` with SignalBox's own
+screenshots, and the responsive audit of every route under
+`evidence/signalbox-responsive/`. `FR-NS-101`'s thresholds now reach the UI
+from `GET /api/country-pack` (`early_warning`), asserted in
+`tests/test_national_capability.py`; `FR-NS-092`'s open interruptions are
+served with their identifiers on the work queue so they can be resumed.

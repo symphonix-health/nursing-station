@@ -243,6 +243,14 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
             "local_adoption": adoption,
             "locally_adopted": bool(adoption and adoption["decision"] == "adopted"),
             "publication_gaps": publications.open_gaps(),
+            # FR-NS-101: the frontend colours and counts deterioration from these,
+            # never from literals of its own (ledger section 5 recorded the literals).
+            "early_warning": {
+                "profile_id": active.early_warning["profile_id"],
+                "thresholds": dict(active.early_warning["thresholds"]),
+                "response_minutes": active.early_warning["response_minutes"],
+                "responder_minimum_role": active.early_warning["responder_minimum_role"],
+            },
         }
 
     @router.post("/api/country-pack/adoptions", status_code=201)
@@ -334,6 +342,19 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
             interruptions=interruptions,
             viewer_competencies=competencies_of(user.id),
         )
+        open_by_task: dict[str, list[dict[str, Any]]] = {}
+        for row in db().fetchall(
+            """SELECT id,task_id,reason,reason_category,interrupted_at,recorded_by
+            FROM task_interruptions WHERE tenant_id=? AND ward_id=? AND resumed_at IS NULL
+            ORDER BY interrupted_at""",
+            (user.tenant_id, selected),
+        ):
+            open_by_task.setdefault(row["task_id"], []).append(row)
+        entry_rows = []
+        for entry in entries:
+            row = entry.as_dict()
+            row["open_interruptions"] = open_by_task.get(row["id"], [])
+            entry_rows.append(row)
         return {
             "ward_id": selected,
             "generated_at": ctx.now(),
@@ -350,7 +371,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
                 "closes a task, and it never hides one: a task the viewer is not competent "
                 "to perform is returned with delegable=false and the missing competency named."
             ),
-            "entries": [entry.as_dict() for entry in entries],
+            "entries": entry_rows,
         }
 
     @router.get("/api/wards/{ward_id}/competencies")
