@@ -405,7 +405,20 @@ def main() -> int:
         hub_env.update(
             {
                 "PYTHONUNBUFFERED": "1",
-                "AUTH_MODE": "off",
+                # AUTHENTICATED, not bypassed. This launched the BulletTrain hub
+                # with authentication switched off, so every exchange in the
+                # journey carried no subject, no roles and no scopes -- nothing
+                # the run produced could evidence authorisation, tenant isolation
+                # or audit attribution, which is most of what a governed journey
+                # exists to demonstrate. AUTH_MODE=dev resolves a REAL principal:
+                # BulletTrain's dependencies.py refuses a request presenting no
+                # subject. Least privilege for a hub exchange caller, never admin
+                # or superuser -- testing as a superuser hides every permission gap.
+                "AUTH_MODE": "dev",
+                "DEV_AUTH_SUBJECT": "nursing-station-phase2-journey",
+                "DEV_AUTH_ROLES": "service",
+                "DEV_AUTH_SCOPES": "connector.exchange",
+                "DEV_AUTH_TENANT_ID": "t-platform",
                 "BT_PICIS_SYSTEM_BASE_URL": base_urls["picis_system"],
                 "BT_LIS_BASE_URL": base_urls["lis"],
                 "BT_PACS_RIS_BASE_URL": base_urls["pacs_ris"],
