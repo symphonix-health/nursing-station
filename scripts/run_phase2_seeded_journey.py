@@ -51,11 +51,19 @@ def resolve_hub_contract(*, reuse_hub: bool) -> tuple[str, str]:
     A listener identity from ``/health`` is necessary but not sufficient for
     reuse: it does not attest which connector URLs or authentication policy the
     existing process loaded. Reuse therefore requires explicit operator-owned
-    configuration. A runner-owned gateway uses its isolated auth-off contract.
+    configuration.
+
+    A runner-owned gateway is launched in ``dev`` with a NAMED principal (see the
+    hub_env block below), not with authentication off. The two halves must agree:
+    this function tells the client which credential contract to build, and
+    returning "off" while the hub runs in "dev" would send bare bearer tokens to
+    a gateway expecting the dev assertion headers. That mismatch was introduced
+    when the hub_env was hardened and is fixed here -- it is exactly the kind of
+    half-change that a run catches and a read does not.
     """
 
     if not reuse_hub:
-        return secrets.token_urlsafe(32), "off"
+        return secrets.token_urlsafe(32), "dev"
     if not _enabled("NURSING_STATION_REUSE_REGISTERED_HUB"):
         raise RuntimeError(
             "Registered api_gateway port is already occupied. Refusing to infer "
@@ -417,8 +425,25 @@ def main() -> int:
                 "AUTH_MODE": "dev",
                 "DEV_AUTH_SUBJECT": "nursing-station-phase2-journey",
                 "DEV_AUTH_ROLES": "service",
-                "DEV_AUTH_SCOPES": "connector.exchange",
+                "DEV_AUTH_SCOPES": "connector:exchange",
                 "DEV_AUTH_TENANT_ID": "t-platform",
+                # The hub's connector_exchange policy is ABAC as well as RBAC: it
+                # requires a purpose_of_use and a legal_basis, and denies without
+                # them with reason_code "legal_basis_not_allowed". Measured
+                # 2026-09-03 against the live governed gateway: a `service`
+                # principal holding connector:exchange is refused, and so is an
+                # `admin` one -- this is not a privilege gap that a bigger role
+                # would close, and granting one would have hidden it.
+                #
+                # DECLARED, not inferred: this journey retrieves a patient's
+                # clinical records into a nursing station for direct care, so the
+                # purpose is `treatment` and the basis is `consent`. Both are
+                # values the policy enumerates. If the programme decides a
+                # different basis applies to this exchange, change it here -- the
+                # point is that the journey asserts one explicitly rather than
+                # running with authentication off, which asserted nothing.
+                "DEV_AUTH_PURPOSE_OF_USE": "treatment",
+                "DEV_AUTH_LEGAL_BASIS": "consent",
                 "BT_PICIS_SYSTEM_BASE_URL": base_urls["picis_system"],
                 "BT_LIS_BASE_URL": base_urls["lis"],
                 "BT_PACS_RIS_BASE_URL": base_urls["pacs_ris"],
