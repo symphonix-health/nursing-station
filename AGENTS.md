@@ -2,7 +2,7 @@
 
 ## Global workspace instructions
 
-Also read and follow `C:\Users\hgeec\github\AGENTS.md` before working in this repository.
+Also read and follow `C:\Users\Joshua Tedam\github\AGENTS.md` before working in this repository.
 
 <!-- global-workspace-instructions:end -->
 
