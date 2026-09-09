@@ -1,5 +1,25 @@
 # Symphonix Health Nursing Station
 
+<!-- symphonix-health-ecosystem:start -->
+## Symphonix Health ecosystem
+
+<p>
+  <a href="https://github.com/symphonix-health"><img alt="Symphonix Health" src="https://img.shields.io/badge/Symphonix_Health-clinical_sibling-6366F1?style=flat-square" /></a>
+  <a href="https://github.com/symphonix-health/symphonix-health.github.io/blob/main/docs/system-catalogue.md"><img alt="System catalogue" src="https://img.shields.io/badge/catalogue-64_repos-14919B?style=flat-square" /></a>
+</p>
+
+| Field | Value |
+|---|---|
+| Organisation | Symphonix-Health |
+| Ecosystem layer | Clinical sibling system |
+| Repository role | Inpatient ward workflow: observations, tasks, care plans, medicines, and handover. |
+| Catalogue | [Symphonix system catalogue](https://github.com/symphonix-health/symphonix-health.github.io/blob/main/docs/system-catalogue.md) |
+| Scope basis | Current catalogue snapshot: 64 catalogued repositories; forked/imported repos are excluded. |
+| Evidence rule | Catalogue presence is orientation only. Use repo-local tests, CAID artefacts, seeded data, and runbooks for readiness claims. |
+<!-- symphonix-health-ecosystem:end -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/symphonix-health/.github/master/profile/assets/github-org-atlas.svg" alt="Symphonix Health GitHub system atlas - 64 catalogued repositories, 37 clinical sibling systems" width="100%" />
+</p>
 The Nursing Station is the Symphonix Health inpatient ward workspace for registered nurses and nurses in charge. It gives a bedside and station view of patients, observations, deterioration warnings, nursing work, care plans, medication administration, safety assessments, and accountable handover.
 
 Phase 2 retains the durable nursing workflow and adds governed sibling context. It includes:
