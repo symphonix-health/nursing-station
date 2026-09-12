@@ -137,7 +137,17 @@ def source_service_specs(temp_path: Path) -> tuple[ServiceSpec, ...]:
             workdir=".",
             app="picis_system.main:app",
             health_service="picis-system",
-            env=(("PICIS_DATABASE_URL", _sqlite_url(temp_path / "picis.db", async_driver=False)),),
+            env=(
+                ("PICIS_DATABASE_URL", _sqlite_url(temp_path / "picis.db", async_driver=False)),
+                # picis refuses to boot without a declared hub-receiver
+                # credential posture (P5 2026-09-12, FR-PI-AUTH-001); the
+                # phase-2 journey delivers hub cascades through the BulletTrain
+                # hub, which signs with its own egress secret, and reads
+                # patient context over staff-guarded API routes. Declaring the
+                # documented dev bypass is the local posture; a deployed boot
+                # would set PICIS_WEBHOOK_INBOUND_HMAC_SECRET instead.
+                ("PICIS_DEBUG", "1"),
+            ),
         ),
         ServiceSpec(
             key="lis",
@@ -203,6 +213,9 @@ def source_service_specs(temp_path: Path) -> tuple[ServiceSpec, ...]:
             env=(
                 ("HMIS_DEBUG", "true"),
                 ("HMIS_AUTH_MODE", "dev"),
+                # auth_mode=dev makes the dev JWT default usable (P5 2026-09-12:
+                # HMIS refuses the default secret outside dev auth mode).
+                ("HMIS_JWT_SECRET", "nursing-phase2-journey-secret-not-for-production"),
                 ("HMIS_MODE", "ci"),
                 ("HMIS_SEED_PROFILE", "dev"),
                 ("HMIS_BUILD_ID", "nursing-phase2-runner"),
