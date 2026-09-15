@@ -70,6 +70,7 @@ class RouteContext:
     current_user: Callable[..., Any]
     scoped_patient: Callable[[str, Any], dict]
     require_roles: Callable[..., None]
+    require_capability: Callable[..., None]
     new_id: Callable[[str], str]
     now: Callable[[], str]
 
@@ -255,7 +256,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.post("/api/country-pack/adoptions", status_code=201)
     def record_adoption(body: AdoptionDecision, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "clinical_safety_officer")
+        ctx.require_capability(user, "country_pack.adopt")
         try:
             target = load_pack(body.jurisdiction)
         except CountryPackError as exc:
@@ -303,7 +304,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     # ------------------------------------------------------------------
     @router.get("/api/ward-board/work-queue")
     def work_queue_view(user: CurrentUser = Depends(ctx.current_user), ward_id: str | None = Query(default=None)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "work_queue.read")
         selected = ward_id or user.ward_id
         if not selected:
             raise HTTPException(status_code=422, detail="ward_id is required for cross-ward roles")
@@ -376,7 +377,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.get("/api/wards/{ward_id}/competencies")
     def ward_competencies(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "competency.read")
         scoped_ward(ward_id, user)
         rows = db().fetchall(
             """SELECT u.id,u.name,u.role,c.competency,c.verified_at,c.verified_by
@@ -399,7 +400,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.post("/api/tasks/{task_id}/interruptions", status_code=201)
     def record_interruption(task_id: str, body: InterruptionCreate, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "task_interruption.create")
         task = db().fetchone(
             "SELECT * FROM tasks WHERE id=? AND tenant_id=?", (task_id, user.tenant_id)
         )
@@ -433,7 +434,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.post("/api/task-interruptions/{interruption_id}/resume")
     def resume_interruption(interruption_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "task_interruption.resume")
         row = db().fetchone(
             "SELECT * FROM task_interruptions WHERE id=? AND tenant_id=?",
             (interruption_id, user.tenant_id),
@@ -462,7 +463,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     # ------------------------------------------------------------------
     @router.get("/api/wards/{ward_id}/escalations")
     def escalations(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "escalation.read")
         scoped_ward(ward_id, user)
         active = pack()
         threshold = int(active.early_warning["thresholds"]["escalate"])
@@ -499,7 +500,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def record_escalation_response(
         observation_id: str, body: EscalationResponseCreate, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "escalation.respond")
         observation = db().fetchone(
             "SELECT * FROM observations WHERE id=? AND tenant_id=?",
             (observation_id, user.tenant_id),
@@ -581,7 +582,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def report_harm_incident(
         patient_id: str, body: HarmIncidentCreate, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "harm_incident.write")
         patient = ctx.scoped_patient(patient_id, user)
         active = pack()
         if body.discovered_at < body.occurred_at:
@@ -658,7 +659,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.get("/api/wards/{ward_id}/harm-incidents")
     def list_harm_incidents(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "harm_incident.read")
         scoped_ward(ward_id, user)
         rows = db().fetchall(
             """SELECT i.*,p.name AS patient_name,p.bed,u.name AS reported_by_name,
@@ -675,7 +676,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def review_harm_incident(
         incident_id: str, body: IncidentReviewCreate, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "harm_incident.review")
         incident = db().fetchone(
             "SELECT * FROM harm_incidents WHERE id=? AND tenant_id=?",
             (incident_id, user.tenant_id),
@@ -743,7 +744,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def open_discharge_readiness(
         patient_id: str, body: DischargeReadinessCreate, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "discharge_readiness.write")
         patient = ctx.scoped_patient(patient_id, user)
         active = pack()
         if db().fetchone(
@@ -821,7 +822,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def confirm_criterion(
         readiness_id: str, criterion_id: str, body: CriterionConfirm, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "discharge_readiness.confirm")
         readiness = db().fetchone(
             "SELECT * FROM discharge_readiness WHERE id=? AND tenant_id=?",
             (readiness_id, user.tenant_id),
@@ -874,7 +875,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
         the evidence. A dispatch, a 2xx with nothing in it, or a missing hub
         route all leave the criterion ``pending`` with a typed reason.
         """
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "discharge_readiness.coordinate")
         readiness = db().fetchone(
             "SELECT * FROM discharge_readiness WHERE id=? AND tenant_id=?",
             (readiness_id, user.tenant_id),
@@ -973,7 +974,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.post("/api/discharge-readiness/{readiness_id}/complete")
     def complete_discharge_readiness(readiness_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge")
+        ctx.require_capability(user, "discharge_readiness.complete")
         readiness = db().fetchone(
             "SELECT * FROM discharge_readiness WHERE id=? AND tenant_id=?",
             (readiness_id, user.tenant_id),
@@ -1044,7 +1045,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.get("/api/wards/{ward_id}/staffing-position")
     def staffing_position(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "staffing.position_read")
         ward = scoped_ward(ward_id, user)
         active = pack()
         position = _current_position(ward, user, active)
@@ -1066,7 +1067,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.post("/api/wards/{ward_id}/staffing-roster/refresh")
     async def refresh_staffing_roster(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "staffing.roster_refresh")
         ward = scoped_ward(ward_id, user)
         try:
             hub = HubClient(settings())
@@ -1137,7 +1138,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def declare_staffing_shortage(
         ward_id: str, body: StaffingDeclarationCreate, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "nurse_in_charge")
+        ctx.require_capability(user, "staffing.declare")
         ward = scoped_ward(ward_id, user)
         active = pack()
         position = _current_position(ward, user, active)
@@ -1197,7 +1198,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     def revoke_staffing_declaration(
         declaration_id: str, body: StaffingRevoke, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "nurse_in_charge")
+        ctx.require_capability(user, "staffing.revoke")
         record = db().fetchone(
             "SELECT * FROM staffing_declarations WHERE declaration_id=? AND tenant_id=?",
             (declaration_id, user.tenant_id),
@@ -1224,7 +1225,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
 
     @router.get("/api/wards/{ward_id}/staffing-declarations")
     def list_staffing_declarations(ward_id: str, user: CurrentUser = Depends(ctx.current_user)) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "staffing.declarations_read")
         scoped_ward(ward_id, user)
         rows = db().fetchall(
             "SELECT * FROM staffing_declarations WHERE tenant_id=? AND ward_id=?"
@@ -1245,7 +1246,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     # ------------------------------------------------------------------
     @router.get("/api/wards/{ward_id}/quality-measures")
     def quality_measures(ward_id: str, user: CurrentUser = Depends(ctx.current_user), days: int = Query(default=1, ge=1, le=90)) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "quality_measures.read")
         ward = scoped_ward(ward_id, user)
         active = pack()
         results, inputs, period = compute_ward_measures(
@@ -1268,7 +1269,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     # ------------------------------------------------------------------
     @router.get("/api/publications")
     def list_publications(user: CurrentUser = Depends(ctx.current_user), kind: str | None = Query(default=None)) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "publications.read")
         clauses = ["tenant_id=?"]
         params: list[Any] = [user.tenant_id]
         if kind:
@@ -1362,7 +1363,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
     async def dispatch_publication(
         publication_id: str, user: CurrentUser = Depends(ctx.current_user)
     ) -> dict:
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "publications.dispatch")
         row = db().fetchone(
             "SELECT * FROM outbound_publications WHERE id=? AND tenant_id=?",
             (publication_id, user.tenant_id),
@@ -1382,7 +1383,7 @@ def build_router(ctx: RouteContext) -> APIRouter:  # noqa: C901 - route table
         their named gap and are reported as skipped rather than failed, because
         a missing destination is not a delivery error.
         """
-        ctx.require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+        ctx.require_capability(user, "publications.dispatch_pending")
         deliverable = publications.deliverable_kinds()
         clauses = ["tenant_id=?", "status<>?"]
         params: list[Any] = [user.tenant_id, publications.STATUS_PUBLISHED]

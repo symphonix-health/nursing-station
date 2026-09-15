@@ -43,3 +43,11 @@ ignore = ["E501"]
 # real one. See backend/nursing_station/national_routes.py for why the routes
 # there cannot use the Annotated form instead.
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.Path"]
+
+[tool.ruff.lint.per-file-ignores]
+# The vendored estate RBAC engine is byte-equal with
+# workspace-tooling/rbac/symphonix_rbac (SHA256-verified at migration time).
+# It must stay byte-identical, so lint accommodations go here rather than in
+# the vendored source: UP035 (typing.Callable/Awaitable/Iterable) and N818
+# (CapabilityDenied keeps the estate exception name).
+"backend/nursing_station/rbac/*" = ["UP035", "N818"]

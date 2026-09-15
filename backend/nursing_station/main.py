@@ -4,11 +4,11 @@ import hashlib
 import hmac
 import json
 import os
-from pathlib import Path
 import sqlite3
 import uuid
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Annotated, Literal
 
 import bcrypt
@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, model_validator
 
 from . import national_routes, publications, quality, warning_scores
+from .authz import require_capability
 from .config import get_settings
 from .country_packs import CountryPack, CountryPackError, load_pack
 from .database import Database
@@ -123,11 +124,9 @@ def require_roles(user: CurrentUser, *roles: str) -> None:
 
 
 def scoped_patient(patient_id: str, user: CurrentUser) -> dict:
-    require_roles(
+    require_capability(
         user,
-        "registered_nurse",
-        "nurse_in_charge",
-        "clinical_safety_officer",
+        "patient.read",
     )
     patient = db.fetchone(
         """SELECT p.*,w.facility_id,u.name AS accountable_nurse_name
@@ -268,7 +267,7 @@ async def receive_critical_result(
 
 @app.get("/api/alerts")
 def alerts(user: UserDep, alert_status: Literal["open", "acknowledged", "all"] = "open") -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+    require_capability(user, "alerts.read")
     clauses = ["a.tenant_id=?"]
     params: list[object] = [user.tenant_id]
     if user.ward_id:
@@ -287,7 +286,7 @@ def alerts(user: UserDep, alert_status: Literal["open", "acknowledged", "all"] =
 
 @app.post("/api/alerts/{alert_id}/acknowledge")
 def acknowledge_alert(alert_id: str, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge", "clinical_safety_officer")
+    require_capability(user, "alerts.acknowledge")
     alert = db.fetchone("SELECT * FROM clinical_alerts WHERE id=? AND tenant_id=?", (alert_id, user.tenant_id))
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
@@ -644,7 +643,7 @@ async def refresh_patient_integrations(patient_id: str, user: UserDep) -> dict:
 
 @app.post("/api/wards/{ward_id}/hmis-measures")
 async def submit_hmis_measures(ward_id: str, user: UserDep) -> dict:
-    require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+    require_capability(user, "hmis_measures.submit")
     ward = db.fetchone(
         "SELECT * FROM wards WHERE id=? AND tenant_id=?", (ward_id, user.tenant_id)
     )
@@ -1002,7 +1001,7 @@ def news_score(value: ObservationCreate, *, oxygen_scale: str = "1") -> int:
 
 @app.post("/api/patients/{patient_id}/observations", status_code=201)
 def add_observation(patient_id: str, body: ObservationCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "observation.write")
     patient = scoped_patient(patient_id, user)
     pack = active_pack()
     observation_id = new_id("obs")
@@ -1128,7 +1127,7 @@ def tasks(user: UserDep, status_filter: str | None = Query(default=None, alias="
 
 @app.post("/api/patients/{patient_id}/tasks", status_code=201)
 def create_task(patient_id: str, body: TaskCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "task.create")
     patient = scoped_patient(patient_id, user)
     if body.assigned_to:
         assignee = db.fetchone("SELECT * FROM users WHERE id=? AND tenant_id=?", (body.assigned_to, user.tenant_id))
@@ -1161,7 +1160,7 @@ class TaskTransition(BaseModel):
 
 @app.post("/api/tasks/{task_id}/transition")
 def transition_task(task_id: str, body: TaskTransition, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "task.transition")
     task = db.fetchone("SELECT * FROM tasks WHERE id=? AND tenant_id=?", (task_id, user.tenant_id))
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -1223,7 +1222,7 @@ def handovers(user: UserDep, status_filter: str | None = Query(default=None, ali
 
 @app.post("/api/patients/{patient_id}/handovers", status_code=201)
 def create_handover(patient_id: str, body: HandoverCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "handover.create")
     patient = scoped_patient(patient_id, user)
     receiver = db.fetchone("SELECT * FROM users WHERE id=? AND active=1", (body.receiver_id,))
     if not receiver or receiver["tenant_id"] != user.tenant_id or receiver["ward_id"] != patient["ward_id"] or receiver["id"] == user.id:
@@ -1378,7 +1377,7 @@ class CarePlanUpdate(BaseModel):
 
 @app.post("/api/patients/{patient_id}/care-plans", status_code=201)
 def create_care_plan(patient_id: str, body: CarePlanCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "care_plan.create")
     patient = scoped_patient(patient_id, user)
     owner = db.fetchone("SELECT * FROM users WHERE id=? AND active=1", (body.owner_id,))
     if not owner or owner["tenant_id"] != user.tenant_id or owner["ward_id"] != patient["ward_id"]:
@@ -1399,7 +1398,7 @@ def create_care_plan(patient_id: str, body: CarePlanCreate, user: UserDep) -> di
 
 @app.post("/api/care-plans/{plan_id}/evaluate")
 def evaluate_care_plan(plan_id: str, body: CarePlanUpdate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "care_plan.evaluate")
     plan = db.fetchone("SELECT * FROM care_plans WHERE id=? AND tenant_id=?", (plan_id, user.tenant_id))
     if not plan:
         raise HTTPException(status_code=404, detail="Care plan not found")
@@ -1442,7 +1441,7 @@ class AdministrationCreate(BaseModel):
 
 @app.post("/api/medication-orders/{order_id}/administrations", status_code=201)
 def administer(order_id: str, body: AdministrationCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "medication_administration.write")
     order = db.fetchone("SELECT * FROM medication_orders WHERE id=? AND tenant_id=?", (order_id,user.tenant_id))
     if not order:
         raise HTTPException(status_code=404, detail="Medication order not found")
@@ -1576,7 +1575,7 @@ class AssessmentCreate(BaseModel):
 
 @app.post("/api/patients/{patient_id}/safety-assessments", status_code=201)
 def assess(patient_id: str, body: AssessmentCreate, user: UserDep) -> dict:
-    require_roles(user, "registered_nurse", "nurse_in_charge")
+    require_capability(user, "safety_assessment.write")
     patient = scoped_patient(patient_id, user)
     assessment_id = new_id("assessment")
     created_tasks: list[str] = []
@@ -1609,7 +1608,7 @@ def assess(patient_id: str, body: AssessmentCreate, user: UserDep) -> dict:
 
 @app.get("/api/audit")
 def audit_log(user: UserDep, limit: int = Query(default=100, ge=1, le=500)) -> dict:
-    require_roles(user, "nurse_in_charge", "clinical_safety_officer")
+    require_capability(user, "audit.read")
     clauses = ["tenant_id=?"]
     params: list = [user.tenant_id]
     if user.ward_id:
@@ -1635,6 +1634,7 @@ app.include_router(
             current_user=current_user,
             scoped_patient=scoped_patient,
             require_roles=require_roles,
+            require_capability=require_capability,
             new_id=new_id,
             now=now,
         )
