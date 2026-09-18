@@ -1,0 +1,456 @@
+{
+  "schema_version": "WORKSPACE_FRONTEND_VISUAL_EVIDENCE_V1",
+  "runs": [
+    {
+      "surface": "Login form (missing required markers and enforcement)",
+      "route": "/login",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:32:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/App.tsx": "f054c9054c253af7835333797a344adcbb5fd95b695a99d2bb71bd7e1a386882"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-01-login-markers.png"
+      ],
+      "assertions": [
+        "Email and Password labels each carry the bt-label-required class and render a visible red asterisk (confirmed by SignalBox visual_qa against the live screenshot); both inputs carry required and aria-required=\"true\"",
+        "Clearing both fields and clicking Sign in produced zero network requests (browser_network, url_pattern=login) -- the previously-missing required attribute now blocks the empty submission natively, before any request is dispatched",
+        "Signing in with the seeded demo account amina.okafor@nursing.test / Nursing2026! succeeded with HTTP 200 from POST /api/auth/login (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "Observations vitals form (no required markers, no range mirror of ObservationCreate)",
+      "route": "/patients/{patientId}",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:39:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/App.tsx": "f054c9054c253af7835333797a344adcbb5fd95b695a99d2bb71bd7e1a386882"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-02-observations-markers.png"
+      ],
+      "assertions": [
+        "Respiratory rate, SpO2, Systolic BP, Pulse, Temperature and Consciousness labels all carry bt-label-required, and each input carries required, aria-required=\"true\", type=\"number\", and min/max mirroring the backend ObservationCreate range (respiratory_rate 4-80, oxygen_saturation 50-100, systolic_bp 40-300, pulse 20-250, temperature 30-45)",
+        "Entering oxygen_saturation=250 (backend max 100) and clicking Confirm observation produced zero network requests (browser_network, url_pattern=observations) -- refused client-side by the native max constraint before any request was sent",
+        "Entering oxygen_saturation=96 and submitting the same form succeeded with HTTP 201 from POST /api/patients/pat-002/observations (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "Safety assessment, SBAR handover, nursing task and care-plan forms (missing required markers/enforcement on App.tsx)",
+      "route": "/patients/{patientId}",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:49:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/App.tsx": "f054c9054c253af7835333797a344adcbb5fd95b695a99d2bb71bd7e1a386882"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-04-tasks-positive-control.png"
+      ],
+      "assertions": [
+        "Safety assessment Findings and Owned action labels carry bt-label-required; clearing both and clicking Save and create action produced zero network requests (previously this form had no required attribute at all and posted straight to the backend); typing valid text and resubmitting succeeded with HTTP 201 from POST /api/patients/pat-002/safety-assessments (positive control)",
+        "SBAR Handover situation/background/assessment/recommendation labels carry bt-label-required with required, aria-required=\"true\" and minLength=5 matching HandoverCreate; clearing all four fields and clicking Create pending handover produced zero network requests (previously this form had no required attribute at all)",
+        "Create-task Task title enforces minLength=3 matching TaskCreate; a 2-character title (\"Hi\") produced zero network requests on click Create task; a valid title (\"Reposition patient\") succeeded with HTTP 201 from POST /api/patients/pat-003/tasks (positive control, screenshot pinned)",
+        "Medications administration Reason (shown when outcome is not administered) and Independent co-signer labels carry bt-label-required with required and aria-required=\"true\""
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "Medications administration record: whitespace-only reason for a non-administered outcome",
+      "route": "/patients/{patientId}",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:47:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/App.tsx": "f054c9054c253af7835333797a344adcbb5fd95b695a99d2bb71bd7e1a386882"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-04-tasks-positive-control.png"
+      ],
+      "assertions": [
+        "Selecting outcome=withheld and entering a reason of three plain spaces, then clicking Confirm administration record, was refused by the backend with HTTP 422 from POST /api/medication-orders/med-003/administrations -- before this fix the identical steps recorded the administration with HTTP 201, i.e. a withheld high-value cardiac medication with no real reason on file",
+        "Entering a real reason (\"Patient nil by mouth for theatre; dose withheld per medical team instruction.\") and resubmitting succeeded with HTTP 201 (positive control)"
+      ],
+      "expected_refusals": [
+        {
+          "method": "POST",
+          "url_pattern": "^/api/medication-orders/[^/]+/administrations$",
+          "status": 422,
+          "justification": "proves the whitespace-only-reason fix: a withheld/refused dose whose reason is only spaces must now be rejected server-side instead of being accepted as if it explained the omission"
+        }
+      ],
+      "console_errors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Content)",
+          "url": "http://127.0.0.1:5282/api/medication-orders/med-003/administrations"
+        }
+      ],
+      "failed_requests": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:5282/api/medication-orders/med-003/administrations",
+          "status": 422
+        }
+      ]
+    },
+    {
+      "surface": "national.tsx harm-incident report: invisible-Unicode-only description, plus required/optional markers",
+      "route": "/incidents",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:55:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-03-incidents-markers.png"
+      ],
+      "assertions": [
+        "Report-an-incident Description label shows a visible red asterisk and Classification/Body site labels show '(optional)' (confirmed by SignalBox visual_qa against the live screenshot); Description/Occurred/Discovered carry required and aria-required=\"true\"",
+        "Entering a Description made of five U+200B (zero width space) characters only -- which satisfies the native minLength=5 constraint character-count-wise -- and clicking Report was refused by the backend with HTTP 422 from POST /api/patients/pat-001/harm-incidents; before this fix the identical steps recorded the incident with HTTP 201, i.e. a harm incident with no real description on file",
+        "Entering a real description and resubmitting succeeded with HTTP 201 (positive control)"
+      ],
+      "expected_refusals": [
+        {
+          "method": "POST",
+          "url_pattern": "^/api/patients/[^/]+/harm-incidents$",
+          "status": 422,
+          "justification": "proves the invisible-Unicode fix: a description made only of zero-width-space characters must be refused as blank, not accepted as real clinical narrative"
+        }
+      ],
+      "console_errors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Content)",
+          "url": "http://127.0.0.1:5282/api/patients/pat-001/harm-incidents"
+        }
+      ],
+      "failed_requests": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:5282/api/patients/pat-001/harm-incidents",
+          "status": 422
+        }
+      ]
+    },
+    {
+      "surface": "national.tsx WorkQueue interruption Reason marker and enforcement",
+      "route": "/work-queue",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T23:04:00Z",
+      "session_id": "iv-nurse-evidence2",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-05-workqueue-markers.png"
+      ],
+      "assertions": [
+        "Record-interruption Reason label shows a visible red asterisk (confirmed by SignalBox visual_qa) and the input carries required, aria-required=\"true\" and minLength=3",
+        "Clicking Record interruption then Save interruption with Reason left empty produced zero network requests (browser_network, url_pattern=interruptions)",
+        "Typing a real reason and clicking Save interruption succeeded with HTTP 201 from POST /api/tasks/task-001/interruptions (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "national.tsx Escalations clinical-response marker and enforcement",
+      "route": "/escalations",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "nurse_in_charge",
+      "verified_at": "2026-09-18T23:07:00Z",
+      "session_id": "iv-nurse-nic",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-06-escalations-markers.png"
+      ],
+      "assertions": [
+        "Clinical response label shows a visible red asterisk (SignalBox visual_qa); the textarea carries required, aria-required=\"true\" and minLength=5",
+        "Clicking Respond then Record response with Clinical response left empty produced zero network requests (browser_network, url_pattern=escalation-response)",
+        "Typing a real clinical response and resubmitting succeeded with HTTP 201 from POST /api/observations/obs-seed-001/escalation-response (positive control; the registered_nurse persona was refused HTTP 403 on this same seeded escalation because the pack's early-warning profile requires a nurse_in_charge response at its level -- a correct, pre-existing business rule, not an input-validation defect, so the positive control was completed as nurse_in_charge)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "national.tsx Staffing shortage declaration (reason + window minutes) and revocation reason markers and enforcement",
+      "route": "/staffing",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "nurse_in_charge",
+      "verified_at": "2026-09-18T23:14:00Z",
+      "session_id": "iv-nurse-nic",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-07-staffing-markers.png"
+      ],
+      "assertions": [
+        "Declare-a-staffing-shortage Reason and Window (minutes) labels both show a visible red asterisk (SignalBox visual_qa); Window (minutes) previously carried no required attribute at all and now carries required, aria-required=\"true\", min=15, max=1440",
+        "Entering Reason=\"short\" (5 chars, backend minLength=10) and clicking Declare produced zero network requests (browser_network, url_pattern=staffing-declarations)",
+        "Entering a real reason (>=10 chars) and clicking Declare succeeded with HTTP 201 from POST /api/wards/ward-med-a/staffing-declarations (positive control)",
+        "On the resulting active declaration, Revocation reason label shows a visible red asterisk and carries required, aria-required=\"true\", minLength=5; a 2-character reason (\"ok\") on Revoke produced zero network requests (url_pattern=revoke); a real reason succeeded with HTTP 200 from POST /api/staffing-declarations/{id}/revoke (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "national.tsx Discharge criterion confirmation-note marker and enforcement",
+      "route": "/patients/{patientId}",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "nurse_in_charge",
+      "verified_at": "2026-09-18T23:18:00Z",
+      "session_id": "iv-nurse-nic",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-08-discharge-markers.png"
+      ],
+      "assertions": [
+        "After opening discharge readiness, the Confirmation note label on a mandatory local criterion shows a visible red asterisk (SignalBox visual_qa) and the input carries required, aria-required=\"true\", minLength=3",
+        "Entering a 2-character note (\"ok\") and clicking Confirm produced zero network requests (browser_network, url_pattern=criteria)",
+        "Entering a real note and resubmitting succeeded with HTTP 200 from POST /api/discharge-readiness/{id}/criteria/{criterionId}/confirm (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "national.tsx Country-pack adoption decision scope/note markers and enforcement",
+      "route": "/governance",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "clinical_safety_officer",
+      "verified_at": "2026-09-18T23:24:00Z",
+      "session_id": "iv-nurse-cso",
+      "files": {
+        "frontend/src/national.tsx": "028e5a61a839b19e066ff1eb8d3871444e2a21152b37a3671cabc5335bb87c6e"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-09-countrypack-markers.png"
+      ],
+      "assertions": [
+        "Record-an-adoption-decision Scope and Note labels both show a visible red asterisk (SignalBox visual_qa); both inputs carry required, aria-required=\"true\" and minLength=3",
+        "Entering Scope=\"ok\" (2 chars) with Note left empty and clicking Record decision produced zero network requests (browser_network, url_pattern=adoptions)",
+        "Entering a real scope and note and resubmitting succeeded with HTTP 201 from POST /api/country-pack/adoptions (positive control)"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    },
+    {
+      "surface": "design-system.css: added bt-label-required/bt-label-optional/bt-error-text marker rules (no new colour literals; all pre-existing literals declared as exceptions above)",
+      "route": "/login",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-18T22:32:00Z",
+      "session_id": "iv-nurse-evidence",
+      "files": {
+        "frontend/src/styles/design-system.css": "350e3762006ba3732a57e824b60f27dfe39118f4b97deaaf7e75dc335052adcd"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/input-validation-01-login-markers.png"
+      ],
+      "assertions": [
+        "The three new CSS rules (.bt-label-required::after, .bt-label-optional::after, .bt-error-text) render correctly on the live login page: the Email and Password labels show a visible red asterisk (confirmed by SignalBox visual_qa against the pinned screenshot), proving the stylesheet change took effect with no other visual change to the page"
+      ],
+      "console_errors": [],
+      "failed_requests": []
+    }
+  ],
+  "design_token_exceptions": [
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#16703a",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#146c43",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#8a5600",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#7a4b00",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#b42318",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#a31911",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#075985",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#f6f7fb",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#f0f2f8",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#101225",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#4d536b",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#d9ddea",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#e8e8ed",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#fff1f0",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#fff7df",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#ebf8ef",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#92400e",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#7dd3fc",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#131522",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#1b1d2b",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#232638",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#f4f5fb",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#b7bbcc",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#383c50",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#ff8a7f",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#421d1c",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#f6c453",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#3d3015",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#7ee2a8",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#153826",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#111",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "rgba(99,102,241,.2)",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#333",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    },
+    {
+      "file": "frontend/src/styles/design-system.css",
+      "literal": "#bbb",
+      "justification": "Pre-existing on origin/main, byte-identical -- confirmed via `git diff origin/main -- frontend/src/styles/design-system.css`, whose only change is 10 added lines (the bt-label-required/bt-label-optional/bt-error-text marker rules), every one referencing var(--ns-critical) or var(--ns-muted) with no new colour literal. Design-system-gate remediation of this repo's pre-existing token debt is out of scope for the input-validation run (standing PO approval 2026-09-11 on pre-existing foundation gaps)."
+    }
+  ]
+}

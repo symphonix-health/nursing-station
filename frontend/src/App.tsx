@@ -99,12 +99,12 @@ function Login() {
         <p>Sign in to your assigned ward. Phase 2 adds governed sibling context for linked fictional patients.</p>
         {error && <div className="alert danger" role="alert">{error}</div>}
         <div className="field">
-          <label htmlFor="email">Email</label>
-          <input id="email" type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="username" />
+          <label className="bt-label-required" htmlFor="email">Email</label>
+          <input id="email" type="email" required aria-required="true" value={email} onChange={event => setEmail(event.target.value)} autoComplete="username" />
         </div>
         <div className="field">
-          <label htmlFor="password">Password</label>
-          <input id="password" type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" />
+          <label className="bt-label-required" htmlFor="password">Password</label>
+          <input id="password" type="password" required aria-required="true" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" />
         </div>
         <button className="btn btn-primary" type="submit">Sign in</button>
         <p className="sub">Phase 2 / BulletTrain mediated / Governed synthetic patients</p>
@@ -553,11 +553,14 @@ function Observations({ patient, onSaved }: { patient: Patient; onSaved: () => v
     },
   })
   const measures = [
-    ['respiratory_rate', 'Respiratory rate /min'],
-    ['oxygen_saturation', 'SpO2 %'],
-    ['systolic_bp', 'Systolic BP mmHg'],
-    ['pulse', 'Pulse /min'],
-    ['temperature', 'Temperature Cel'],
+    // min/max mirror the backend's ObservationCreate range (ge/le); a value
+    // outside them is refused by the server, so the field should say so
+    // before the round trip rather than surface a raw 422.
+    ['respiratory_rate', 'Respiratory rate /min', 4, 80],
+    ['oxygen_saturation', 'SpO2 %', 50, 100],
+    ['systolic_bp', 'Systolic BP mmHg', 40, 300],
+    ['pulse', 'Pulse /min', 20, 250],
+    ['temperature', 'Temperature Cel', 30, 45],
   ] as const
   return (
     <div className="grid grid-2">
@@ -566,15 +569,15 @@ function Observations({ patient, onSaved }: { patient: Patient; onSaved: () => v
         {mutation.error && <div className="alert danger" role="alert">{(mutation.error as Error).message}</div>}
         {message && <div className="alert normal" aria-live="polite">{message}</div>}
         <div className="form-grid">
-          {measures.map(([key, label]) => (
+          {measures.map(([key, label, min, max]) => (
             <div className="field" key={key}>
-              <label htmlFor={key}>{label}</label>
-              <input id={key} inputMode="decimal" value={form[key]} onChange={event => setForm({ ...form, [key]: event.target.value })} />
+              <label className="bt-label-required" htmlFor={key}>{label}</label>
+              <input id={key} type="number" inputMode="decimal" step="0.1" min={min} max={max} required aria-required="true" value={form[key]} onChange={event => setForm({ ...form, [key]: event.target.value })} />
             </div>
           ))}
           <div className="field">
-            <label htmlFor="consciousness">Consciousness</label>
-            <select id="consciousness" value={form.consciousness} onChange={event => setForm({ ...form, consciousness: event.target.value })}>
+            <label className="bt-label-required" htmlFor="consciousness">Consciousness</label>
+            <select id="consciousness" required aria-required="true" value={form.consciousness} onChange={event => setForm({ ...form, consciousness: event.target.value })}>
               {(consciousness.data?.values ?? []).map(value => <option value={value} key={value}>{value.replaceAll('-', ' ')}</option>)}
             </select>
           </div>
@@ -656,10 +659,10 @@ function PatientTasks({ patient, user, onSaved }: { patient: Patient; user: User
       <form className="panel" onSubmit={event => { event.preventDefault(); create.mutate() }}>
         <h2>Create and assign task</h2>
         {create.error && <div className="alert danger" role="alert">{(create.error as Error).message}</div>}
-        <div className="field"><label htmlFor="task-title">Task</label><input id="task-title" required value={form.title} onChange={event => setForm({ ...form, title: event.target.value })} /></div>
-        <div className="field"><label htmlFor="task-description">Instructions</label><textarea id="task-description" required value={form.description} onChange={event => setForm({ ...form, description: event.target.value })} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="task-title">Task</label><input id="task-title" required aria-required="true" minLength={3} maxLength={120} value={form.title} onChange={event => setForm({ ...form, title: event.target.value })} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="task-description">Instructions</label><textarea id="task-description" required aria-required="true" minLength={3} maxLength={500} value={form.description} onChange={event => setForm({ ...form, description: event.target.value })} /></div>
         <div className="field"><label htmlFor="task-priority">Priority</label><select id="task-priority" value={form.priority} onChange={event => setForm({ ...form, priority: event.target.value })}>{(priorities.data?.values ?? []).map(value => <option key={value}>{value}</option>)}</select></div>
-        <div className="field"><label htmlFor="task-due">Due time</label><input id="task-due" type="datetime-local" required value={form.due_at} onChange={event => setForm({ ...form, due_at: event.target.value })} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="task-due">Due time</label><input id="task-due" type="datetime-local" required aria-required="true" value={form.due_at} onChange={event => setForm({ ...form, due_at: event.target.value })} /></div>
         <div className="field"><label htmlFor="task-owner">Assigned nurse</label><select id="task-owner" value={form.assigned_to} onChange={event => setForm({ ...form, assigned_to: event.target.value })}>{nurses.map(nurse => <option value={nurse.id} key={nurse.id}>{nurse.name}, {nurse.role.replaceAll('_', ' ')}</option>)}</select></div>
         <button className="btn btn-primary" disabled={create.isPending || priorities.isLoading}>Create task</button>
       </form>
@@ -703,9 +706,9 @@ function CarePlans({ patient, user, onSaved }: { patient: Patient; user: User; o
       <form className="panel" onSubmit={event => { event.preventDefault(); create.mutate() }}>
         <h2>Add care plan problem</h2>
         {(create.error || evaluate.error) && <div className="alert danger" role="alert">{((create.error || evaluate.error) as Error).message}</div>}
-        <div className="field"><label htmlFor="problem">Nursing problem</label><input id="problem" required value={problem} onChange={event => setProblem(event.target.value)} /></div>
-        <div className="field"><label htmlFor="goal">Measurable goal</label><textarea id="goal" required value={goal} onChange={event => setGoal(event.target.value)} /></div>
-        <div className="field"><label htmlFor="intervention">Owned intervention</label><textarea id="intervention" required value={intervention} onChange={event => setIntervention(event.target.value)} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="problem">Nursing problem</label><input id="problem" required aria-required="true" minLength={3} maxLength={500} value={problem} onChange={event => setProblem(event.target.value)} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="goal">Measurable goal</label><textarea id="goal" required aria-required="true" minLength={3} maxLength={1000} value={goal} onChange={event => setGoal(event.target.value)} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="intervention">Owned intervention</label><textarea id="intervention" required aria-required="true" minLength={1} value={intervention} onChange={event => setIntervention(event.target.value)} /></div>
         <div className="field"><label htmlFor="care-owner">Accountable nurse</label><select id="care-owner" value={owner} onChange={event => setOwner(event.target.value)}>{nurses.map(nurse => <option value={nurse.id} key={nurse.id}>{nurse.name}, {nurse.role.replaceAll('_', ' ')}</option>)}</select></div>
         <button className="btn btn-primary" disabled={create.isPending}>Add to care plan</button>
       </form>
@@ -750,8 +753,8 @@ function Medications({ patient, user, privacy, onSaved }: { patient: Patient; us
             {selected.high_alert === 1 && <div className="alert danger" role="alert"><ShieldCheck size={18} /><div><strong>HIGH-ALERT medication</strong><div>An independent eligible nurse must co-sign.</div></div></div>}
             {mutation.error && <div className="alert danger" role="alert">{(mutation.error as Error).message}</div>}
             <div className="field"><label htmlFor="outcome">Outcome</label><select id="outcome" value={outcome} onChange={event => setOutcome(event.target.value)}>{(outcomes.data?.values ?? []).map(value => <option key={value}>{value}</option>)}</select></div>
-            {outcome !== 'administered' && <div className="field"><label htmlFor="reason">Reason</label><textarea id="reason" required value={reason} onChange={event => setReason(event.target.value)} /></div>}
-            {selected.high_alert === 1 && <div className="field"><label htmlFor="cosigner">Independent co-signer</label><select id="cosigner" value={cosigner || eligible[0]?.id || ''} onChange={event => setCosigner(event.target.value)}>{eligible.map(nurse => <option value={nurse.id} key={nurse.id}>{nurse.name}, {nurse.role.replaceAll('_', ' ')}</option>)}</select></div>}
+            {outcome !== 'administered' && <div className="field"><label className="bt-label-required" htmlFor="reason">Reason</label><textarea id="reason" required aria-required="true" value={reason} onChange={event => setReason(event.target.value)} />{!reason.trim() && <span className="bt-error-text">A reason is required when the medication is not administered as ordered.</span>}</div>}
+            {selected.high_alert === 1 && <div className="field"><label className="bt-label-required" htmlFor="cosigner">Independent co-signer</label><select id="cosigner" required aria-required="true" value={cosigner || eligible[0]?.id || ''} onChange={event => setCosigner(event.target.value)}>{eligible.map(nurse => <option value={nurse.id} key={nurse.id}>{nurse.name}, {nurse.role.replaceAll('_', ' ')}</option>)}</select></div>}
             <button className="btn btn-primary" disabled={mutation.isPending || outcomes.isLoading}>{mutation.isPending ? 'Confirming...' : 'Confirm administration record'}</button>
           </form>
         ) : <div className="empty">Select a medication to begin the verification workflow.</div>}
@@ -787,7 +790,7 @@ function Handover({ patient, user }: { patient: Patient; user: User }) {
         <div className="panel-head"><h2>Structured SBAR handover</h2><Status kind="caution" label="Explicit acceptance required" /></div>
         {(mutation.error || accept.error) && <div className="alert danger" role="alert">{((mutation.error || accept.error) as Error).message}</div>}
         {Boolean(mutation.data) && <div className="alert normal" aria-live="polite">Handover created. Accountability has not transferred until named acceptance.</div>}
-        <div className="grid grid-2">{(['situation', 'background', 'assessment', 'recommendation'] as const).map(key => <div className="field" key={key}><label htmlFor={key}>{key[0].toUpperCase() + key.slice(1)}</label><textarea id={key} value={form[key]} onChange={event => setForm({ ...form, [key]: event.target.value })} /></div>)}</div>
+        <div className="grid grid-2">{(['situation', 'background', 'assessment', 'recommendation'] as const).map(key => <div className="field" key={key}><label className="bt-label-required" htmlFor={key}>{key[0].toUpperCase() + key.slice(1)}</label><textarea id={key} required aria-required="true" minLength={5} maxLength={2000} value={form[key]} onChange={event => setForm({ ...form, [key]: event.target.value })} /></div>)}</div>
         <div className="field field-narrow"><label htmlFor="receiver">Receiving nurse</label><select id="receiver" value={form.receiver_id || eligible[0]?.id || ''} onChange={event => setForm({ ...form, receiver_id: event.target.value })}>{eligible.map(nurse => <option value={nurse.id} key={nurse.id}>{nurse.name}, {nurse.role.replaceAll('_', ' ')}</option>)}</select></div>
         <button className="btn btn-primary" disabled={mutation.isPending || eligible.length === 0}>{mutation.isPending ? 'Creating...' : 'Create pending handover'}</button>
       </form>
@@ -826,8 +829,8 @@ function Safety({ patient, onSaved }: { patient: Patient; onSaved: () => void })
         {mutation.error && <div className="alert danger" role="alert">{(mutation.error as Error).message}</div>}
         <div className="field"><label htmlFor="atype">Assessment</label><select id="atype" value={type} onChange={event => setType(event.target.value)}>{(types.data?.values ?? []).map(value => <option key={value}>{value}</option>)}</select></div>
         <div className="field"><label htmlFor="risk">Risk</label><select id="risk" value={risk} onChange={event => setRisk(event.target.value)}>{(risks.data?.values ?? []).map(value => <option key={value}>{value}</option>)}</select></div>
-        <div className="field"><label htmlFor="findings">Findings</label><textarea id="findings" value={findings} onChange={event => setFindings(event.target.value)} /></div>
-        <div className="field"><label htmlFor="action">Owned action</label><input id="action" value={action} onChange={event => setAction(event.target.value)} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="findings">Findings</label><textarea id="findings" required aria-required="true" minLength={3} maxLength={1000} value={findings} onChange={event => setFindings(event.target.value)} /></div>
+        <div className="field"><label className="bt-label-required" htmlFor="action">Owned action</label><input id="action" required aria-required="true" value={action} onChange={event => setAction(event.target.value)} /></div>
         <button className="btn btn-primary" disabled={mutation.isPending || types.isLoading || risks.isLoading}>Save and create action</button>
       </form>
       <section className="panel">

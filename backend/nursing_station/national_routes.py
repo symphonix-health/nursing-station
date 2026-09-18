@@ -27,12 +27,13 @@ from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from . import publications, quality, work_queue, workforce
 from .country_packs import CountryPack, CountryPackError, available_jurisdictions, load_pack
 from .identity import CurrentUser
 from .integration import HubClient, IntegrationError
+from .text_validation import require_meaningful_items, require_meaningful_text
 
 HARM_LEVELS = ("none", "low", "moderate", "severe", "death")
 _HARM_ORDER = {level: index for index, level in enumerate(HARM_LEVELS)}
@@ -85,6 +86,8 @@ class AdoptionDecision(BaseModel):
     scope: str = Field(min_length=3, max_length=200)
     note: str = Field(min_length=3, max_length=1000)
 
+    _check_text = field_validator("scope", "note")(require_meaningful_text)
+
 
 class InterruptionCreate(BaseModel):
     reason: str = Field(min_length=3, max_length=300)
@@ -97,10 +100,14 @@ class InterruptionCreate(BaseModel):
         "communication",
     ]
 
+    _check_text = field_validator("reason")(require_meaningful_text)
+
 
 class EscalationResponseCreate(BaseModel):
     clinical_response: str = Field(min_length=5, max_length=1000)
     outcome: Literal["reviewed-no-change", "treatment-changed", "escalated-to-medical-team", "transferred"]
+
+    _check_text = field_validator("clinical_response")(require_meaningful_text)
 
 
 class HarmIncidentCreate(BaseModel):
@@ -114,12 +121,20 @@ class HarmIncidentCreate(BaseModel):
     present_on_admission: bool = False
     linked_assessment_id: str | None = None
 
+    # A harm-incident report is a clinical-safety record; description is the
+    # only mandatory narrative on it and must not be satisfiable by spaces or
+    # invisible Unicode (estate input-validation run, 2026-09-18, high severity).
+    _check_text = field_validator("description")(require_meaningful_text)
+
 
 class IncidentReviewCreate(BaseModel):
     avoidability: Literal["avoidable", "unavoidable", "not-determined"]
     contributory_factors: list[str] = Field(min_length=1, max_length=10)
     learning_actions: list[str] = Field(min_length=1, max_length=10)
     conclusion: str = Field(min_length=5, max_length=2000)
+
+    _check_text = field_validator("conclusion")(require_meaningful_text)
+    _check_items = field_validator("contributory_factors", "learning_actions")(require_meaningful_items)
 
 
 class DischargeReadinessCreate(BaseModel):
@@ -129,14 +144,20 @@ class DischargeReadinessCreate(BaseModel):
 class CriterionConfirm(BaseModel):
     note: str = Field(min_length=3, max_length=500)
 
+    _check_text = field_validator("note")(require_meaningful_text)
+
 
 class StaffingDeclarationCreate(BaseModel):
     reason: str = Field(min_length=10, max_length=500)
     window_minutes: int | None = Field(default=None, ge=15, le=1440)
 
+    _check_text = field_validator("reason")(require_meaningful_text)
+
 
 class StaffingRevoke(BaseModel):
     reason: str = Field(min_length=5, max_length=500)
+
+    _check_text = field_validator("reason")(require_meaningful_text)
 
 
 # --------------------------------------------------------------------------

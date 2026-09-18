@@ -15,7 +15,7 @@ import bcrypt
 import jwt
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from . import national_routes, publications, quality, warning_scores
 from .authz import require_capability
@@ -25,6 +25,7 @@ from .database import Database
 from .identity import CurrentUser
 from .integration import SOURCE_CONTRACTS, HubClient, IntegrationError
 from .port_registry import resolve_frontend_port
+from .text_validation import is_blank, require_meaningful_text, require_meaningful_text_if_present
 
 settings = get_settings()
 db = Database(settings.database_path)
@@ -1074,6 +1075,11 @@ class TaskCreate(BaseModel):
     assigned_to: str | None = None
     required_competency: str | None = Field(default=None, max_length=80)
 
+    # min_length alone accepts a string of spaces or of invisible Unicode
+    # formatting characters; a nursing task's title and instructions must
+    # carry actual content (estate input-validation run, 2026-09-18).
+    _check_text = field_validator("title", "description")(require_meaningful_text)
+
 
 def held_competencies(user_id: str) -> set[str]:
     return {
@@ -1200,6 +1206,12 @@ class HandoverCreate(BaseModel):
     assessment: str = Field(min_length=5, max_length=2000)
     recommendation: str = Field(min_length=5, max_length=2000)
 
+    # Each SBAR line is accountable clinical narrative; a run of spaces or
+    # invisible characters must not stand in for it.
+    _check_text = field_validator("situation", "background", "assessment", "recommendation")(
+        require_meaningful_text
+    )
+
 
 @app.get("/api/handovers")
 def handovers(user: UserDep, status_filter: str | None = Query(default=None, alias="status")) -> list[dict]:
@@ -1310,7 +1322,9 @@ def accept_handover(handover_id: str, body: HandoverAccept, user: UserDep) -> di
         )
     declined_without_reason = [
         task_id for task_id, item in decisions.items()
-        if item.decision == "decline" and not item.reason.strip()
+        # A plain .strip() misses zero-width/invisible Unicode filler, which
+        # would otherwise let a decline through with no real reason.
+        if item.decision == "decline" and is_blank(item.reason)
     ]
     if declined_without_reason:
         raise HTTPException(
@@ -1368,11 +1382,15 @@ class CarePlanCreate(BaseModel):
     interventions: list[str] = Field(min_length=1, max_length=20)
     owner_id: str
 
+    _check_text = field_validator("problem", "goal")(require_meaningful_text)
+
 
 class CarePlanUpdate(BaseModel):
     status: Literal["active", "achieved", "discontinued"]
     evaluation: str = Field(min_length=3, max_length=2000)
     version: int = Field(ge=1)
+
+    _check_text = field_validator("evaluation")(require_meaningful_text)
 
 
 @app.post("/api/patients/{patient_id}/care-plans", status_code=201)
@@ -1431,6 +1449,12 @@ class AdministrationCreate(BaseModel):
     mrn_verified: str
     date_of_birth_verified: str
     cosigner_id: str | None = None
+
+    # High-alert / non-administered outcomes are clinical-safety-critical:
+    # a reason of spaces or invisible Unicode is not a reason, and must not
+    # be able to satisfy `reason_for_non_administered` below merely by
+    # being a non-empty string (estate input-validation run, 2026-09-18).
+    _check_reason = field_validator("reason")(require_meaningful_text_if_present)
 
     @model_validator(mode="after")
     def reason_for_non_administered(self):
@@ -1571,6 +1595,8 @@ class AssessmentCreate(BaseModel):
     score: float | None = None
     findings: str = Field(min_length=3, max_length=1000)
     actions: list[str] = Field(min_length=1, max_length=10)
+
+    _check_text = field_validator("findings")(require_meaningful_text)
 
 
 @app.post("/api/patients/{patient_id}/safety-assessments", status_code=201)

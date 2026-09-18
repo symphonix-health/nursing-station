@@ -130,7 +130,7 @@ export function WorkQueuePage({ user, privacy }: { user: User; privacy: boolean 
                 ))}
                 {open === entry.id && (
                   <form className="form-grid" onSubmit={(event: FormEvent) => { event.preventDefault(); interrupt.mutate(entry.id) }} aria-label="Record interruption">
-                    <div className="field"><label htmlFor={`reason-${entry.id}`}>Reason</label><input id={`reason-${entry.id}`} value={reason} onChange={event => setReason(event.target.value)} required minLength={3} /></div>
+                    <div className="field"><label className="bt-label-required" htmlFor={`reason-${entry.id}`}>Reason</label><input id={`reason-${entry.id}`} value={reason} onChange={event => setReason(event.target.value)} required aria-required="true" minLength={3} /></div>
                     <div className="field"><label htmlFor={`category-${entry.id}`}>Category</label><select id={`category-${entry.id}`} value={category} onChange={event => setCategory(event.target.value)}>{INTERRUPTION_CATEGORIES.map(value => <option key={value} value={value}>{value}</option>)}</select></div>
                     <div className="field"><label>&nbsp;</label><button className="btn btn-primary" disabled={interrupt.isPending}>Save interruption</button></div>
                   </form>
@@ -199,7 +199,7 @@ export function EscalationsPage({ user, privacy }: { user: User; privacy: boolea
                 {row.answered && <div className="sub">Responded {when(row.responded_at)} by {row.responder_id} {row.within_required_interval ? 'within' : 'outside'} the required interval</div>}
                 {open === row.id && (
                   <form className="form-grid" onSubmit={(event: FormEvent) => { event.preventDefault(); respond.mutate(row.id) }} aria-label="Record clinical response">
-                    <div className="field"><label htmlFor={`response-${row.id}`}>Clinical response</label><textarea id={`response-${row.id}`} value={response} onChange={event => setResponse(event.target.value)} required minLength={5} /></div>
+                    <div className="field"><label className="bt-label-required" htmlFor={`response-${row.id}`}>Clinical response</label><textarea id={`response-${row.id}`} value={response} onChange={event => setResponse(event.target.value)} required aria-required="true" minLength={5} /></div>
                     <div className="field"><label htmlFor={`outcome-${row.id}`}>Outcome</label><select id={`outcome-${row.id}`} value={outcome} onChange={event => setOutcome(event.target.value)}>{OUTCOMES.map(value => <option key={value} value={value}>{value}</option>)}</select></div>
                     <div className="field"><label>&nbsp;</label><button className="btn btn-primary" disabled={respond.isPending}>Record response as {user.name}</button></div>
                   </form>
@@ -277,12 +277,12 @@ export function IncidentsPage({ user, privacy }: { user: User; privacy: boolean 
             <div className="form-grid">
               <div className="field"><label htmlFor="inc-type">Type</label><select id="inc-type" value={form.incident_type} onChange={event => setForm({ ...form, incident_type: event.target.value })}>{INCIDENT_TYPES.map(value => <option key={value} value={value}>{value}</option>)}</select></div>
               <div className="field"><label htmlFor="inc-harm">Harm level</label><select id="inc-harm" value={form.harm_level} onChange={event => setForm({ ...form, harm_level: event.target.value })}>{HARM_LEVELS.map(value => <option key={value} value={value}>{value}</option>)}</select></div>
-              <div className="field"><label htmlFor="inc-class">Classification</label><input id="inc-class" value={form.classification} onChange={event => setForm({ ...form, classification: event.target.value })} placeholder="e.g. category 2" /></div>
-              <div className="field"><label htmlFor="inc-occurred">Occurred</label><input id="inc-occurred" type="datetime-local" value={form.occurred_at} onChange={event => setForm({ ...form, occurred_at: event.target.value })} required /></div>
-              <div className="field"><label htmlFor="inc-discovered">Discovered</label><input id="inc-discovered" type="datetime-local" value={form.discovered_at} onChange={event => setForm({ ...form, discovered_at: event.target.value })} required /></div>
-              <div className="field"><label htmlFor="inc-site">Body site</label><input id="inc-site" value={form.body_site} onChange={event => setForm({ ...form, body_site: event.target.value })} /></div>
+              <div className="field"><label className="bt-label-optional" htmlFor="inc-class">Classification</label><input id="inc-class" value={form.classification} onChange={event => setForm({ ...form, classification: event.target.value })} placeholder="e.g. category 2" /></div>
+              <div className="field"><label className="bt-label-required" htmlFor="inc-occurred">Occurred</label><input id="inc-occurred" type="datetime-local" value={form.occurred_at} onChange={event => setForm({ ...form, occurred_at: event.target.value })} required aria-required="true" /></div>
+              <div className="field"><label className="bt-label-required" htmlFor="inc-discovered">Discovered</label><input id="inc-discovered" type="datetime-local" value={form.discovered_at} onChange={event => setForm({ ...form, discovered_at: event.target.value })} required aria-required="true" /></div>
+              <div className="field"><label className="bt-label-optional" htmlFor="inc-site">Body site</label><input id="inc-site" value={form.body_site} onChange={event => setForm({ ...form, body_site: event.target.value })} /></div>
             </div>
-            <div className="field"><label htmlFor="inc-desc">Description</label><textarea id="inc-desc" value={form.description} onChange={event => setForm({ ...form, description: event.target.value })} required minLength={5} /></div>
+            <div className="field"><label className="bt-label-required" htmlFor="inc-desc">Description</label><textarea id="inc-desc" value={form.description} onChange={event => setForm({ ...form, description: event.target.value })} required aria-required="true" minLength={5} /></div>
             <label className="check-field"><input type="checkbox" checked={form.present_on_admission} onChange={event => setForm({ ...form, present_on_admission: event.target.checked })} /> Present on admission (excluded from this ward's acquired harm)</label>
             <button className="btn btn-primary" disabled={report.isPending} data-testid="report-incident">Report as {user.name}</button>
           </form>
@@ -304,9 +304,9 @@ export function IncidentsPage({ user, privacy }: { user: User; privacy: boolean 
                   {reviewing === incident.id && (
                     <form className="form-grid" onSubmit={(event: FormEvent) => { event.preventDefault(); submitReview.mutate(incident.id) }} aria-label="Review incident">
                       <div className="field"><label htmlFor={`avoid-${incident.id}`}>Avoidability</label><select id={`avoid-${incident.id}`} value={review.avoidability} onChange={event => setReview({ ...review, avoidability: event.target.value })}>{AVOIDABILITY.map(value => <option key={value} value={value}>{value}</option>)}</select></div>
-                      <div className="field"><label htmlFor={`factors-${incident.id}`}>Contributory factors (one per line)</label><textarea id={`factors-${incident.id}`} value={review.factors} onChange={event => setReview({ ...review, factors: event.target.value })} required /></div>
-                      <div className="field"><label htmlFor={`actions-${incident.id}`}>Learning actions (one per line)</label><textarea id={`actions-${incident.id}`} value={review.actions} onChange={event => setReview({ ...review, actions: event.target.value })} required /></div>
-                      <div className="field"><label htmlFor={`conclusion-${incident.id}`}>Conclusion</label><textarea id={`conclusion-${incident.id}`} value={review.conclusion} onChange={event => setReview({ ...review, conclusion: event.target.value })} required minLength={5} /></div>
+                      <div className="field"><label className="bt-label-required" htmlFor={`factors-${incident.id}`}>Contributory factors (one per line)</label><textarea id={`factors-${incident.id}`} value={review.factors} onChange={event => setReview({ ...review, factors: event.target.value })} required aria-required="true" /></div>
+                      <div className="field"><label className="bt-label-required" htmlFor={`actions-${incident.id}`}>Learning actions (one per line)</label><textarea id={`actions-${incident.id}`} value={review.actions} onChange={event => setReview({ ...review, actions: event.target.value })} required aria-required="true" /></div>
+                      <div className="field"><label className="bt-label-required" htmlFor={`conclusion-${incident.id}`}>Conclusion</label><textarea id={`conclusion-${incident.id}`} value={review.conclusion} onChange={event => setReview({ ...review, conclusion: event.target.value })} required aria-required="true" minLength={5} /></div>
                       <div className="field"><label>&nbsp;</label><button className="btn btn-primary" disabled={submitReview.isPending}>Record review as {user.name}</button></div>
                     </form>
                   )}
@@ -381,8 +381,8 @@ export function StaffingPage({ user }: { user: User }) {
             <form className="panel" onSubmit={(event: FormEvent) => { event.preventDefault(); declare.mutate() }} aria-label="Declare staffing shortage">
               <h2>Declare a staffing shortage</h2>
               <p className="sub">A named human act by the nurse in charge. The declaration carries exactly BulletTrain's governed field set and asserts no tier, severity or approval of its own; it is queued, never reported as delivered.</p>
-              <div className="field"><label htmlFor="decl-reason">Reason</label><textarea id="decl-reason" value={reason} onChange={event => setReason(event.target.value)} required minLength={10} /></div>
-              <div className="field field-narrow"><label htmlFor="decl-window">Window (minutes)</label><input id="decl-window" type="number" min={15} max={1440} value={windowMinutes} onChange={event => setWindowMinutes(Number(event.target.value))} /></div>
+              <div className="field"><label className="bt-label-required" htmlFor="decl-reason">Reason</label><textarea id="decl-reason" value={reason} onChange={event => setReason(event.target.value)} required aria-required="true" minLength={10} /></div>
+              <div className="field field-narrow"><label className="bt-label-required" htmlFor="decl-window">Window (minutes)</label><input id="decl-window" type="number" min={15} max={1440} required aria-required="true" value={windowMinutes} onChange={event => setWindowMinutes(Number(event.target.value))} /></div>
               <button className="btn btn-primary" disabled={declare.isPending} data-testid="declare-shortage">Declare as {user.name}</button>
             </form>
           )}
@@ -397,8 +397,8 @@ export function StaffingPage({ user }: { user: User }) {
                   <div className="stack-actions">
                     {row.active && user.role === 'nurse_in_charge' && (
                       <form onSubmit={(event: FormEvent) => { event.preventDefault(); revoke.mutate(row.declaration_id) }} className="field">
-                        <label htmlFor={`revoke-${row.id}`}>Revocation reason</label>
-                        <input id={`revoke-${row.id}`} value={revokeReason} onChange={event => setRevokeReason(event.target.value)} required minLength={5} />
+                        <label className="bt-label-required" htmlFor={`revoke-${row.id}`}>Revocation reason</label>
+                        <input id={`revoke-${row.id}`} value={revokeReason} onChange={event => setRevokeReason(event.target.value)} required aria-required="true" minLength={5} />
                         <button className="btn" disabled={revoke.isPending} data-testid={`revoke-${row.declaration_id}`}>Revoke</button>
                       </form>
                     )}
@@ -489,8 +489,8 @@ export function CountryPackPanel({ user }: { user: User }) {
           <ErrorNote error={adopt.error} />
           <div className="form-grid">
             <div className="field"><label htmlFor="adopt-decision">Decision</label><select id="adopt-decision" value={decision} onChange={event => setDecision(event.target.value as 'adopted' | 'rejected')}><option value="adopted">adopted</option><option value="rejected">rejected</option></select></div>
-            <div className="field"><label htmlFor="adopt-scope">Scope</label><input id="adopt-scope" value={scope} onChange={event => setScope(event.target.value)} required minLength={3} placeholder="e.g. synthetic clinical simulation on ward MED-A" /></div>
-            <div className="field"><label htmlFor="adopt-note">Note</label><input id="adopt-note" value={note} onChange={event => setNote(event.target.value)} required minLength={3} /></div>
+            <div className="field"><label className="bt-label-required" htmlFor="adopt-scope">Scope</label><input id="adopt-scope" value={scope} onChange={event => setScope(event.target.value)} required aria-required="true" minLength={3} placeholder="e.g. synthetic clinical simulation on ward MED-A" /></div>
+            <div className="field"><label className="bt-label-required" htmlFor="adopt-note">Note</label><input id="adopt-note" value={note} onChange={event => setNote(event.target.value)} required aria-required="true" minLength={3} /></div>
           </div>
           <button className="btn btn-primary" disabled={adopt.isPending} data-testid="record-adoption">Record decision as {user.name}</button>
         </form>
@@ -584,8 +584,8 @@ export function DischargeTab({ patient, user }: { patient: Patient; user: User }
                   <div className="sub">Owner {criterion.owner_role}; evidence from {criterion.evidence_source}{criterion.evidence_reference ? `; ${criterion.evidence_reference}` : ''}{criterion.confirmed_by ? `; confirmed by ${criterion.confirmed_by} at ${when(criterion.confirmed_at)}` : ''}</div>
                   {criterion.status !== 'met' && local && isNursing(user) && data.status !== 'completed' && (
                     <form className="field" onSubmit={(event: FormEvent) => { event.preventDefault(); confirm.mutate(criterion.criterion_id) }}>
-                      <label htmlFor={`note-${criterion.criterion_id}`}>Confirmation note</label>
-                      <input id={`note-${criterion.criterion_id}`} value={notes[criterion.criterion_id] ?? ''} onChange={event => setNotes({ ...notes, [criterion.criterion_id]: event.target.value })} required minLength={3} />
+                      <label className="bt-label-required" htmlFor={`note-${criterion.criterion_id}`}>Confirmation note</label>
+                      <input id={`note-${criterion.criterion_id}`} value={notes[criterion.criterion_id] ?? ''} onChange={event => setNotes({ ...notes, [criterion.criterion_id]: event.target.value })} required aria-required="true" minLength={3} />
                       <button className="btn" disabled={confirm.isPending} data-testid={`confirm-${criterion.criterion_id}`}>Confirm as {user.name}</button>
                     </form>
                   )}
