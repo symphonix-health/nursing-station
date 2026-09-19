@@ -45,6 +45,50 @@ def _enabled(name: str) -> bool:
     return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+def runner_owned_hub_auth_env() -> dict[str, str]:
+    """Return the authentication environment a runner-owned hub is launched with.
+
+    This is the single definition of the gateway principal: ``main`` merges it
+    into the hub process environment, and ``tests/test_phase2_runner_contract.py``
+    asserts on exactly this mapping, so the contract is checked against what the
+    hub is really handed rather than against a transcription of it.
+
+    AUTHENTICATED, not bypassed. This used to launch the BulletTrain hub with
+    authentication switched off, so every exchange in the journey carried no
+    subject, no roles and no scopes -- nothing the run produced could evidence
+    authorisation, tenant isolation or audit attribution, which is most of what a
+    governed journey exists to demonstrate. AUTH_MODE=dev resolves a REAL
+    principal: BulletTrain's dependencies.py refuses a request presenting no
+    subject (and refuses AUTH_MODE=off outright in a deployed environment).
+    Least privilege for a hub exchange caller, never admin or superuser --
+    testing as a superuser hides every permission gap.
+
+    The hub's connector_exchange policy is ABAC as well as RBAC: it requires a
+    purpose_of_use and a legal_basis, and denies without them with reason_code
+    "legal_basis_not_allowed". Measured 2026-09-03 against the live governed
+    gateway: a ``service`` principal holding connector:exchange is refused, and
+    so is an ``admin`` one -- this is not a privilege gap that a bigger role
+    would close, and granting one would have hidden it.
+
+    DECLARED, not inferred: this journey retrieves a patient's clinical records
+    into a nursing station for direct care, so the purpose is ``treatment`` and
+    the basis is ``consent``. Both are values the policy enumerates. If the
+    programme decides a different basis applies to this exchange, change it here
+    -- the point is that the journey asserts one explicitly rather than running
+    with authentication off, which asserted nothing.
+    """
+
+    return {
+        "AUTH_MODE": "dev",
+        "DEV_AUTH_SUBJECT": "nursing-station-phase2-journey",
+        "DEV_AUTH_ROLES": "service",
+        "DEV_AUTH_SCOPES": "connector:exchange",
+        "DEV_AUTH_TENANT_ID": "t-platform",
+        "DEV_AUTH_PURPOSE_OF_USE": "treatment",
+        "DEV_AUTH_LEGAL_BASIS": "consent",
+    }
+
+
 def resolve_hub_contract(*, reuse_hub: bool) -> tuple[str, str]:
     """Return the bearer token and auth mode for the exact gateway lifecycle.
 
@@ -53,8 +97,9 @@ def resolve_hub_contract(*, reuse_hub: bool) -> tuple[str, str]:
     existing process loaded. Reuse therefore requires explicit operator-owned
     configuration.
 
-    A runner-owned gateway is launched in ``dev`` with a NAMED principal (see the
-    hub_env block below), not with authentication off. The two halves must agree:
+    A runner-owned gateway is launched in ``dev`` with a NAMED principal (see
+    ``runner_owned_hub_auth_env``), not with authentication off. The two halves
+    must agree:
     this function tells the client which credential contract to build, and
     returning "off" while the hub runs in "dev" would send bare bearer tokens to
     a gateway expecting the dev assertion headers. That mismatch was introduced
@@ -426,37 +471,8 @@ def main() -> int:
         hub_env.update(
             {
                 "PYTHONUNBUFFERED": "1",
-                # AUTHENTICATED, not bypassed. This launched the BulletTrain hub
-                # with authentication switched off, so every exchange in the
-                # journey carried no subject, no roles and no scopes -- nothing
-                # the run produced could evidence authorisation, tenant isolation
-                # or audit attribution, which is most of what a governed journey
-                # exists to demonstrate. AUTH_MODE=dev resolves a REAL principal:
-                # BulletTrain's dependencies.py refuses a request presenting no
-                # subject. Least privilege for a hub exchange caller, never admin
-                # or superuser -- testing as a superuser hides every permission gap.
-                "AUTH_MODE": "dev",
-                "DEV_AUTH_SUBJECT": "nursing-station-phase2-journey",
-                "DEV_AUTH_ROLES": "service",
-                "DEV_AUTH_SCOPES": "connector:exchange",
-                "DEV_AUTH_TENANT_ID": "t-platform",
-                # The hub's connector_exchange policy is ABAC as well as RBAC: it
-                # requires a purpose_of_use and a legal_basis, and denies without
-                # them with reason_code "legal_basis_not_allowed". Measured
-                # 2026-09-03 against the live governed gateway: a `service`
-                # principal holding connector:exchange is refused, and so is an
-                # `admin` one -- this is not a privilege gap that a bigger role
-                # would close, and granting one would have hidden it.
-                #
-                # DECLARED, not inferred: this journey retrieves a patient's
-                # clinical records into a nursing station for direct care, so the
-                # purpose is `treatment` and the basis is `consent`. Both are
-                # values the policy enumerates. If the programme decides a
-                # different basis applies to this exchange, change it here -- the
-                # point is that the journey asserts one explicitly rather than
-                # running with authentication off, which asserted nothing.
-                "DEV_AUTH_PURPOSE_OF_USE": "treatment",
-                "DEV_AUTH_LEGAL_BASIS": "consent",
+                # AUTHENTICATED, not bypassed: see runner_owned_hub_auth_env().
+                **runner_owned_hub_auth_env(),
                 "BT_PICIS_SYSTEM_BASE_URL": base_urls["picis_system"],
                 "BT_LIS_BASE_URL": base_urls["lis"],
                 "BT_PACS_RIS_BASE_URL": base_urls["pacs_ris"],
