@@ -17,6 +17,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Mapping
 from contextlib import ExitStack
 from dataclasses import dataclass
 from pathlib import Path
@@ -48,9 +49,11 @@ def _enabled(name: str) -> bool:
 def runner_owned_hub_auth_env() -> dict[str, str]:
     """Return the authentication environment a runner-owned hub is launched with.
 
-    This is the single definition of the gateway principal: ``main`` merges it
-    into the hub process environment, and ``tests/test_phase2_runner_contract.py``
-    asserts on exactly this mapping, so the contract is checked against what the
+    This is the single definition of the gateway principal: ``build_runner_hub_env``
+    applies it LAST when composing the hub process environment (after every
+    inherited identity-affecting variable has been removed), ``main`` calls that
+    function, and ``tests/test_phase2_runner_contract.py`` asserts on this mapping
+    and on the composed environment, so the contract is checked against what the
     hub is really handed rather than against a transcription of it.
 
     AUTHENTICATED, not bypassed. This used to launch the BulletTrain hub with
@@ -87,6 +90,128 @@ def runner_owned_hub_auth_env() -> dict[str, str]:
         "DEV_AUTH_PURPOSE_OF_USE": "treatment",
         "DEV_AUTH_LEGAL_BASIS": "consent",
     }
+
+
+# Prefix of every variable BulletTrain's dev authenticator reads for the caller's
+# principal. Measured, not assumed: bullettrain/security/auth/dependencies.py
+# _authenticate_dev consults exactly DEV_AUTH_SUBJECT, _TENANT_ID, _ROLES,
+# _SCOPES, _LINKED_PATIENTS, _PURPOSE_OF_USE, _LEGAL_BASIS and _IDENTITY_KIND.
+# The whole prefix is treated as identity so a key BulletTrain adds later cannot
+# slip through a hand-written list.
+HUB_IDENTITY_ENV_PREFIX = "DEV_AUTH_"
+
+# Identity-affecting variables that do NOT carry the prefix, each with the
+# source line that makes it so (BulletTrain, bullettrain/security):
+#   AUTH_MODE              auth/dependencies.py _auth_mode(): off | dev | oidc.
+#   OIDC_ISSUER,           auth/dependencies.py _dev_bearer_validation_configured():
+#   OIDC_JWKS_URL          when BOTH are set, a dev-mode request that presents a
+#                          bearer is validated as a signed OIDC token instead of
+#                          the dev assertion. The runner's bearer is random, so
+#                          the hub answers 401 to its own runner. Measured against
+#                          the real authenticator: HTTP 401 "Invalid JWT header".
+#   AUTH_PUBLIC_PATHS      auth/dependencies.py _resolve_public_paths() and
+#                          pep.py _public_paths(): a listed path is served with NO
+#                          authentication and NO policy check (subject None).
+#   PEP_PUBLIC_PATHS       pep.py _public_paths(): the same exemption, PEP side.
+#   ALLOW_DEV_AUTH_IN_K8S  auth/dependencies.py _dev_mode_allowed(): the only
+#                          switch that lets dev auth run in a deployed cluster.
+# Deliberately NOT here, because they only ever NARROW the hub or locate the
+# policy decision point the hub must reach: ENVIRONMENT/APP_ENV/ENV/
+# BT_ENVIRONMENT and KUBERNETES_* (a production marker makes dev auth refuse,
+# which is the right outcome), BT_INTERNAL_ENFORCEMENT_MODE (STRICT demands mTLS
+# and fails closed), and POLICY_SERVICE_URL / POLICY_SERVICE_* (the PEP's own
+# workload identity and the PDP address; without them every hub call is denied
+# policy_unavailable).
+HUB_IDENTITY_ENV_NAMES: frozenset[str] = frozenset(
+    {
+        "AUTH_MODE",
+        "OIDC_ISSUER",
+        "OIDC_JWKS_URL",
+        "AUTH_PUBLIC_PATHS",
+        "PEP_PUBLIC_PATHS",
+        "ALLOW_DEV_AUTH_IN_K8S",
+    }
+)
+
+
+def is_hub_identity_env(name: str) -> bool:
+    """True when ``name`` decides who the hub believes its caller is.
+
+    Case-insensitive: Windows environment names are, and a lower-case
+    ``dev_auth_roles`` in a caller shell is the same variable there.
+    """
+
+    upper = name.upper()
+    return upper.startswith(HUB_IDENTITY_ENV_PREFIX) or upper in HUB_IDENTITY_ENV_NAMES
+
+
+def runner_owned_hub_neutral_env() -> dict[str, str]:
+    """Identity-affecting variables the runner does not assign, pinned empty.
+
+    Removing an inherited variable is NOT enough. The hub is launched with
+    ``cwd=BulletTrain`` and ``bullettrain/services/api_gateway.py`` loads
+    ``BulletTrain/.env`` with ``load_dotenv(..., override=False)``, which fills in
+    every variable that is ABSENT from the process environment. Measured with
+    python-dotenv: a variable that exists but is empty survives the load, an
+    absent one takes the ``.env`` value. The checked-in ``.env`` here sets
+    OIDC_ISSUER, OIDC_JWKS_URL, ALLOW_DEV_AUTH_IN_K8S, AUTH_PUBLIC_PATHS and a
+    DEV_AUTH_* default principal (subject dev-user, scopes ``*``) on the machine
+    this was written on (the file is untracked and machine-local), so a hub that
+    merely drops them inherits them straight back from disk.
+
+    Empty is read as unset by every reader of these names (``os.getenv(...) or
+    ...`` / ``if value:`` / ``_is_truthy("")``), so pinning to "" means "not
+    configured" without leaving the door open. The keys the runner DOES assign
+    are pinned by ``runner_owned_hub_auth_env`` and need no entry here.
+    """
+
+    return {
+        "DEV_AUTH_LINKED_PATIENTS": "",
+        "DEV_AUTH_IDENTITY_KIND": "",
+        "OIDC_ISSUER": "",
+        "OIDC_JWKS_URL": "",
+        "AUTH_PUBLIC_PATHS": "",
+        "PEP_PUBLIC_PATHS": "",
+        "ALLOW_DEV_AUTH_IN_K8S": "",
+    }
+
+
+def build_runner_hub_env(
+    base_env: Mapping[str, str],
+    *,
+    service_env: Mapping[str, str] | None = None,
+) -> dict[str, str]:
+    """Compose the exact environment a runner-owned hub is launched with.
+
+    The principal is exactly what ``runner_owned_hub_auth_env`` says, whatever
+    the caller's shell or a loaded ``.env`` holds. Order matters and is the
+    contract: inherited environment with every identity-affecting variable
+    removed, then the caller's non-identity ``service_env`` (connector base URLs
+    and the like), then the empty pins, then the runner's own principal LAST so
+    nothing before it can win.
+
+    ``service_env`` is refused, not silently overridden, when it names an
+    identity-affecting variable: a call site that tries to set ``AUTH_MODE=off``
+    is a defect to surface, not to paper over.
+
+    A pure function of its arguments: ``base_env`` is never mutated, which is
+    what makes the composition testable without starting the fleet.
+    """
+
+    extra = dict(service_env or {})
+    smuggled = sorted(name for name in extra if is_hub_identity_env(name))
+    if smuggled:
+        raise ValueError(
+            "service_env must not set identity-affecting hub variables "
+            f"(the runner owns them): {smuggled}"
+        )
+    hub_env = {
+        name: value for name, value in base_env.items() if not is_hub_identity_env(name)
+    }
+    hub_env.update(extra)
+    hub_env.update(runner_owned_hub_neutral_env())
+    hub_env.update(runner_owned_hub_auth_env())
+    return hub_env
 
 
 def resolve_hub_contract(*, reuse_hub: bool) -> tuple[str, str]:
@@ -467,12 +592,15 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="nursing-phase2-") as temp:
         temp_path = Path(temp)
-        hub_env = os.environ.copy()
-        hub_env.update(
-            {
+        # AUTHENTICATED, not bypassed, and independent of the caller's shell or
+        # BulletTrain/.env: build_runner_hub_env() strips every identity-affecting
+        # variable, pins the ones the runner does not assign, and applies
+        # runner_owned_hub_auth_env() last. This is the ONLY place hub_env is
+        # written; tests/test_phase2_runner_contract.py holds main() to that.
+        hub_env = build_runner_hub_env(
+            os.environ,
+            service_env={
                 "PYTHONUNBUFFERED": "1",
-                # AUTHENTICATED, not bypassed: see runner_owned_hub_auth_env().
-                **runner_owned_hub_auth_env(),
                 "BT_PICIS_SYSTEM_BASE_URL": base_urls["picis_system"],
                 "BT_LIS_BASE_URL": base_urls["lis"],
                 "BT_PACS_RIS_BASE_URL": base_urls["pacs_ris"],
@@ -481,7 +609,7 @@ def main() -> int:
                 "BT_HMIS_BASE_URL": base_urls["hmis"],
                 "BT_NURSING_STATION_BASE_URL": f"http://127.0.0.1:{nursing_port}",
                 "BT_NURSING_STATION_WEBHOOK_HMAC_SECRET": inbound_secret,
-            }
+            },
         )
         nursing_env = os.environ.copy()
         nursing_env.update(
