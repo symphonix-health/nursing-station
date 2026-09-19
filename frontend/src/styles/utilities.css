@@ -1,0 +1,1376 @@
+/* ─────────────────────────────────────────────────────────────
+   Symphonix Health — Canonical Utility Classes
+   Source of truth for .bt-* utilities. Consumers import this
+   alongside colors_and_type.css:
+
+     <link rel="stylesheet" href=".../colors_and_type.css"/>
+     <link rel="stylesheet" href=".../utilities.css"/>
+
+   Or in a Vite project:
+     import "<design-system>/colors_and_type.css";
+     import "<design-system>/utilities.css";
+
+   Every consumer inherits the same visual treatment — no per-repo
+   drift. This file references tokens from colors_and_type.css and
+   MUST NOT hard-code colours, spacings, or radii.
+
+   L-261: form inputs must have a visibly bordered utility class.
+   Prior to this file, each caid-generated simulator copied its own
+   design-system.css and drifted. The canonical .bt-input below uses
+   --border-strong (not --border — which is a 7%/14% hairline tuned
+   for card chrome, not form affordances) so the form is legible in
+   both light and dark themes on every consumer.
+   ───────────────────────────────────────────────────────────── */
+
+/* ───── App shell ───── */
+
+.bt-app {
+  background: var(--surface-0);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bt-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: var(--surface-0);
+}
+
+@media (max-width: 768px) {
+  .bt-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bt-sidebar {
+  background: var(--surface-1);
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bt-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-1);
+}
+
+.bt-sidebar-section {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-top: 12px;
+}
+
+.bt-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bt-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: var(--r-sm);
+  font-size: 0.9rem;
+  border-left: 2px solid transparent;
+  transition: background 0.2s ease-out, color 0.2s ease-out;
+}
+
+.bt-nav-item:hover {
+  color: var(--brand-300);
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.06));
+}
+
+.bt-nav-item-active {
+  color: var(--brand-500);
+  background: var(--tint-weak, rgba(99, 102, 241, 0.10));
+  font-weight: 600;
+  border-left-color: var(--brand-500);
+}
+
+.bt-nav-item-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.bt-main {
+  padding: 28px 32px;
+  overflow-x: hidden;
+  background: var(--surface-0);
+}
+
+@media (max-width: 480px) {
+  .bt-main {
+    padding: 16px;
+  }
+}
+
+/* ───── Mobile sidebar / hamburger ───── */
+
+@media (max-width: 768px) {
+  .bt-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 280px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s ease-out;
+  }
+  .bt-shell[data-sidebar-open] .bt-sidebar {
+    transform: translateX(0);
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.bt-sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bt-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 199;
+    backdrop-filter: blur(2px);
+    cursor: default;
+  }
+  .bt-shell[data-sidebar-open] .bt-sidebar-backdrop {
+    display: block;
+  }
+}
+
+/* Hamburger button — hidden on desktop, visible on mobile */
+.bt-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease-out, color 0.15s ease-out;
+}
+
+.bt-hamburger:hover {
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.06));
+  color: var(--text-1);
+}
+
+.bt-hamburger:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .bt-hamburger {
+    display: inline-flex;
+  }
+}
+
+/* Sidebar close button — hidden on desktop, visible on mobile */
+.bt-sidebar-close {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bt-sidebar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    color: var(--text-2);
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: inherit;
+    transition: background 0.15s ease-out, color 0.15s ease-out;
+  }
+  .bt-sidebar-close:hover {
+    background: var(--tint-subtle, rgba(99, 102, 241, 0.06));
+    color: var(--text-1);
+  }
+  .bt-sidebar-close:focus-visible {
+    outline: 2px solid var(--brand-400);
+    outline-offset: 2px;
+  }
+}
+
+/* ───── Forms (L-261 — visibly bordered) ───── */
+
+.bt-form-container {
+  max-width: 720px;
+}
+
+.bt-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--surface-card, var(--surface-1));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(12px) saturate(1.5);
+}
+
+.bt-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.bt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bt-label {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--text-2);
+  font-family: var(--f-sans);
+}
+
+.bt-label-required::after {
+  content: " *";
+  color: #EF4444;
+}
+
+/*
+ * Optional-field counterpart to .bt-label-required. A mandatory field carries
+ * the red asterisk; a genuinely optional field carries "(optional)" so the
+ * distinction is explicit for sighted users. Inputs still must carry
+ * required / aria-required themselves (a CSS ::after cannot set them) --
+ * see preview/components-forms-canonical.html for the canonical pattern.
+ */
+.bt-label-optional::after {
+  content: " (optional)";
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.bt-hint {
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.bt-error-text {
+  font-size: 0.8rem;
+  color: #EF4444;
+  margin: 0;
+}
+
+/* Input / select / textarea share a border spec using --border-strong,
+   NOT --border. --border is tuned for card chrome (6–14% opacity, sits
+   invisibly on surface-0); --border-strong sits around 35% and reads
+   as a real form affordance in both themes. See L-261. */
+
+.bt-input,
+.bt-select,
+.bt-textarea {
+  width: 100%;
+  /* L-261: even outside a .bt-form-container wrapper, inputs should
+     never stretch across the full viewport — that's unreadable and
+     looks unfinished. 520px is the readable-form width (≈ 80 chars
+     at 13px). Inside .bt-form-container the container's max-width
+     already caps them; this keeps them sane in ad-hoc forms too. */
+  max-width: 520px;
+  padding: 9px 12px;
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.04));
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Inside a form row (3-up responsive grid), inputs should fill their
+   grid cell. The grid itself sits inside .bt-form-container so the
+   overall cap still applies. */
+.bt-form-row .bt-input,
+.bt-form-row .bt-select,
+.bt-form-row .bt-textarea {
+  max-width: 100%;
+}
+
+.bt-input {
+  height: 44px;
+}
+
+.bt-textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.bt-select {
+  height: 44px;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%),
+                    linear-gradient(135deg, var(--text-3) 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50%), calc(100% - 13px) calc(50%);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 32px;
+}
+
+.bt-input::placeholder,
+.bt-textarea::placeholder {
+  color: var(--text-3);
+}
+
+.bt-input:hover,
+.bt-select:hover,
+.bt-textarea:hover {
+  border-color: var(--border-hover);
+}
+
+.bt-input:focus,
+.bt-input:focus-visible,
+.bt-select:focus,
+.bt-select:focus-visible,
+.bt-textarea:focus,
+.bt-textarea:focus-visible {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.20);
+  background: var(--surface-0);
+}
+
+.bt-input[disabled],
+.bt-select[disabled],
+.bt-textarea[disabled] {
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.02));
+  color: var(--text-3);
+  border-color: var(--border);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.bt-input[disabled]::placeholder,
+.bt-textarea[disabled]::placeholder {
+  color: var(--text-3);
+  opacity: 0.6;
+}
+
+.bt-input-error,
+.bt-select-error,
+.bt-textarea-error {
+  border-color: #EF4444;
+}
+
+.bt-input-error:focus,
+.bt-select-error:focus,
+.bt-textarea-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.20);
+}
+
+/* ───── Input wrapper — icon slots ───── */
+
+.bt-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 520px;
+}
+
+.bt-form-row .bt-input-wrap {
+  max-width: 100%;
+}
+
+.bt-input-wrap .bt-input {
+  max-width: 100%;
+  width: 100%;
+}
+
+.bt-input-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--text-3);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: color 0.15s ease-out;
+}
+
+.bt-input-wrap.bt-icon-left .bt-input   { padding-left: 40px; }
+.bt-input-wrap.bt-icon-right .bt-input  { padding-right: 40px; }
+.bt-input-wrap.bt-icon-left .bt-input-icon  { left: 12px; }
+.bt-input-wrap.bt-icon-right .bt-input-icon { right: 12px; }
+
+.bt-input-wrap .bt-input:focus ~ .bt-input-icon,
+.bt-input-wrap .bt-input:focus-visible ~ .bt-input-icon {
+  color: var(--brand-400);
+}
+
+.bt-input-wrap .bt-input.bt-input-error ~ .bt-input-icon {
+  color: #EF4444;
+}
+
+/* ───── Checkbox ───── */
+
+.bt-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.bt-checkbox:hover:not(:disabled) {
+  border-color: var(--brand-400);
+}
+
+.bt-checkbox:checked {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 7 5.5 10 11.5 4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
+}
+
+.bt-checkbox:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+.bt-checkbox:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--border);
+}
+
+.bt-checkbox:checked:disabled {
+  background: var(--text-3);
+  border-color: var(--text-3);
+}
+
+.bt-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--text-1);
+  cursor: pointer;
+  font-family: var(--f-sans);
+  user-select: none;
+  line-height: 1.4;
+}
+
+.bt-checkbox-label:has(.bt-checkbox:disabled) {
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+/* ───── Radio button ───── */
+
+.bt-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease-out, background 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.bt-radio:hover:not(:disabled) {
+  border-color: var(--brand-400);
+}
+
+.bt-radio:checked {
+  border-color: var(--brand-500);
+  border-width: 2px;
+  background: radial-gradient(circle at center, var(--brand-500) 42%, transparent 42%);
+}
+
+.bt-radio:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+.bt-radio:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  border-color: var(--border);
+}
+
+.bt-radio:checked:disabled {
+  background: radial-gradient(circle at center, var(--text-3) 42%, transparent 42%);
+  border-color: var(--text-3);
+}
+
+.bt-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--text-1);
+  cursor: pointer;
+  font-family: var(--f-sans);
+  user-select: none;
+  line-height: 1.4;
+}
+
+.bt-radio-label:has(.bt-radio:disabled) {
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+/* ───── Toggle switch ───── */
+
+.bt-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.bt-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.bt-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background 0.2s ease-out;
+}
+
+.bt-toggle-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease-out;
+}
+
+.bt-toggle input:checked ~ .bt-toggle-track {
+  background: var(--brand-600);
+}
+
+.bt-toggle input:checked ~ .bt-toggle-thumb {
+  transform: translateX(20px);
+}
+
+.bt-toggle input:focus-visible ~ .bt-toggle-track {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+.bt-toggle input:disabled ~ .bt-toggle-track,
+.bt-toggle input:disabled ~ .bt-toggle-thumb {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ───── Segmented control ───── */
+
+.bt-segmented {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--r-md);
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.04));
+  border: 1px solid var(--border-strong);
+  gap: 2px;
+}
+
+.bt-segmented-option {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  padding: 7px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: var(--f-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.15s ease-out;
+  white-space: nowrap;
+}
+
+.bt-segmented-option:hover:not(.bt-segmented-active) {
+  color: var(--text-1);
+  background: var(--tint-weak, rgba(99, 102, 241, 0.08));
+}
+
+.bt-segmented-option.bt-segmented-active {
+  background: var(--brand-600);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.30);
+  font-weight: 600;
+}
+
+.bt-segmented-option:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+/* ───── Alert / message banners ───── */
+
+.bt-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  font-family: var(--f-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.bt-alert-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.bt-alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.bt-alert-close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease-out, background 0.15s ease-out;
+  margin-top: -1px;
+}
+
+.bt-alert-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.bt-alert-success {
+  background: rgba(34, 197, 94, 0.10);
+  border-color: rgba(34, 197, 94, 0.28);
+  color: #15803d;
+}
+
+.bt-alert-success .bt-alert-close { color: #15803d; }
+
+.bt-alert-info {
+  background: rgba(14, 165, 233, 0.10);
+  border-color: rgba(14, 165, 233, 0.28);
+  color: #0369a1;
+}
+
+.bt-alert-info .bt-alert-close { color: #0369a1; }
+
+.bt-alert-warning {
+  background: rgba(245, 158, 11, 0.10);
+  border-color: rgba(245, 158, 11, 0.28);
+  color: #b45309;
+}
+
+.bt-alert-warning .bt-alert-close { color: #b45309; }
+
+.bt-alert-error {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.28);
+  color: #b91c1c;
+}
+
+.bt-alert-error .bt-alert-close { color: #b91c1c; }
+
+/* ───── Step indicator ───── */
+
+.bt-steps {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.bt-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+/* Connector line between steps */
+.bt-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 22px);
+  right: calc(-50% + 22px);
+  height: 2px;
+  background: var(--border-strong);
+  transition: background 0.3s ease-out;
+}
+
+.bt-step.bt-step-done:not(:last-child)::after {
+  background: var(--brand-500);
+}
+
+.bt-step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  transition: all 0.2s ease-out;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.bt-step.bt-step-done .bt-step-icon {
+  background: var(--brand-500);
+  border-color: var(--brand-500);
+  color: #ffffff;
+}
+
+.bt-step.bt-step-active .bt-step-icon {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #ffffff;
+  box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.15);
+}
+
+.bt-step-label {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-3);
+  text-align: center;
+  font-family: var(--f-sans);
+  white-space: nowrap;
+}
+
+.bt-step.bt-step-active .bt-step-label {
+  color: var(--brand-400);
+  font-weight: 600;
+}
+
+.bt-step.bt-step-done .bt-step-label {
+  color: var(--text-2);
+}
+
+/* ───── Progress bar ───── */
+
+.bt-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--tint-line, rgba(99, 102, 241, 0.12));
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bt-progress-bar {
+  height: 100%;
+  background: var(--brand-500);
+  border-radius: 999px;
+  transition: width 0.4s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.bt-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin-top: 6px;
+  font-family: var(--f-sans);
+}
+
+/* ───── Buttons ───── */
+
+.bt-btn {
+  display: inline-flex;
+  flex-shrink: 0; /* D-AMB-UI-1: keep button at its content width in flex rows (don't shrink below label) */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  /* WCAG 2.5.5 (Target Size, Enhanced) -- 44x44px floor.
+   * Replaces fixed `height: 38px` which exceeded only the AA criterion
+   * 2.5.8 (24px). 44px is healthcare best practice and the floor used
+   * across the BulletTrain hub frontend (frontend/src/styles.css:3084).
+   * `min-*` rather than `height` so dense data-table contexts can
+   * still use `.bt-btn-sm` for the documented 32px exception. */
+  min-height: 44px;
+  min-width: 44px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  color: var(--text-1);
+  font-family: var(--f-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out, transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+
+.bt-btn:hover {
+  border-color: var(--brand-400);
+  background: var(--tint-weak, rgba(99, 102, 241, 0.06));
+}
+
+.bt-btn:focus-visible {
+  outline: 2px solid var(--brand-400);
+  outline-offset: 2px;
+}
+
+.bt-btn[disabled],
+.bt-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bt-btn-primary {
+  background: var(--brand-600);
+  border-color: var(--brand-600);
+  color: #FFFFFF;
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+.bt-btn-primary:hover {
+  background: var(--brand-500);
+  border-color: var(--brand-500);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.30);
+}
+
+.bt-btn-ghost {
+  border-color: transparent;
+  color: var(--text-2);
+}
+
+.bt-btn-ghost:hover {
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.04));
+  color: var(--brand-300);
+}
+
+.bt-btn-danger {
+  background: #EF4444;
+  border-color: #EF4444;
+  color: #FFFFFF;
+}
+
+.bt-btn-danger:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+}
+
+.bt-btn-sm {
+  /* Documented exception to the 44px floor. Use only inside dense
+   * data-table rows where a 44px button would break the row rhythm.
+   * WCAG 2.5.5 (AAA) is missed; 2.5.8 (AA, 24px) is still satisfied. */
+  min-height: 32px;
+  min-width: 32px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+}
+
+.bt-btn-lg {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+.bt-btn-pill {
+  border-radius: var(--r-full);
+}
+
+/* BEM-style modifier aliases — `bt-btn--primary` is the form used by
+ * the clinical-react UI kit (NominationSelector / PrescriptionTracker
+ * / SubjectAccessExporter). Both single-dash and double-dash modifiers
+ * are now first-class so consumers can pick either convention. */
+.bt-btn.bt-btn--primary,
+.bt-btn--primary {
+  background: var(--brand-600);
+  color: var(--text-on-brand, #fff);
+  border-color: var(--brand-600);
+}
+.bt-btn--primary:hover {
+  background: var(--brand-700, var(--brand-600));
+  border-color: var(--brand-700, var(--brand-600));
+}
+.bt-btn.bt-btn--ghost,
+.bt-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--brand-600);
+}
+.bt-btn--ghost:hover {
+  background: var(--surface-hover, rgba(0, 0, 0, 0.04));
+}
+.bt-btn.bt-btn--danger,
+.bt-btn--danger {
+  background: var(--clinical-danger);
+  color: #fff;
+  border-color: var(--clinical-danger);
+}
+
+/* ───── Tables ───── */
+
+.bt-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface-card, var(--surface-1));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  font-family: var(--f-sans);
+  font-size: 0.875rem;
+}
+
+.bt-table th {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 16px;
+  background: var(--surface-2, var(--surface-1));
+  border-bottom: 1px solid var(--border);
+}
+
+.bt-table td {
+  padding: 14px 16px;
+  color: var(--text-2);
+  border-top: 1px solid var(--border);
+}
+
+.bt-table tbody tr:hover {
+  background: var(--tint-subtle, rgba(99, 102, 241, 0.04));
+}
+
+.bt-table-empty td {
+  text-align: center;
+  color: var(--text-3);
+  font-style: italic;
+  padding: 32px;
+}
+
+/* ───── Badges ───── */
+
+.bt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.bt-badge-neutral {
+  background: rgba(160, 163, 181, 0.15);
+  color: var(--text-2);
+}
+
+.bt-badge-success {
+  background: rgba(52, 199, 89, 0.15);
+  color: #34C759;
+}
+
+.bt-badge-warning {
+  background: rgba(255, 204, 0, 0.20);
+  color: #D97706;
+}
+
+.bt-badge-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+}
+
+/* High-contrast badge variants (--hc).
+ *
+ * The default tinted bg + same-hue text variants above (.bt-badge-success,
+ * -warning, -error, -neutral) work on dark surfaces but fall to 2.7-4.2:1
+ * contrast at the 10px badge font on light surfaces (verified against the
+ * BulletTrain V5 vendor dashboard, 2026-05-10), below WCAG AA's 4.5:1 floor
+ * for non-large text. The --hc variants here use solid backgrounds with
+ * opposite-luminance text and clear AA on every supported surface.
+ *
+ * Use the --hc variant when the badge sits on a light bt-card surface or
+ * any consumer where the underlying lightness is unknown. The legacy
+ * variants remain available for dark hero/cockpit surfaces where they
+ * already pass.
+ */
+.bt-badge-neutral--hc {
+  background: #374151;
+  color: #FFFFFF;
+}
+
+.bt-badge-success--hc {
+  /* #15803D (Tailwind green-700, 5.02:1 on white) replaces #16A34A
+   * (3.30:1, fails WCAG AA at 10px badge font). Caught by the
+   * BulletLink E2E pilot walkthrough on 2026-05-10 (commit d8989ccfa3
+   * post-filtered axe color-contrast violations on this exact class
+   * pending the upstream fix). */
+  background: #15803D;
+  color: #FFFFFF;
+}
+
+.bt-badge-warning--hc {
+  background: #F59E0B;
+  color: #1F2937;
+}
+
+.bt-badge-error--hc {
+  background: #B91C1C;
+  color: #FFFFFF;
+}
+
+.bt-badge-info--hc {
+  background: #1D4ED8;
+  color: #FFFFFF;
+}
+
+.bt-badge-primary--hc {
+  background: var(--brand-700, #4338CA);
+  color: #FFFFFF;
+}
+
+/* Drug-class badges — used by the medication-search UI kit. They map
+ * to the clinical-coloured badge tokens with a textual label that
+ * makes the meaning obvious without colour alone. Adding here so the
+ * clinical-react kit references resolve. */
+.bt-badge--opioid {
+  background: var(--clinical-critical-bg, var(--clinical-danger-bg));
+  color: var(--clinical-critical, var(--clinical-danger));
+  border: 1px solid var(--clinical-critical, var(--clinical-danger));
+}
+.bt-badge--antibiotic {
+  background: var(--clinical-caution-bg);
+  color: var(--clinical-caution);
+  border: 1px solid var(--clinical-caution);
+}
+.bt-badge--anticoagulant {
+  background: var(--audit-tint, var(--clinical-warning-bg, var(--surface-2)));
+  color: var(--audit-indicator, var(--clinical-warning, var(--text-1)));
+  border: 1px solid var(--audit-border, var(--border));
+}
+
+/* Look-Alike-Sound-Alike — ISMP-style identification of high-confusion
+ * pairs. Distinct visual cue pairs with the textual prefix `LASA`. */
+.bt-badge--lasa {
+  background: var(--clinical-caution-bg);
+  color: var(--clinical-caution);
+  border: 1px solid var(--clinical-caution);
+  font-style: italic;
+}
+
+/* Controlled-substance badges — ISMP / DEA / Home Office class. */
+.bt-badge--controlled {
+  background: var(--clinical-critical-bg, var(--clinical-danger-bg));
+  color: var(--clinical-critical, var(--clinical-danger));
+  border: 2px solid var(--clinical-critical, var(--clinical-danger));
+}
+
+/* `bt-sr-only` — screen-reader-only, visually hidden but exposed to
+ * assistive tech. Mirrors Tailwind / Bootstrap `sr-only` pattern.
+ * Used by clinical-react chart components for off-screen labels. */
+.bt-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bt-badge-info {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--brand-400);
+}
+
+/* Prescription/state pills used by the clinical React kit.
+ * State semantics are paired with text labels in the component; colour
+ * reinforces the state but is never the only signal. */
+.bt-state {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 9px;
+  border: 1px solid var(--bt-border);
+  border-radius: var(--r-full);
+  background: var(--bt-surface-alt);
+  color: var(--bt-text-secondary);
+  font-family: var(--f-mono);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bt-state--draft,
+.bt-state--DRAFT,
+.bt-state--pending,
+.bt-state--PENDING {
+  background: var(--bt-surface-alt);
+  color: var(--bt-text-muted);
+  border-color: var(--bt-border);
+}
+
+.bt-state--signed,
+.bt-state--SIGNED,
+.bt-state--released,
+.bt-state--RELEASED,
+.bt-state--downloaded,
+.bt-state--DOWNLOADED,
+.bt-state--active,
+.bt-state--ACTIVE,
+.bt-state--issued,
+.bt-state--ISSUED {
+  background: var(--bt-info-bg);
+  color: var(--bt-info-text);
+  border-color: var(--bt-info-border);
+}
+
+.bt-state--partially-dispensed,
+.bt-state--PARTIALLY_DISPENSED,
+.bt-state--partial,
+.bt-state--PARTIAL {
+  background: var(--bt-warning-bg);
+  color: var(--bt-warning-text);
+  border-color: var(--bt-warning-border);
+}
+
+.bt-state--dispensed,
+.bt-state--DISPENSED,
+.bt-state--claimed,
+.bt-state--CLAIMED,
+.bt-state--completed,
+.bt-state--COMPLETED,
+.bt-state--authorised,
+.bt-state--AUTHORISED,
+.bt-state--authorized,
+.bt-state--AUTHORIZED {
+  background: var(--clinical-normal-bg, var(--success-bg));
+  color: var(--clinical-normal-fg, var(--success-text));
+  border-color: var(--bt-success);
+}
+
+.bt-state--cancelled,
+.bt-state--CANCELLED,
+.bt-state--canceled,
+.bt-state--CANCELED,
+.bt-state--expired,
+.bt-state--EXPIRED,
+.bt-state--rejected,
+.bt-state--REJECTED {
+  background: var(--bt-danger-bg);
+  color: var(--bt-danger-text);
+  border-color: var(--bt-danger-border);
+}
+
+/* ───── Cards ───── */
+
+.bt-card {
+  background: var(--surface-card, var(--surface-1));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  backdrop-filter: blur(12px) saturate(1.5);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.bt-card-elevated {
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.35), 0 0 60px rgba(99, 102, 241, 0.08);
+}
+
+/* ───── KPI stat cards ───── */
+
+.bt-kpi {
+  background: var(--surface-card, var(--surface-1));
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--brand-500);
+  border-radius: var(--r-lg);
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  transition: box-shadow 0.15s ease-out;
+}
+
+.bt-kpi:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.bt-kpi-label {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+
+.bt-kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.bt-kpi-change {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+.bt-kpi-change-pos {
+  color: #34C759;
+}
+
+.bt-kpi-change-neg {
+  color: #EF4444;
+}
+
+/* ───── Grid utilities ───── */
+
+.bt-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.bt-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.bt-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.bt-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+@media (max-width: 1200px) {
+  .bt-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bt-grid-2,
+  .bt-grid-3,
+  .bt-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ───── Empty state ───── */
+
+.bt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 24px;
+  color: var(--text-3);
+  text-align: center;
+  font-family: var(--f-sans);
+}
+
+.bt-empty-title {
+  font-weight: 600;
+  color: var(--text-2);
+  font-size: 1rem;
+}
+
+/* Phone floor (estate responsive criteria R2/R5/R6, 2026-09-02)
+   Measured with SignalBox browser_responsive_audit at 375x812: the uppercase
+   micro-labels (10-11px) and 36-40px controls fail the estate's legibility
+   and touch-target floors (BulletTrain frontend/e2e/L3-VIS-responsive.spec.ts:
+   no text under 12px, every control at least 44px, fields stacked). The
+   desktop scale is unchanged; on a phone the floor applies. */
+@media (max-width: 640px) {
+  .bt-sidebar-section, .bt-table th, .bt-badge, .bt-kpi-label { font-size: 12px; }
+  .bt-input, .bt-select, .bt-textarea { width: 100%; min-height: 44px; }
+  .bt-tab { min-height: 44px; }
+}

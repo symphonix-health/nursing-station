@@ -2,6 +2,67 @@
   "schema_version": "WORKSPACE_FRONTEND_VISUAL_EVIDENCE_V1",
   "runs": [
     {
+      "surface": "Design-system-foundation gate follow-up (picis treatment): design-system.css gains a truthful canonical-source-layer provenance header and a real utilities.css import; the 9 prior input-validation defects (including both clinical-safety-critical ones) re-verified fixed on the pinned content",
+      "route": "/login",
+      "mode": "headed",
+      "driver": "signalbox",
+      "persona": "registered_nurse",
+      "verified_at": "2026-09-19T07:30:00Z",
+      "session_id": "iv-nurse-picis",
+      "files": {
+        "frontend/src/styles/design-system.css": "d29f970b4927b6eba3c651de6f480fd205deacb468761ac91eafb446272e35a9",
+        "frontend/src/styles/utilities.css": "012df2ac8ed4649b2db59cc601700f2b7ca6e13fc8446fc9f96055c77f02f2c1"
+      },
+      "screenshots": [
+        "docs/verification/screenshots/iv-nurse-picis-01-login-after-fix.png",
+        "docs/verification/screenshots/iv-nurse-picis-02-medication-whitespace-refused.png",
+        "docs/verification/screenshots/iv-nurse-picis-03-harm-incident-invisible-unicode-refused.png"
+      ],
+      "assertions": [
+        "The design-system-foundation gate gap (`caid frontend-headed-evidence`, design_system: FAIL -- 'lacks canonical source-layer provenance or compiled Symphonix fingerprints' and 'no consumed stylesheet proves the Symphonix base plus healthcare token stack') was confirmed pre-existing and unrelated to this worktree's input-validation edits by re-running the gate with --base-ref origin/main --content-ref origin/main against design-system.css as it stood on origin/main before any edit in this worktree: the same two gaps reproduce. Fixed by adding a truthful provenance header naming the three canonical source layers (colors_and_type.css, healthcare/tokens.css -- vendored flat as healthcare-tokens.css since this repo carries no .claude/skills/symphonix-health-design submodule pin -- and utilities.css) and a real `@import './utilities.css'` of a vendored, byte-identical copy of the design system's own utilities.css. After the fix, `caid frontend-headed-evidence --repo . --base-ref origin/main` reports design_system: PASS.",
+        "Login page (http://127.0.0.1:5282/login) rendered correctly after the fix: the .bt-label-required/.bt-label-optional/.bt-error-text markers and the rest of the page's styling are unchanged from before this session's edit (visual_baseline screenshot -01), zero console errors and zero failed requests for the full page-load session.",
+        "Spot-check, clinical-safety-critical defect 1 of 2 (medication non-administration reason): signed in as amina.okafor@nursing.test (registered_nurse), opened patient pat-003's Insulin aspart order, set outcome to withheld, entered a whitespace-only reason (three space characters), and clicked Confirm administration record -- POST /api/medication-orders/med-002/administrations still returns 422 (screenshot -02), reconfirming this fix still holds on the pinned design-system.css/utilities.css content.",
+        "Spot-check, clinical-safety-critical defect 2 of 2 (harm-incident description): on /incidents, entered a description of five U+200B (zero-width space) characters only and clicked Report as Amina Okafor -- POST /api/patients/pat-001/harm-incidents still returns 422 (screenshot -03), reconfirming this fix still holds on the pinned content.",
+        "Console/network across the whole session: the only two console errors and the only two non-2xx network responses are exactly the two expected 422 refusals above (the intended clinical-safety behaviour, not a defect); every other request (fonts, JS modules, /api/auth/login, /api/auth/me, /api/patients/pat-003, /api/ward-board, /api/alerts, /api/wards/ward-med-a/nurses, /api/reference/medication-outcomes, /api/wards/ward-med-a/harm-incidents) returned 200/201/304."
+      ],
+      "expected_refusals": [
+        {
+          "method": "POST",
+          "url_pattern": "^/api/medication-orders/[^/]+/administrations$",
+          "status": 422,
+          "justification": "Spot-check re-proving the whitespace-only-reason fix still holds after the design-system.css/utilities.css edit: a withheld dose whose reason is only spaces must be rejected server-side."
+        },
+        {
+          "method": "POST",
+          "url_pattern": "^/api/patients/[^/]+/harm-incidents$",
+          "status": 422,
+          "justification": "Spot-check re-proving the invisible-Unicode fix still holds after the design-system.css/utilities.css edit: a description made only of zero-width-space characters must be refused as blank."
+        }
+      ],
+      "console_errors": [
+        {
+          "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Content)",
+          "url": "http://127.0.0.1:5282/api/medication-orders/med-002/administrations"
+        },
+        {
+          "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Content)",
+          "url": "http://127.0.0.1:5282/api/patients/pat-001/harm-incidents"
+        }
+      ],
+      "failed_requests": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:5282/api/medication-orders/med-002/administrations",
+          "status": 422
+        },
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:5282/api/patients/pat-001/harm-incidents",
+          "status": 422
+        }
+      ]
+    },
+    {
       "surface": "Login form (missing required markers and enforcement)",
       "route": "/login",
       "mode": "headed",

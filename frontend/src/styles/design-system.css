@@ -1,6 +1,26 @@
+/*
+ * nursing-station -- design-system aliases on top of Symphonix-Health tokens.
+ *
+ * Canonical source layers. This repo carries no `.claude/skills/
+ * symphonix-health-design` submodule pin, so the three canonical layers
+ * below are vendored as flat local copies (a CSS @import path cannot
+ * reproduce the submodule's `healthcare/tokens.css` sub-directory as a
+ * same-directory relative import, hence the flattened filename) and
+ * imported here, before this file's own rules, in the design system's own
+ * layering order:
+ *   - colors_and_type.css    base brand, surface, text and type tokens
+ *   - healthcare-tokens.css  clinical-domain tokens -- this repo's flat copy
+ *                            of the design system's healthcare/tokens.css
+ *   - utilities.css          the `.bt-*` component classes and the
+ *                            WCAG-compliant 44 px button floor
+ * Those layers are the source of truth. This file maps them onto the
+ * --sg- and --ns- prefixed alias tokens this app's own components already
+ * reference, so no component needed to change when the layers were added.
+ */
 @import '../../assets/fonts/fonts.css';
 @import './colors_and_type.css';
 @import './healthcare-tokens.css';
+@import './utilities.css';
 
 :root {
   --sg-primary: #4f46e5;

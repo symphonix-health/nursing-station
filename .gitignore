@@ -39,3 +39,7 @@ data/
 .DS_Store
 Thumbs.db
 .claude/worktrees/
+
+# Worktree-local junction to the workspace port registry (see
+# resolve-ports.cjs / port_registry.py); never a real repo directory here.
+/workspace-tooling/
