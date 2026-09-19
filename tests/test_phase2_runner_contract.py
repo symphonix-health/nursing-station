@@ -279,6 +279,26 @@ def test_composed_hub_env_is_the_runner_principal_whatever_the_caller_shell_hold
         assert composed[key] == value
 
 
+@pytest.mark.parametrize("service_env", [None, {}], ids=["omitted", "empty"])
+def test_composed_hub_env_is_sanitised_when_no_service_env_is_supplied(service_env):
+    """The contract holds for every call shape, not only the one main() uses today.
+
+    A short-circuit for "nothing to add" that returned the inherited environment
+    untouched would satisfy every test that always passes a service_env, and hand
+    the hub the caller's shell.
+    """
+
+    composed = build_runner_hub_env(HOSTILE_INHERITED_ENV, service_env=service_env)
+    mapping = runner_owned_hub_auth_env()
+    neutral = runner_owned_hub_neutral_env()
+    for key, value in mapping.items():
+        assert composed[key] == value, key
+    for key in neutral:
+        assert composed[key] == "", key
+    assert set(_identity_view(composed)) == set(mapping) | set(neutral)
+    assert composed == build_runner_hub_env({}, service_env=service_env)
+
+
 @pytest.mark.parametrize("name", sorted(HOSTILE_INHERITED_ENV))
 def test_no_single_inherited_identity_variable_changes_the_hub_environment(name):
     """One hostile variable at a time, so a sanitiser missing ONE name is named.
@@ -522,10 +542,34 @@ def main_hub_env_violations(source: str) -> list[str]:
     ]
     if len(hub_launches) != 1:
         problems.append(f"found {len(hub_launches)} BulletTrain launches, expected exactly one")
+    launch_env_nodes: set[int] = set()
     for launch in hub_launches:
         env = next((kw.value for kw in launch.keywords if kw.arg == "env"), None)
         if env is None or not _is_hub_env_name(env):
             problems.append("the BulletTrain hub is not launched with env=hub_env")
+        else:
+            launch_env_nodes.add(id(env))
+
+    # The specific checks above name the spellings we thought of. This is the
+    # whitelist that does not depend on thinking of them: hub_env may be bound
+    # exactly once (the builder call) and read exactly once (env= of the hub
+    # launch). An alias, dict.update(hub_env, ...), a walrus rebinding, a helper
+    # that receives it, or a second read are all a way to change what the hub is
+    # launched with after the builder produced it.
+    references = [node for node in ast.walk(main) if _is_hub_env_name(node)]
+    stores = [node for node in references if not isinstance(node.ctx, ast.Load)]
+    stray_loads = [
+        node
+        for node in references
+        if isinstance(node.ctx, ast.Load) and id(node) not in launch_env_nodes
+    ]
+    if len(stores) != 1:
+        problems.append(f"hub_env is bound {len(stores)} times, expected exactly once")
+    if stray_loads:
+        problems.append(
+            f"hub_env is referenced {len(stray_loads)} time(s) other than as env= of the "
+            "hub launch (an alias, a helper call or an in-place edit)"
+        )
     return problems
 
 
@@ -560,6 +604,26 @@ def test_main_hands_the_hub_only_the_composed_environment():
             "hub launched with the raw shell environment",
             "env=hub_env,",
             "env=os.environ.copy(),",
+        ),
+        (
+            "hub_env edited through the unbound dict.update spelling",
+            "        nursing_env = os.environ.copy()\n",
+            '        dict.update(hub_env, {"AUTH_MODE": "off"})\n        nursing_env = os.environ.copy()\n',
+        ),
+        (
+            "hub_env edited through an alias",
+            "        nursing_env = os.environ.copy()\n",
+            '        alias = hub_env\n        alias["AUTH_MODE"] = "off"\n        nursing_env = os.environ.copy()\n',
+        ),
+        (
+            "hub_env rebound with a walrus after it is built",
+            "        nursing_env = os.environ.copy()\n",
+            '        (hub_env := {**hub_env, "AUTH_MODE": "off"})\n        nursing_env = os.environ.copy()\n',
+        ),
+        (
+            "hub_env handed to a helper that can edit it",
+            "        nursing_env = os.environ.copy()\n",
+            "        _tamper(hub_env)\n        nursing_env = os.environ.copy()\n",
         ),
     ],
 )
